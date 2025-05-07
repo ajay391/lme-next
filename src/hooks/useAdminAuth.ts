@@ -20,7 +20,7 @@ export const useAdminAuth = () => {
       })
       .then(res => {
         if (res.data.user.role !== 'admin') {
-          router.push('/unauthorized'); // create this page
+          router.push('/'); // create this page
         } else {
           setLoading(false);
         }

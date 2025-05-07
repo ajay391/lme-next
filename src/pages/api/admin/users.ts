@@ -13,16 +13,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (!token) return res.status(401).json({ error: 'No token provided' });
 
   try {
-    const decoded: any = jwt.verify(token, process.env.JWT_SECRET!); // Verify JWT
+    const decoded: any = jwt.verify(token, process.env.JWT_SECRET!);
     const user = await User.findById(decoded.id);
 
     if (!user || user.role !== 'admin') {
       return res.status(403).json({ error: 'Forbidden' }); // Admin-only access
     }
 
-    // Proceed with admin-specific logic (e.g., fetching users)
-    const users = await User.find({});
-    res.status(200).json({ users });
+    // ✅ Only fetch users with role 'user'
+    const users = await User.find({ role: 'user' });
+
+    return res.status(200).json({ users });
   } catch (err) {
     return res.status(401).json({ error: 'Invalid or expired token' });
   }
