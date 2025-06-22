@@ -19,11 +19,11 @@ const allProducts: Product[] = [
     slug: "oversized-black-tee",
     price: "999",
     oldPrice: "1299",  // Example of a product with oldPrice
-    image: "/images/home/new-1.avif",
+    image: "/images/home/new-1.jpg",
     images: [
-      "/images/products/category-1.avif",
-      "/images/products/category-2.avif",
-      "/images/products/category-3.avif"
+      "/images/products/category-1.jpg",
+      "/images/products/category-2.jpg",
+      "/images/products/category-3.jpg"
     ],
     category: "T-Shirts",
     description: "A comfortable black tee, perfect for any occasion.",
@@ -35,11 +35,11 @@ const allProducts: Product[] = [
     name: "LIMITLESS SPIRIT",
     slug: "urban-white-hoodie",
     price: "1999",
-    image: "/images/home/new-2.avif",
+    image: "/images/home/new-2.jpg",
     images: [
-      "/images/products/category-2.avif",
-      "/images/products/category-3.avif",
-      "/images/products/category-4.avif"
+      "/images/products/category-2.jpg",
+      "/images/products/category-3.jpg",
+      "/images/products/category-4.jpg"
     ],
     category: "Hoodies",
     description: "A clean, urban-style hoodie in white with minimalist design.",
@@ -51,11 +51,11 @@ const allProducts: Product[] = [
     name: "URBAN VIBES",
     slug: "nowhere-graphic-tee",
     price: "1199",
-    image: "/images/home/new-3.avif",
+    image: "/images/home/new-3.jpg",
     images: [
-      "/images/products/category-3.avif",
-      "/images/products/category-4.avif",
-      "/images/products/category-5.avif"
+      "/images/products/category-3.jpg",
+      "/images/products/category-4.jpg",
+      "/images/products/category-5.jpg"
     ],
     category: "T-Shirts",
     description: "A graphic tee that showcases the Nowhere brand with bold prints.",
@@ -68,11 +68,11 @@ const allProducts: Product[] = [
     slug: "minimal-cream-hoodie",
     price: "2099",
     oldPrice: "2499",  // Example of a product with oldPrice
-    image: "/images/products/category-2.avif",
+    image: "/images/products/category-2.jpg",
     images: [
-      "/images/products/category-4.avif",
-      "/images/products/category-5.avif",
-      "/images/products/category-3.avif"
+      "/images/products/category-4.jpg",
+      "/images/products/category-5.jpg",
+      "/images/products/category-3.jpg"
     ],
     category: "Hoodies",
     description: "A soft cream hoodie with minimal branding for a clean, stylish look.",
@@ -84,11 +84,11 @@ const allProducts: Product[] = [
     name: "URBAN VIBES",
     slug: "drop-shoulder-tee",
     price: "1299",
-    image: "/images/products/category-10.avif",
+    image: "/images/products/category-10.jpg",
     images: [
-      "/images/products/category-5.avif",
-      "/images/products/category-3.avif",
-      "/images/products/category-1.avif"
+      "/images/products/category-5.jpg",
+      "/images/products/category-3.jpg",
+      "/images/products/category-1.jpg"
     ],
     category: "T-Shirts",
     description: "A drop shoulder tee for a relaxed fit with a modern silhouette.",
@@ -100,11 +100,11 @@ const allProducts: Product[] = [
     name: "UNSEEN REALM",
     slug: "oversized-washed-tee",
     price: "1399",
-    image: "/images/products/category-7.avif",
+    image: "/images/products/category-7.jpg",
     images: [
-      "/images/products/category-6.avif",
-      "/images/products/category-5.avif",
-      "/images/products/category-2.avif"
+      "/images/products/category-6.jpg",
+      "/images/products/category-5.jpg",
+      "/images/products/category-2.jpg"
     ],
     category: "T-Shirts",
     description: "A faded, oversized tee that gives a vintage feel to your outfit.",
@@ -116,11 +116,11 @@ const allProducts: Product[] = [
     name: "MINIMAL POWER",
     slug: "cropped-hoodie",
     price: "1899",
-    image: "/images/products/category-8.avif",
+    image: "/images/products/category-8.jpg",
     images: [
-      "/images/products/category-7.avif",
-      "/images/products/category-5.avif",
-      "/images/products/category-7.avif"
+      "/images/products/category-7.jpg",
+      "/images/products/category-5.jpg",
+      "/images/products/category-7.jpg"
     ],
     category: "Hoodies",
     description: "A cropped hoodie with a modern fit and comfortable feel.",
@@ -132,11 +132,11 @@ const allProducts: Product[] = [
     name: "PRIME STREETWEAR",
     slug: "nowhere-classic-tee",
     price: "1099",
-    image: "/images/products/category-9.avif",
+    image: "/images/products/category-9.jpg",
     images: [
-      "/images/products/category-1.avif",
-      "/images/products/category-2.avif",
-      "/images/products/category-7.avif"
+      "/images/products/category-1.jpg",
+      "/images/products/category-2.jpg",
+      "/images/products/category-7.jpg"
     ],
     category: "T-Shirts",
     description: "A classic, simple tee with Nowhere's signature logo on the front.",

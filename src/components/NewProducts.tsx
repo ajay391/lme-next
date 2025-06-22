@@ -7,7 +7,7 @@ const featuredProducts = [
     slug: "oversized-black-tee",
     price: "999",
     oldPrice: "1299",  // Example of a product with oldPrice
-    image: "/images/home/new-1.avif",
+    image: "/images/home/new-1.jpg",
     images: [
       "/images/products/category-1.jpg",
       "/images/products/category-2.jpg",
@@ -23,7 +23,7 @@ const featuredProducts = [
     name: "LIMITLESS SPIRIT",
     slug: "urban-white-hoodie",
     price: "1999",
-    image: "/images/home/new-2.avif",
+    image: "/images/home/new-2.jpg",
     images: [
       "/images/products/category-2.jpg",
       "/images/products/category-3.jpg",
@@ -39,7 +39,7 @@ const featuredProducts = [
     name: "URBAN VIBES",
     slug: "nowhere-graphic-tee",
     price: "1199",
-    image: "/images/home/new-3.avif",
+    image: "/images/home/new-3.jpg",
     images: [
       "/images/products/category-3.jpg",
       "/images/products/category-4.jpg",

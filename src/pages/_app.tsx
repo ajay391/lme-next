@@ -17,7 +17,11 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <Provider store={store}>
       <Navbar />
-      <Toaster position="bottom-right" />
+      <Toaster position="top-right" toastOptions={{
+          style: {
+            marginTop: "60px", // Set your desired top offset
+          },
+        }}/>
 
       <PersistGate loading={null} persistor={persistor}>
         <Component {...pageProps} />

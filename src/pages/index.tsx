@@ -23,7 +23,7 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Nowhere | Shop Oversized Tees & Hoodies</title>
+        <title>LME | Shop Oversized Tees & Hoodies</title>
       </Head>
       <HomeHero />
       <NewProducts />

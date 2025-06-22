@@ -2,8 +2,9 @@ import AnimatedButton from "@/components/AnimatedButton";
 
 export default function HomeHero() {
   return (
-    <section
-      className="flex items-end justify-start bg-cover bg-center py-24 px-10 min-h-[80vh]"
+    <section className="py-5 md:py-12 px-8 sm:px-8 md:px-12 lg:px-12 xl:px-32">
+    <div
+      className="flex items-end justify-start bg-cover bg-center py-24 px-10 min-h-[80vh] rounded-3xl"
       style={{ backgroundImage: "url('/images/home/hero-1.jpg')" }} // Make sure you have this image
     >
       <div className="max-w-7xl w-full text-start text-white">
@@ -21,6 +22,7 @@ export default function HomeHero() {
 
 
       </div>
+    </div>
     </section>
   );
 }

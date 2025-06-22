@@ -1,4 +1,3 @@
-// models/Product.ts
 import mongoose, { Schema, Document } from 'mongoose';
 
 interface IProduct extends Document {
@@ -8,6 +7,7 @@ interface IProduct extends Document {
   category: string;
   imageUrl: string;
   stock: number;
+  publicId: string; // Add publicId field to store the Cloudinary public ID
 }
 
 const productSchema = new Schema<IProduct>({
@@ -16,7 +16,8 @@ const productSchema = new Schema<IProduct>({
   price: { type: Number, required: true },
   category: { type: String, required: true },
   imageUrl: { type: String, required: true },
-  stock: { type: Number, required: true, default: 0 }, 
+  stock: { type: Number, required: true, default: 0 },
+  publicId: { type: String, required: true }, // Store the public ID here
 }, { timestamps: true });
 
 const Product = mongoose.models.Product || mongoose.model<IProduct>('Product', productSchema);

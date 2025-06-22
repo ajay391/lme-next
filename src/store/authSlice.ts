@@ -1,8 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = {
-  isAuthenticated: false,
-  token: null,
+interface AuthState {
+  isAuthenticated: boolean;
+  access_token: string | null;
+  refresh_token: string | null;
+}
+
+const initialState: AuthState = {
+  isAuthenticated: typeof window !== "undefined" && !!localStorage.getItem("access_token"),
+  access_token: typeof window !== "undefined" ? localStorage.getItem("access_token") : null,
+  refresh_token: typeof window !== "undefined" ? localStorage.getItem("refresh_token") : null,
 };
 
 const authSlice = createSlice({
@@ -10,18 +17,24 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     login: (state, action) => {
-      const token = action.payload;  // Expect token as payload
+      const { access, refresh } = action.payload;
       state.isAuthenticated = true;
-      state.token = token;
+      state.access_token = access;
+      state.refresh_token = refresh;
+
       if (typeof window !== "undefined") {
-        localStorage.setItem("token", token); // Safe for client-side
+        localStorage.setItem("access_token", access);
+        localStorage.setItem("refresh_token", refresh);
       }
     },
     logout: (state) => {
       state.isAuthenticated = false;
-      state.token = null;
+      state.access_token = null;
+      state.refresh_token = null;
+
       if (typeof window !== "undefined") {
-        localStorage.removeItem("token");
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("refresh_token");
       }
     },
     setAuthState: (state, action) => {

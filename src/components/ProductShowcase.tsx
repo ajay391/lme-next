@@ -3,10 +3,10 @@
 import { useState } from 'react';
 import Image from 'next/image';
 
-import car1 from "../../public/images/products/category-1.avif";
-import car2 from "../../public/images/products/category-3.avif";
-import car3 from "../../public/images/products/category-4.avif";
-import car4 from "../../public/images/products/category-5.avif";
+import car1 from "../../public/images/products/category-1.jpg";
+import car2 from "../../public/images/products/category-3.jpg";
+import car3 from "../../public/images/products/category-4.jpg";
+import car4 from "../../public/images/products/category-5.jpg";
 
 const productImages = [car1, car2, car3, car4];
 export default function ProductShowcase() {

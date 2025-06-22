@@ -1,15 +1,19 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
-import { login } from '../store/authSlice'; // Import the login action from the authSlice
+import { login } from '../store/authSlice';
+import axiosInstance from '../utils/axiosInstance';
+import logo from "../../public/images/logo.png";
+import Link from "next/link";
+import Image from "next/image";
+import { Eye, EyeOff } from "lucide-react";
+import toast from "react-hot-toast";
 
 export default function LoginPage() {
   const [form, setForm] = useState({ phone: '', password: '' });
   const [message, setMessage] = useState('');
   const router = useRouter();
-  const dispatch = useDispatch(); // Initialize useDispatch hook
-
+  const dispatch = useDispatch();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -19,135 +23,99 @@ export default function LoginPage() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
-
-  // const handleSubmit = async (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   try {
-  //     const res = await axios.post('/api/auth/login', form);
-  //     const token = res.data.token;
-
-  //     // Save the token in localStorage
-  //     localStorage.setItem('token', token);
-
-  //     // Dispatch the login action to update Redux state
-  //     dispatch(login());
-
-  //     // Redirect after login
-  //     router.push('/'); // Adjust to wherever you want to redirect after successful login
-  //   } catch (err: any) {
-  //     setMessage(err.response?.data?.error || 'Login failed');
-  //   }
-  // };
+ 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await axios.post('/api/auth/login', form);
-      const token = res.data.token;
+      const res = await axiosInstance.post('/auth/login/', form);
+      console.log(res.data);  // Check the response format here
   
-      // Save the token in localStorage
-      localStorage.setItem('token', token);
-  
-      // Dispatch the login action to update Redux state
-      dispatch(login(token));
-  
-      // Fetch user info after login
-      const userRes = await axios.get('/api/auth/me', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-  
-      const user = userRes.data.user;
-  
-      // Redirect based on role
-      if (user.role === 'admin') {
-        router.push('/admin/dashboard');
-      } else {
+      const { access, refresh } = res.data.tokens || { access: undefined, refresh: undefined };
+
+      console.log("Access Token:", access);
+      console.log("Refresh Token:", refresh);
+      
+      if (access && refresh) {
+
+        // localStorage.setItem('access_token', access);
+        // localStorage.setItem('refresh_token', refresh);
+              
+        dispatch(login({ access, refresh }));
+        toast.success("Login Success");
         router.push('/');
+      } else {
+        // setMessage('Tokens not received');
+        toast.error("Tokens not received");
       }
     } catch (err: any) {
-      setMessage(err.response?.data?.error || 'Login failed');
+      // setMessage(err.response?.data?.error || 'Login failed');
+      toast.error(err.response?.data?.error || 'Login failed');
     }
+  };
+
+  const [showPassword, setShowPassword] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
   
 
-  if (!mounted) return null; // Ensure that this component doesn't try to render on the server-side during SSR
+  if (!mounted) return null;
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-    <div className="max-w-md w-full space-y-8 bg-white p-10 rounded-lg shadow-lg">
-      {/* Welcome Heading */}
-      <div className="text-center">
-        <h2 className="text-4xl font-bold text-gray-900">Welcome</h2>
-        <p className="text-lg text-gray-500 mt-2">Please sign in to continue</p>
+    <div className=" flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-300 p-6 py-10">
+    <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-10">
+      <div className="text-start mb-8">
+        {/* <Image src={logo} alt="Logo" width={50} height={50} className=" mb-4" /> */}
+        <h2 className="text-3xl font-extrabold text-gray-800 mb-3">Welcome Back!</h2>
+        <p className="text-gray-500 text-base">Sign in to your account</p>
       </div>
-  
-      {/* Sign In Text */}
-      <div className="mt-6 text-center">
-        <h3 className="text-2xl font-semibold text-gray-900">Sign In</h3>
-      </div>
-  
-      {/* Form Fields */}
-      <form onSubmit={handleSubmit} className="mt-8 space-y-6">
-        <div className="rounded-md shadow-sm space-y-4">
-          {/* Phone Field */}
-          <div>
-            <label htmlFor="phone" className="sr-only">Phone</label>
-            <input
-              id="phone"
-              name="phone"
-              type="text"
-              required
-              value={form.phone}
-              onChange={handleChange}
-              className="appearance-none relative block w-full px-4 py-3 border border-gray-300 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-lg"
-              placeholder="Phone"
-            />
-          </div>
-          {/* Password Field */}
-          <div>
-            <label htmlFor="password" className="sr-only">Password</label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              required
-              value={form.password}
-              onChange={handleChange}
-              className="appearance-none relative block w-full px-4 py-3 border border-gray-300 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-lg"
-              placeholder="Password"
-            />
-          </div>
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="space-y-4">
+          <label htmlFor="phone" className="block text-lg font-semibold text-gray-700 mt-10">
+            Phone <span className='text-red-500 '>*</span>
+          </label>
+          <input
+            type="text"
+            name="phone"
+            value={form.phone}
+            onChange={handleChange}
+            placeholder="Enter Phone number"
+            className="w-full px-4 py-3 mt-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          />
+           <div className="relative w-full">
+      <label htmlFor="password" className="block text-lg font-semibold text-gray-700 mt-5">
+        Password <span className="text-red-500">*</span>
+      </label>
+      <input
+        type={showPassword ? "text" : "password"}
+        name="password"
+        value={form.password}
+        onChange={handleChange}
+        placeholder="Enter Password"
+        className="w-full px-4 py-3 mt-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+      />
+      <button
+        type="button"
+        onClick={togglePasswordVisibility}
+        className="absolute right-4 top-[3.5rem] text-gray-500 focus:outline-none"
+      >
+        {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+      </button>
+    </div>
         </div>
-  
-        {/* Submit Button */}
-        <div>
-          <button
-            type="submit"
-            className="group relative w-full flex justify-center py-3 px-6 border border-transparent text-lg font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          >
-            Login
-          </button>
-        </div>
-  
-        {/* Register Link */}
-        <div className="text-center mt-4">
-          <p className="text-sm text-gray-600">
-            Don't have an account?{' '}
-            <a href="/register" className="font-semibold text-indigo-600 hover:text-indigo-700">
-              Register here
-            </a>
-          </p>
-        </div>
-  
-        {/* Error Message */}
-        {message && (
-          <div className="text-sm text-red-500 mt-2 text-center">{message}</div>
-        )}
+        <button
+          type="submit"
+          className="w-full py-3 bg-red-500 text-white rounded-lg font-semibold hover:bg-red-600 transition-colors"
+        >
+          Login
+        </button>
+        {/* {message && <div className="text-red-500 text-center mt-4">{message}</div>} */}
       </form>
+      <p className="text-center text-base text-gray-500 mt-6">
+        Don't have an account? <Link href="/register" className="text-indigo-600 hover:text-indigo-500">Register here</Link>
+      </p>
     </div>
   </div>
-  
-
   );
 }

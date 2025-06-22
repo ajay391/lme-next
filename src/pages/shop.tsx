@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import ProductCard from "@/components/ProductCard";
 import { Product } from "@/data/products";
+import axiosInstance from "@/utils/axiosInstance";
 
 const ShopPage = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -18,8 +19,8 @@ const ShopPage = () => {
     const fetchProducts = async () => {
       setLoading(true);
       try {
-        const module = await import('@/data/products');
-        setProducts(module.default);
+        const response = await axiosInstance.get('/products/');
+        setProducts(response.data);
       } catch (error) {
         console.error("Error fetching products:", error);
       } finally {
@@ -64,7 +65,7 @@ const ShopPage = () => {
       ) : filteredProducts.length === 0 ? (
         <p>No products found.</p>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-col-4 gap-6">
           {filteredProducts.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}

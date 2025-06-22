@@ -40,9 +40,9 @@ export const WhyUs = () => (
       <div className="grid grid-cols-2 gap-6">
         {features.map((item, index) => (
           <div key={index} className="text-start">
-            <div className="flex justify-start mb-3">{item.icon}</div>
-            <h3 className="font-semibold text-xl mb-1 uppercase">{item.title}</h3>
-            <p className="text-sm text-gray-600">{item.description}</p>
+            <div className="flex justify-start mb-5">{item.icon}</div>
+            <h3 className="font-semibold text-xl mb-3 uppercase">{item.title}</h3>
+            <p className="text-sm text-gray-600 mb-8">{item.description}</p>
           </div>
         ))}
       </div>

@@ -1,10 +1,10 @@
 import React, { useRef } from 'react';
 import Slider from 'react-slick';
 import Image from 'next/image';
-import carOne from "../../public/images/products/category-5.avif";
-import carTwo from "../../public/images/products/category-4.avif";
-import carThree from "../../public/images/products/category-3.avif";
-import carFour from "../../public/images/products/category-1.avif";
+import carOne from "../../public/images/products/category-5.jpg";
+import carTwo from "../../public/images/products/category-4.jpg";
+import carThree from "../../public/images/products/category-3.jpg";
+import carFour from "../../public/images/products/category-1.jpg";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 

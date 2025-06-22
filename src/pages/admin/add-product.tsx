@@ -1,4 +1,3 @@
-// pages/admin/add-product.tsx
 import { useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
@@ -40,8 +39,8 @@ const AddProduct = () => {
     const imageUrl = await handleImageUpload();
     if (!imageUrl) return;
 
-    const token = localStorage.getItem('token');
-    if (!token) {
+    const access_token = localStorage.getItem('access_token');
+    if (!access_token) {
       console.error('No token found!');
       router.push('/login');
       return;
@@ -60,14 +59,14 @@ const AddProduct = () => {
         },
         {
           headers: {
-            Authorization: `Bearer ${token}`, // Pass the token as Bearer in headers
+            Authorization: `Bearer ${access_token}`, // Pass the token as Bearer in headers
           },
         }
       );
       console.log('Product added:', response.data);
       router.push('/admin/products');
     } catch (error) {
-      console.error('Error adding product:');
+      console.error('Error adding product:', error);
     }
   };
 

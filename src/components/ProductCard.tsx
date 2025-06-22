@@ -7,12 +7,12 @@ type Props = {
 
 const ProductCard = ({ product }: Props) => {
   return (
-    <Link href={`/product/${product.slug}`}>
-      <div className="relative p-0  transition-all">
+    <Link href={`/product/${product.id}`}>
+      <div className="relative p-0 transition-all">
         <img
           src={product.image}
           alt={product.name}
-          className="w-full h-[500px] object-cover rounded-3xl"
+          className="w-full h-[450px] object-cover rounded-3xl"
         />
         <div className="p-0">
           {/* "New" tag only if isNew is true */}
