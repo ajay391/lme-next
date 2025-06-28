@@ -2,13 +2,7 @@ import { useDispatch } from "react-redux";
 import { addToCart } from "../store/cartSlice";
 import toast from "react-hot-toast";
 
-interface AddToCartButtonProps {
-  product: any;
-  selectedSize: string;
-  quantity: number;
-}
-
-const AddToCartButton: React.FC<AddToCartButtonProps> = ({ product, selectedSize, quantity }) => {
+const AddToCartButton = ({ product, selectedSize, quantity, selectedColor }) => {
   const dispatch = useDispatch();
 
   const handleAddToCart = () => {
@@ -24,6 +18,7 @@ const AddToCartButton: React.FC<AddToCartButtonProps> = ({ product, selectedSize
       image: product.image,
       quantity,
       size: selectedSize,
+      color: selectedColor
     }));
 
     toast.success("Added to cart!");

@@ -1,4 +1,4 @@
-import AnimatedButton from "@/components/AnimatedButton";
+import AnimatedButton from "./AnimatedButton";
 
 export default function HomeHero() {
   return (

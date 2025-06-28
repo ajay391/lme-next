@@ -1,11 +1,6 @@
-import { Product } from "@/data/products";
 import Link from "next/link";
 
-type Props = {
-  product: Product;
-};
-
-const ProductCard = ({ product }: Props) => {
+const ProductCard = ({ product }) => {
   return (
     <Link href={`/product/${product.id}`}>
       <div className="relative p-0 transition-all">

@@ -8,11 +8,10 @@ const AddProduct = () => {
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('');
   const [stock, setStock] = useState(0);
-  const [images, setImages] = useState<File[]>([]);
+  const [images, setImages] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
   const router = useRouter();
 
-  // Handle image upload to Cloudinary
   const handleImageUpload = async () => {
     const formData = new FormData();
     images.forEach((image) => formData.append('file', image));
@@ -24,7 +23,7 @@ const AddProduct = () => {
         `https://api.cloudinary.com/v1_1/dxtmkvwrp/image/upload`,
         formData
       );
-      return response.data.secure_url; // Return the secure URL of the uploaded image
+      return response.data.secure_url;
     } catch (error) {
       console.error('Image upload failed:', error);
       return '';
@@ -33,8 +32,7 @@ const AddProduct = () => {
     }
   };
 
-  // Handle form submission
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const imageUrl = await handleImageUpload();
     if (!imageUrl) return;
@@ -59,7 +57,7 @@ const AddProduct = () => {
         },
         {
           headers: {
-            Authorization: `Bearer ${access_token}`, // Pass the token as Bearer in headers
+            Authorization: `Bearer ${access_token}`,
           },
         }
       );

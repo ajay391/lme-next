@@ -1,19 +1,22 @@
-import React, { useRef } from 'react';
+'use client';
+
+import { useRef } from 'react';
 import Slider from 'react-slick';
 import Image from 'next/image';
+
 import carOne from "../../public/images/products/category-5.jpg";
 import carTwo from "../../public/images/products/category-4.jpg";
 import carThree from "../../public/images/products/category-3.jpg";
 import carFour from "../../public/images/products/category-1.jpg";
+
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 import { FaInstagram } from 'react-icons/fa';
-import { IoIosArrowForward } from "react-icons/io";
-import { IoIosArrowBack } from "react-icons/io";
+import { IoIosArrowForward, IoIosArrowBack } from "react-icons/io";
 
-const Carousel: React.FC = () => {
-  const sliderRef = useRef<Slider | null>(null);
+const Carousel = () => {
+  const sliderRef = useRef(null);
 
   const settings = {
     infinite: true,
@@ -74,7 +77,8 @@ const Carousel: React.FC = () => {
 
   return (
     <div className="carousel-container px-4">
-       <section className="py-16 px-4 sm:px-8 md:px-12 lg:px-20 xl:px-28">
+      {/* Section Heading */}
+      <section className="py-16 px-4 sm:px-8 md:px-12 lg:px-20 xl:px-28">
         <div className="max-w-3xl text-start">
           <h1 className="text-5xl sm:text-4xl md:text-5xl font-bold mb-4 uppercase">
             Featured Drops: <span className="text-primary">Stand Out, Stay Ahead</span>
@@ -85,6 +89,7 @@ const Carousel: React.FC = () => {
         </div>
       </section>
 
+      {/* Carousel */}
       <Slider {...settings} ref={sliderRef}>
         {carData.map((car, idx) => (
           <div key={idx} className="p-4">
@@ -97,13 +102,13 @@ const Carousel: React.FC = () => {
                 className="w-full h-[400px] md:h-[500px] lg:h-[600px] object-cover"
               />
 
-              {/* Bottom overlay */}
+              {/* Overlay Content */}
               <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-black/60 to-transparent text-white p-4 flex flex-col justify-end">
                 <h2 className="text-2xl font-semibold mb-2 px-2">{car.title}</h2>
-                <p className="text-sm mb-4  px-2">{car.description}</p>
+                <p className="text-sm mb-4 px-2">{car.description}</p>
                 <button className="w-fit px-4 py-2 bg-white text-black font-medium rounded-3xl hover:bg-red-500 hover:text-white transition flex items-center gap-2">
                   <FaInstagram className="text-xl" />
-                  <span>Explore Our Instagram</span> {/* Change the text here */}
+                  <span>Explore Our Instagram</span>
                 </button>
               </div>
             </div>
@@ -111,8 +116,7 @@ const Carousel: React.FC = () => {
         ))}
       </Slider>
 
-      {/* Custom controls */}
-      
+      {/* Custom Arrows */}
       <div className="flex justify-start gap-4 pt-10 pb-16 px-4 sm:px-8 md:px-12 lg:px-20 xl:px-28">
         <button
           onClick={prevButton}
@@ -124,7 +128,7 @@ const Carousel: React.FC = () => {
           onClick={nextButton}
           className="px-4 py-4 bg-black text-white rounded-full hover:bg-red-500 flex items-center gap-2"
         >
-          <IoIosArrowForward  className="text-xl" />
+          <IoIosArrowForward className="text-xl" />
         </button>
       </div>
     </div>

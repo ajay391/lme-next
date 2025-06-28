@@ -1,18 +1,20 @@
 import axios from 'axios';
 
+const baseURL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
+
 const axiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api',
+  baseURL,
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
-// Add a request interceptor to include the token
+// Request Interceptor: Add Access Token
 axiosInstance.interceptors.request.use(
   (config) => {
     if (typeof window !== 'undefined') {
       const token = localStorage.getItem('access_token');
-      if (token) {
+      if (token && config.headers) {
         config.headers.Authorization = `Bearer ${token}`;
       }
     }
@@ -21,33 +23,38 @@ axiosInstance.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Add a response interceptor to handle token refresh
+// Response Interceptor: Refresh Token Logic
 axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
 
-    // Handle 401 errors (Unauthorized)
-    if (error.response && error.response.status === 401 && !originalRequest._retry) {
+    if (
+      error.response?.status === 401 &&
+      !originalRequest._retry &&
+      typeof window !== 'undefined'
+    ) {
       originalRequest._retry = true;
+
       try {
         const refreshToken = localStorage.getItem('refresh_token');
+
         if (refreshToken) {
           const res = await axios.post(
-            `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api'}/auth/token/refresh/`,
-            { refresh: refreshToken }
+            `${baseURL}/auth/token/refresh/`,
+            { refresh: refreshToken },
+            { headers: { 'Content-Type': 'application/json' } }
           );
 
           const newAccessToken = res.data.access;
           localStorage.setItem('access_token', newAccessToken);
 
-
-          // Retry the original request with the new token
+          // Set new token and retry request
           originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
           return axiosInstance(originalRequest);
         }
       } catch (refreshError) {
-        console.error('Token refresh failed, logging out...');
+        console.error('Token refresh failed:', refreshError);
         localStorage.removeItem('access_token');
         localStorage.removeItem('refresh_token');
         window.location.href = '/login';

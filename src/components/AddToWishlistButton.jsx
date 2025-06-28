@@ -1,28 +1,16 @@
 import { useDispatch } from "react-redux";
 import { addToWishlist } from "../store/wishlistSlice";
 
-interface AddToWishlistButtonProps {
-  product: any;
-  selectedSize: string;
-}
-
-const AddToWishlistButton: React.FC<AddToWishlistButtonProps> = ({ product, selectedSize }) => {
+const AddToWishlistButton = ({ product }) => {
   const dispatch = useDispatch();
 
   const handleAddToWishlist = () => {
-    if (!selectedSize) {
-      alert("Please select a size.");
-      return;
-    }
-
-    dispatch(addToWishlist({
-      id: product.id,
-      name: product.name,
-      price: product.price,
-      image: product.image,
-      size: selectedSize,
-    }));
-  };
+  dispatch(addToWishlist({
+    product: product.id,        // ✅ send only the ID
+    size: product.size || "",   // optional: add size/color if available
+    color: product.color || "",
+  }));
+};
 
   return (
     <button

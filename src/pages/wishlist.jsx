@@ -1,19 +1,18 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '../store/store';
-import { removeFromWishlist, clearWishlist } from '../store/wishlistSlice';
-import Link from 'next/link';
+import {
+  fetchWishlist,
+  removeFromWishlist,
+  clearWishlist,
+} from '../store/wishlistSlice';
 
 const WishlistPage = () => {
-  const [isClient, setIsClient] = useState(false);
-  const wishlistItems = useSelector((state: RootState) => state.wishlist.items);
+  const wishlistItems = useSelector((state) => state.wishlist.items);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  if (!isClient) return null;
+    dispatch(fetchWishlist());
+  }, [dispatch]);
 
   return (
     <div className="max-w-4xl mx-auto p-4">
@@ -24,21 +23,22 @@ const WishlistPage = () => {
         <div className="space-y-4">
           {wishlistItems.map((item) => (
             <div
-              key={`${item.id}-${item.size}`}
+              key={item.id}
               className="flex items-center justify-between py-4 border-b border-gray-300"
             >
               <img
-                src={item.image}
-                alt={item.name}
+                src={`${process.env.NEXT_PUBLIC_IMAGE_BASE}/${item.product_detail?.image}`}
+                alt={item.product_detail?.name}
                 className="w-24 h-24 object-cover rounded-lg"
               />
               <div className="ml-4 flex-1">
-                <p className="text-lg font-semibold text-gray-800">{item.name}</p>
-                <p className="text-gray-600">${item.price}</p>
+                <p className="text-lg font-semibold text-gray-800">{item.product_detail?.name}</p>
+                <p className="text-gray-600">${item.product_detail?.price}</p>
                 <p className="text-sm text-gray-500">Size: {item.size}</p>
+                <p className="text-sm text-gray-500">Color: {item.color}</p>
               </div>
               <button
-                onClick={() => dispatch(removeFromWishlist({ id: item.id, size: item.size }))}
+                onClick={() => dispatch(removeFromWishlist({ id: item.id }))}
                 className="text-red-500 hover:underline"
               >
                 Remove

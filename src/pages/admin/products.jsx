@@ -1,19 +1,9 @@
-// pages/admin/products.tsx
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 
-interface Product {
-  _id: string;
-  name: string;
-  price: number;
-  category: string;
-  stock: number;
-  imageUrl: string;
-}
-
 const AdminProductsPage = () => {
-  const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
@@ -39,14 +29,15 @@ const AdminProductsPage = () => {
 
     fetchProducts();
   }, []);
-  const handleDelete = async (productId: string) => {
+
+  const handleDelete = async (productId) => {
     const token = localStorage.getItem('access_token');
     if (!token) {
       console.error('No token found!');
       router.push('/login');
       return;
     }
-  
+
     try {
       const response = await axios.delete(`/api/admin/products?productId=${productId}`, {
         headers: {
@@ -54,11 +45,12 @@ const AdminProductsPage = () => {
         },
       });
       console.log('Product deleted:', response.data);
-      // You can also trigger a refresh of the product list here
+      setProducts(products.filter((product) => product._id !== productId)); // remove deleted product from state
     } catch (error) {
       console.error('Error deleting product:', error);
     }
   };
+
   if (isLoading) {
     return <p>Loading...</p>;
   }

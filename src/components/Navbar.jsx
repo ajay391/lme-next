@@ -1,63 +1,64 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, memo } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useSelector, useDispatch } from "react-redux";
 import { ShoppingCart, Heart } from "lucide-react";
-import Image from "next/image";
-import logo from "../../public/images/logo.png";
-import profile from "../../public/images/profile.png";
-import { login, logout } from "@/store/authSlice";  // Import logout action
+// import logo from "../../public/images/logo.png";
+// import profile from "../../public/images/profile.png";
+import { login, logout } from "../store/authSlice";
 import { useRouter } from "next/router";
-import { memo } from "react";
+import { fetchWishlist } from "../store/wishlistSlice";
 
-const Navbar: React.FC = () => {
+const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const profileRef = useRef<HTMLDivElement>(null); // Track hover state
+ const profileRef = useRef(null); 
   const dispatch = useDispatch();
   const router = useRouter();
-  const authState = useSelector((state: any) => state.auth);
+
+  const authState = useSelector((state) => state.auth);
+  const cartItemCount = useSelector((state) => state.cart.items.length);
+  const wishlistItemCount = useSelector((state) => state.wishlist.items.length);
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
   useEffect(() => {
-    // Assuming Redux handles the authentication state, 
-    // so we don't need to check the token manually anymore.
+  if (authState.isAuthenticated) {
+    dispatch(fetchWishlist());
+  }
+}, [authState.isAuthenticated, dispatch]);
+
+  useEffect(() => {
     if (!authState.isAuthenticated) {
-      dispatch(logout()); // If no token or logged out, mark as logged out
+      dispatch(logout());
     }
   }, [authState.isAuthenticated, dispatch]);
-
-  const cartItemCount = useSelector((state: any) => state.cart.items.length);
-  const wishlistItemCount = useSelector((state: any) => state.wishlist.items.length);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
+  
+useEffect(() => {
+  const handleClickOutside = (event) => {
+    if (profileRef.current && !profileRef.current.contains(event.target)) {
+      setIsProfileOpen(false); // Close only if clicked outside
+    }
+  };
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        profileRef.current &&
-        !profileRef.current.contains(event.target as Node)
-      ) {
-        setIsProfileOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
+  document.addEventListener("mousedown", handleClickOutside);
+  return () => {
+    document.removeEventListener("mousedown", handleClickOutside);
+  };
+}, []);
 
   const handleLogout = () => {
-    dispatch(logout()); // Logout user through Redux
-    router.push("/login"); // Redirect to login page
+    dispatch(logout());
+    router.push("/login");
   };
 
   if (!isMounted) return null;
@@ -68,24 +69,21 @@ const Navbar: React.FC = () => {
         {/* Left: Logo */}
         <div className="text-gray-800 font-bold text-lg z-10">
           <Link href="/">
-            <Image src={logo} alt="Logo" width={40} height={40} className="object-contain" />
+            <Image src="/images/logo.png" alt="Logo" width={40} height={40} className="object-contain" />
           </Link>
-        </div>
-
-        {/* Center: Navigation Links */}
-        <div className="absolute left-1/2 transform -translate-x-1/2 hidden md:flex space-x-8 text-lg font-medium">
-          <Link href="/" className="text-gray-800 hover:text-red-500">Home</Link>
-          <Link href="/shop" className="text-gray-800 hover:text-red-500">Shop</Link>
-          <Link href="/about" className="text-gray-800 hover:text-red-500">About Us</Link>
         </div>
 
         {/* Right: Icons */}
         <div className="hidden md:flex items-center space-x-6 z-10">
-          {/* Wishlist Icon */}
+          <Link href="/" className="text-lg text-gray-800 hover:text-red-500">Home</Link>
+          <Link href="/shop" className="text-lg text-gray-800 hover:text-red-500">Shop</Link>
+          <Link href="/about" className="text-lg text-gray-800 hover:text-red-500">About Us</Link>
+
+          {/* Wishlist */}
           <Link href="/wishlist">
             <div className="relative flex items-center text-gray-800 hover:text-red-500">
               <Heart className="w-5 h-5" />
-              {wishlistItemCount > 0 && (
+              {authState.isAuthenticated && wishlistItemCount > 0 && (
                 <span className="absolute top-[-5px] right-[-10px] text-xs bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center">
                   {wishlistItemCount}
                 </span>
@@ -93,7 +91,7 @@ const Navbar: React.FC = () => {
             </div>
           </Link>
 
-          {/* Cart Icon */}
+          {/* Cart */}
           <Link href="/cart">
             <div className="relative flex items-center text-gray-800 hover:text-red-500">
               <ShoppingCart className="w-5 h-5" />
@@ -109,7 +107,9 @@ const Navbar: React.FC = () => {
           <div className="relative" ref={profileRef}>
             <button onClick={() => setIsProfileOpen((prev) => !prev)}>
               <Image
-                src={profile}
+                src="/images/profile.png"
+                width="100"
+                height="100"
                 alt="Profile"
                 className="w-8 h-8 rounded-full hover:border-red-500 transition"
               />
@@ -152,7 +152,7 @@ const Navbar: React.FC = () => {
           <Link href="/wishlist">
             <div className="relative flex items-center text-gray-800 hover:text-red-500">
               <Heart className="w-5 h-5" />
-              {wishlistItemCount > 0 && (
+              {authState.isAuthenticated && wishlistItemCount > 0 && (
                 <span className="absolute top-[-5px] right-[-10px] text-xs bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center">
                   {wishlistItemCount}
                 </span>

@@ -1,42 +1,86 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import profile from "../../public/images/profile.png";
+import axiosInstance from "../utils/axiosInstance";
 
 const Profile = () => {
   const [activeTab, setActiveTab] = useState("profile");
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [form, setForm] = useState({ 
-    name: "John Doe", 
-    email: "john@example.com",
-    phone: "+1 234 567 8900",
-    address: "123 Main St, Apt 4B, New York, NY 10001"
+    name: "", 
+    email: "",
+    phone: "",
+    address: ""
   });
 
-  // Mock data for demonstration
-  const orders = [
-    { id: "#ORD-12345", date: "2023-05-15", status: "Delivered", total: "$125.99", items: 3 },
-    { id: "#ORD-12344", date: "2023-04-28", status: "Shipped", total: "$89.50", items: 2 },
-    { id: "#ORD-12343", date: "2023-03-10", status: "Cancelled", total: "$45.99", items: 1 },
-  ];
+  const [addresses, setAddresses] = useState([]);
+  const [orders, setOrders] = useState([]);
+  const [expandedOrderId, setExpandedOrderId] = useState(null);
 
-  const addresses = [
-    { type: "Home", address: "123 Main St, Apt 4B, New York, NY 10001", isDefault: true },
-    { type: "Work", address: "456 Business Ave, Suite 200, New York, NY 10005", isDefault: false },
-  ];
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await axiosInstance.get("auth/me/");
+        const user = res.data.user;
+        setForm({
+          name: user.name,
+          email: user.email,
+          phone: user.phone || "",
+          address: user.address || "",
+        });
+      } catch (err) {
+        console.error("Failed to load user:", err);
+      }
+    };
+    fetchUser();
+  }, []);
 
-  const wishlist = [
-    { id: 1, name: "Wireless Headphones", price: "$99.99", image: "/placeholder-product.jpg" },
-    { id: 2, name: "Smart Watch", price: "$199.99", image: "/placeholder-product.jpg" },
-    { id: 3, name: "Bluetooth Speaker", price: "$59.99", image: "/placeholder-product.jpg" },
-  ];
+  useEffect(() => {
+    const fetchAddresses = async () => {
+      try {
+        const res = await axiosInstance.get("/auth/my-addresses/");
+        
+        setAddresses(res.data);
+      } catch (err) {
+        console.error("Error fetching addresses:", err);
+      }
+    };
+    fetchAddresses();
+  }, []);
 
-  const handleUpdate = (e: React.FormEvent) => {
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const res = await axiosInstance.get("/orders/my-orders/");
+        setOrders(res.data);
+      } catch (err) {
+        console.error("Failed to fetch orders", err);
+      }
+    };
+    fetchOrders();
+  }, []);
+
+  const [wishlist, setWishlist] = useState([]);
+    useEffect(() => {
+    const fetchWishlist = async () => {
+      try {
+        const res = await axiosInstance.get("/wishlist/"); // Adjust if your endpoint is different
+        setWishlist(res.data);
+      } catch (err) {
+        console.error("Error fetching wishlist:", err);
+      }
+    };
+
+    fetchWishlist();
+  }, []);
+
+ 
+  const handleUpdate = (e) => {
     e.preventDefault();
     setIsEditOpen(false);
   };
-
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -132,33 +176,61 @@ const Profile = () => {
                 
                 <div className="divide-y">
                   {orders.map((order) => (
-                    <div key={order.id} className="p-6 hover:bg-gray-50 transition-colors">
-                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                        <div>
-                          <div className="font-medium text-gray-900">Order {order.id}</div>
-                          <div className="text-sm text-gray-500">Placed on {order.date}</div>
-                        </div>
-                        <div className="flex items-center gap-4">
-                          <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                            order.status === "Delivered" ? "bg-green-100 text-green-800" :
-                            order.status === "Shipped" ? "bg-blue-100 text-blue-800" :
-                            "bg-red-100 text-red-800"
-                          }`}>
-                            {order.status}
-                          </span>
-                          <div className="text-right">
-                            <div className="font-medium">{order.total}</div>
-                            <div className="text-sm text-gray-500">{order.items} items</div>
+                      <div key={order.id} className="p-6 hover:bg-gray-50 transition-colors border-b">
+                        <div className="flex justify-between items-center">
+                          <div>
+                            <div className="font-medium text-gray-900">Order #{order.id}</div>
+                            <div className="text-sm text-gray-500">Placed on {new Date(order.created_at).toLocaleDateString()}</div>
+                          </div>
+                          <div className="flex items-center gap-4">
+                            <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                              order.status === "Delivered" ? "bg-green-100 text-green-800" :
+                              order.status === "Shipped" ? "bg-blue-100 text-blue-800" :
+                              "bg-red-100 text-red-800"
+                            }`}>
+                              {order.status}
+                            </span>
+                            <div className="text-right">
+                              <div className="font-medium">₹{order.total_price}</div>
+                              <div className="text-sm text-gray-500">{order.items.length} items</div>
+                            </div>
                           </div>
                         </div>
+
+                        {/* View Details Toggle */}
+                        <div className="mt-4 flex justify-end">
+                          <button
+                            onClick={() => setExpandedOrderId(expandedOrderId === order.id ? null : order.id)}
+                            className="text-indigo-600 hover:text-indigo-800 text-sm font-medium"
+                          >
+                            {expandedOrderId === order.id ? "Hide Details" : "View Details"}
+                          </button>
+                        </div>
+
+                        {/* Expanded Order Details */}
+                        {expandedOrderId === order.id && (
+                          <div className="mt-4 space-y-4 border-t pt-4">
+                            {order.items.map((item) => (
+                              <div key={item.id} className="flex items-center gap-4">
+                                <Image
+                                  src={item.product_image}
+                                  alt={item.product_name}
+                                  width={60}
+                                  height={60}
+                                  className="rounded object-cover"
+                                />
+                                <div>
+                                  <h4 className="font-semibold">{item.product_name}</h4>
+                                  <p className="text-sm text-gray-600">Qty: {item.quantity}</p>
+                                  <p className="text-sm text-gray-600">Price: ₹{item.price}</p>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
                       </div>
-                      <div className="mt-4 flex justify-end">
-                        <button className="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
-                          View Details
-                        </button>
-                      </div>
-                    </div>
-                  ))}
+                    ))}
+
                 </div>
               </div>
             )}
@@ -174,23 +246,22 @@ const Profile = () => {
                 </div>
                 
                 <div className="grid md:grid-cols-2 gap-6 p-6">
-                  {addresses.map((addr, index) => (
-                    <div key={index} className="border rounded-lg p-6 hover:border-indigo-300 transition-colors relative">
-                      {addr.isDefault && (
+                  {addresses.map((addr) => (
+                    <div key={addr.id} className="border rounded-lg p-6 hover:border-indigo-300 transition-colors relative">
+                      {addr.is_default && (
                         <span className="absolute top-4 right-4 bg-indigo-100 text-indigo-800 text-xs px-2 py-1 rounded">
                           Default
                         </span>
                       )}
-                      <h3 className="font-medium text-lg mb-2">{addr.type}</h3>
-                      <p className="text-gray-600 mb-4">{addr.address}</p>
+                      <h3 className="font-medium text-lg mb-2">{addr.full_name}</h3>
+                      <p className="text-gray-600 mb-4">
+                        {addr.street_address}, {addr.city}, {addr.state}, {addr.postal_code}, {addr.country}
+                      </p>
+                      <p className="text-gray-500 text-sm mb-2">Phone: {addr.phone_number}</p>
                       <div className="flex gap-3">
-                        <button className="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
-                          Edit
-                        </button>
-                        <button className="text-red-600 hover:text-red-800 text-sm font-medium">
-                          Remove
-                        </button>
-                        {!addr.isDefault && (
+                        <button className="text-indigo-600 hover:text-indigo-800 text-sm font-medium">Edit</button>
+                        <button className="text-red-600 hover:text-red-800 text-sm font-medium">Remove</button>
+                        {!addr.is_default && (
                           <button className="text-gray-600 hover:text-gray-800 text-sm font-medium ml-auto">
                             Set as Default
                           </button>
@@ -214,23 +285,25 @@ const Profile = () => {
                     <div key={item.id} className="border rounded-lg overflow-hidden hover:shadow-md transition-shadow">
                       <div className="relative aspect-square bg-gray-100">
                         <Image 
-                          src={item.image} 
-                          alt={item.name}
+                          src={`${process.env.NEXT_PUBLIC_IMAGE_BASE}/${item.product_detail?.image}`}
+                          alt={item.product_detail.name}
                           fill
                           className="object-cover"
                         />
                       </div>
                       <div className="p-4">
-                        <h3 className="font-medium text-gray-900 mb-1">{item.name}</h3>
+                        <h3 className="font-medium text-gray-900 mb-1">{item.product_detail.name}</h3>
+                        <p className="text-sm text-gray-500 mb-1">Size: {item.size} | Color: {item.color}</p>
                         <div className="flex justify-between items-center">
-                          <span className="font-bold">{item.price}</span>
+                          <span className="font-bold">₹{item.product_detail.price}</span>
                           <div className="flex gap-2">
-                            <button className="p-2 text-gray-500 hover:text-indigo-600">
+                            {/* Wishlist or cart icons */}
+                            <button className="p-2 text-red-500 hover:text-red-600" title="Remove">
                               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                 <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
                               </svg>
                             </button>
-                            <button className="p-2 text-gray-500 hover:text-indigo-600">
+                            <button className="p-2 text-gray-500 hover:text-indigo-600" title="Add to cart">
                               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                 <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" />
                               </svg>

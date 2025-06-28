@@ -1,23 +1,13 @@
 import React from "react";
 
-interface AnimatedButtonProps {
-  text: string;
-  color?: string;
-  spanBg?: string;
-  url?: string; // <-- Added URL support
-}
-
-const AnimatedButton: React.FC<AnimatedButtonProps> = ({ text, color,spanBg, url }) => {
+const AnimatedButton = ({ text, color, spanBg, url }) => {
   const baseClasses =
     "w-fit group relative inline-flex items-center gap-3 font-semibold rounded-full px-6 py-3 overflow-hidden transition-colors duration-300";
 
   const content = (
     <>
-      {/* Background expanding from behind SVG */}
-      {/* <span
-        className="absolute w-8 h-8 left-4 top-1/2 -translate-y-1/2 bg-white rounded-full transform scale-0 group-hover:scale-[15] transition-transform duration-700 ease-out z-0"
-      /> */}
-       <span
+      {/* Expanding Background */}
+      <span
         className="absolute w-8 h-8 left-4 top-1/2 -translate-y-1/2 rounded-full transform scale-0 group-hover:scale-[15] transition-transform duration-700 ease-out z-0"
         style={{ backgroundColor: spanBg }}
       />
@@ -25,7 +15,7 @@ const AnimatedButton: React.FC<AnimatedButtonProps> = ({ text, color,spanBg, url
       {/* Icon */}
       <span
         className="relative flex items-center justify-center w-6 h-6 rounded-full overflow-hidden z-10"
-        style={{ color: color , backgroundColor: spanBg }}
+        style={{ color: color, backgroundColor: spanBg }}
       >
         <svg
           viewBox="0 0 14 15"
@@ -41,19 +31,15 @@ const AnimatedButton: React.FC<AnimatedButtonProps> = ({ text, color,spanBg, url
       </span>
 
       {/* Text */}
-      {/* <span className="poppins-font font-semibold text-sm relative z-10 transition-colors duration-300 group-hover:text-black text-white">
-        {text}
-      </span> */}
-
-      {spanBg == "#ffffff" ? (
+      {spanBg === "#ffffff" ? (
         <span className="poppins-font font-semibold text-sm relative z-10 transition-colors duration-300 group-hover:text-red-500 text-white">
-        {text}
-      </span>
+          {text}
+        </span>
       ) : (
         <span className="poppins-font font-semibold text-sm relative z-10 transition-colors duration-300 group-hover:text-white text-red-500">
-        {text}
-      </span>
-    )}
+          {text}
+        </span>
+      )}
     </>
   );
 

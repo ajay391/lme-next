@@ -1,13 +1,12 @@
 'use client';
 
 import { useState, useEffect } from "react";
-import ProductCard from "@/components/ProductCard";
-import { Product } from "@/data/products";
-import axiosInstance from "@/utils/axiosInstance";
+import ProductCard from "../components/ProductCard";
+import axiosInstance from "../utils/axiosInstance";
 
 const ShopPage = () => {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [products, setProducts] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isMounted, setIsMounted] = useState(false);
 
@@ -33,9 +32,17 @@ const ShopPage = () => {
 
   if (!isMounted) return null;
 
-  const categories = Array.from(new Set(products.map((p) => p.category)));
+  // Extract unique category names from product.category?.name
+  const categories = Array.from(
+    new Set(
+      products
+        .map((p) => p.category?.name)
+        .filter((name) => name) // remove undefined/null
+    )
+  );
+
   const filteredProducts = selectedCategory
-    ? products.filter((p) => p.category === selectedCategory)
+    ? products.filter((p) => p.category?.name === selectedCategory)
     : products;
 
   return (
@@ -65,7 +72,7 @@ const ShopPage = () => {
       ) : filteredProducts.length === 0 ? (
         <p>No products found.</p>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-col-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {filteredProducts.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}

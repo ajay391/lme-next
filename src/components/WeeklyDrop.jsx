@@ -2,7 +2,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import ProductShowcase from './ProductShowcase';
-import AnimatedButton from "@/components/AnimatedButton";
+import AnimatedButton from "../components/AnimatedButton";
 
 const WeeklyDrop = () => {
   return (

@@ -1,20 +1,7 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-
-interface CartItem {
-  id: number;
-  name: string;
-  price: number;
-  quantity: number;
-  image: string;
-  size: string; // Make sure size is part of the CartItem
-}
-
-interface CartState {
-  items: CartItem[];
-}
+import { createSlice } from '@reduxjs/toolkit';
 
 // Helper to safely load cart from localStorage (only in browser)
-const loadCartFromLocalStorage = (): CartItem[] => {
+const loadCartFromLocalStorage = () => {
   if (typeof window !== 'undefined') {
     const storedCart = localStorage.getItem('cart');
     return storedCart ? JSON.parse(storedCart) : [];
@@ -23,13 +10,13 @@ const loadCartFromLocalStorage = (): CartItem[] => {
 };
 
 // Helper to save cart to localStorage
-const saveCartToLocalStorage = (items: CartItem[]) => {
+const saveCartToLocalStorage = (items) => {
   if (typeof window !== 'undefined') {
     localStorage.setItem('cart', JSON.stringify(items));
   }
 };
 
-const initialState: CartState = {
+const initialState = {
   items: loadCartFromLocalStorage(),
 };
 
@@ -37,12 +24,15 @@ const cartSlice = createSlice({
   name: 'cart',
   initialState,
   reducers: {
-    addToCart(state, action: PayloadAction<CartItem>) {
+    addToCart(state, action) {
       const newItem = action.payload;
 
-      // Check if item with same id and size already exists
+      // Check if item with same id, size, and color already exists
       const existingItem = state.items.find(
-        item => item.id === newItem.id && item.size === newItem.size
+        item =>
+          item.id === newItem.id &&
+          item.size === newItem.size &&
+          item.color === newItem.color
       );
 
       if (existingItem) {
@@ -54,13 +44,16 @@ const cartSlice = createSlice({
       saveCartToLocalStorage(state.items);
     },
 
-    removeFromCart(
-      state,
-      action: PayloadAction<{ id: number; size: string }>
-    ) {
+    removeFromCart(state, action) {
+      const { id, size, color } = action.payload;
+
       state.items = state.items.filter(
-        item => item.id !== action.payload.id || item.size !== action.payload.size
+        item =>
+          item.id !== id ||
+          item.size !== size ||
+          item.color !== color
       );
+
       saveCartToLocalStorage(state.items);
     },
 

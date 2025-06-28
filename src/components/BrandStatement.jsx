@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import AnimatedButton from "@/components/AnimatedButton";
+import AnimatedButton from "./AnimatedButton";
 
 export const BrandStatement = () => (
   <section className=" text-black py-16 px-6 sm:px-10 lg:px-24">
