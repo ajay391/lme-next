@@ -7,17 +7,17 @@ const ProductCard = ({ product }) => {
         <img
           src={product.image}
           alt={product.name}
-          className="w-full h-[450px] object-cover rounded-3xl"
+          className="w-full h-[380px] object-cover "
         />
         <div className="p-0">
           {/* "New" tag only if isNew is true */}
           {product.isNew && (
-            <span className="absolute top-3 left-4 bg-red-500 text-white text-sm px-3 py-1 rounded-full">
+            <span className="absolute top-3 left-4 bg-red-500 text-white text-sm px-3 py-0 rounded-sm">
               New
             </span>
           )}
-          <h3 className="mt-5 text-3xl font-bold">{product.name}</h3>
-          <p className="text-base text-gray-500 mt-1">{product.category}</p>
+          <h3 className="mt-5 text-xl font-bold">{product.name}</h3>
+          <p className="text-sm text-gray-500 mt-1">{product.category}</p>
           <div className="flex items-center gap-3 mt-1">
             {product.oldPrice && (
               <p className="text-gray-400 line-through text-lg">₹{product.oldPrice}</p>

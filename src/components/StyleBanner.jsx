@@ -6,7 +6,7 @@ import AnimatedButton from "../components/AnimatedButton";
 
 export const StyleBanner = () => {
   return (
-      <div className="py-5 md:py-16 px-8 sm:px-8 md:px-12 lg:px-12 xl:px-32">
+      <div className="py-5 md:py-16 px-8 sm:px-8 md:px-14 lg:px-14 xl:px-14">
 
         <div className="max-w-3xl text-start pb-16">
           <h1 className="text-5xl sm:text-5xl md:text-5xl font-bold mb-4 uppercase">
@@ -27,11 +27,11 @@ export const StyleBanner = () => {
               alt="Featured Image"
               width={600} // Adjust width as needed
               height={300} // Adjust height as needed
-              className="w-full h-full object-cover rounded-3xl max-h-[500px]"
+              className="w-full h-full object-cover rounded-md max-h-[500px]"
             />
           </div>
           <div className="w-4/12">
-            <div className="bg-black text-white rounded-3xl w-full p-7 flex flex-col justify-end h-[500px]">
+            <div className="bg-black text-white rounded-md w-full p-7 flex flex-col justify-end h-[500px]">
               <h5 className="text-3xl font-extrabold uppercase mb-4">
                 Built by the Streets, Made for You
               </h5>
@@ -42,7 +42,7 @@ export const StyleBanner = () => {
               <AnimatedButton text="Explore More" color = "#ffffff" spanBg="#ef4444" url="/shop" />
               {/* <a
                 href="#"
-                className="border border-white px-4 py-2 rounded-xl text-sm font-medium text-white hover:bg-white hover:text-black transition duration-300"
+                className="border border-white px-4 py-2 rounded-md text-sm font-medium text-white hover:bg-white hover:text-black transition duration-300"
               >
                 Read our story
               </a> */}
@@ -53,7 +53,7 @@ export const StyleBanner = () => {
         {/* Second row - box (col-4) + image (col-8) */}
         <div className="flex flex-wrap">
           <div className="w-4/12 pr-4">
-            <div className="bg-gray-200 text-black rounded-3xl w-full p-7 flex flex-col justify-end h-[500px]">
+            <div className="bg-gray-200 text-black rounded-md w-full p-7 flex flex-col justify-end h-[500px]">
               <h1 className="text-3xl font-extrabold uppercase mb-4">
               Elevate Your Street Game
               </h1>
@@ -63,7 +63,7 @@ export const StyleBanner = () => {
               <AnimatedButton text="Shop Collection" color="#ef4444" spanBg="#ffffff" url="/shop" />
               {/* <a
                 href="#"
-                className="border border-black px-4 py-2 rounded-xl text-sm font-medium text-black hover:border-red-800 hover:bg-red-500 hover:text-white transition duration-300"
+                className="border border-black px-4 py-2 rounded-md text-sm font-medium text-black hover:border-red-800 hover:bg-red-500 hover:text-white transition duration-300"
               >
                 Read our story
               </a> */}
@@ -75,7 +75,7 @@ export const StyleBanner = () => {
               alt="Featured Image"
               width={600} // Adjust width as needed
               height={300} // Adjust height as needed
-              className="w-full h-full object-cover rounded-3xl max-h-[500px]"
+              className="w-full h-full object-cover rounded-md max-h-[500px]"
             />
           </div>
         </div>
@@ -90,14 +90,14 @@ export const StyleBanner = () => {
             alt="Featured Image"
             width={600} // Adjust width as needed
             height={300} // Adjust height as needed
-            className="w-full h-full object-cover rounded-xl max-h-[500px]"
+            className="w-full h-full object-cover rounded-md max-h-[500px]"
           />
         </div>
         
         {/* Second row - two boxes */}
         <div className="flex flex-wrap mb-8">
           <div className="w-6/12 pr-2">
-            <div className="bg-black text-white rounded-3xl w-full p-7 flex flex-col justify-end h-[500px]">
+            <div className="bg-black text-white rounded-md w-full p-7 flex flex-col justify-end h-[500px]">
               <h5 className="text-3xl font-extrabold uppercase mb-4">
                 Built by the Streets, Made for You
               </h5>
@@ -109,7 +109,7 @@ export const StyleBanner = () => {
             </div>
           </div>
           <div className="w-6/12 pl-2">
-            <div className="bg-gray-200 text-black rounded-3xl w-full p-7 flex flex-col justify-end h-[500px]">
+            <div className="bg-gray-200 text-black rounded-md w-full p-7 flex flex-col justify-end h-[500px]">
               <h1 className="text-3xl font-extrabold uppercase mb-4">
               Elevate Your Street Game
               </h1>
@@ -128,7 +128,7 @@ export const StyleBanner = () => {
             alt="Featured Image"
             width={600} // Adjust width as needed
             height={300} // Adjust height as needed
-            className="w-full h-full object-cover rounded-xl max-h-[500px]"
+            className="w-full h-full object-cover rounded-md max-h-[500px]"
           />
         </div>
       </div>
@@ -142,13 +142,13 @@ export const StyleBanner = () => {
             alt="Featured Image"
             width={600} // Adjust width as needed
             height={300} // Adjust height as needed
-            className="w-full h-full object-cover rounded-xl min-h-[300px] max-h-[500px]"
+            className="w-full h-full object-cover rounded-md min-h-[300px] max-h-[500px]"
           />
         </div>
         
         {/* First box */}
         <div className="mb-4">
-          <div className="bg-black text-white rounded-3xl w-full p-7 flex flex-col justify-end min-h-[380px] max-h-[500px]">
+          <div className="bg-black text-white rounded-md w-full p-7 flex flex-col justify-end min-h-[380px] max-h-[500px]">
             <h5 className="text-3xl font-extrabold uppercase mb-4">
               Built by the Streets, Made for You
             </h5>
@@ -162,7 +162,7 @@ export const StyleBanner = () => {
         
         {/* Second box */}
         <div className="mb-4">
-          <div className="bg-gray-200 text-black rounded-3xl w-full p-7 flex flex-col justify-end min-h-[380px] max-h-[500px]">
+          <div className="bg-gray-200 text-black rounded-md w-full p-7 flex flex-col justify-end min-h-[380px] max-h-[500px]">
             <h1 className="text-3xl font-extrabold uppercase mb-4">
               Elevate Your Street Game
               </h1>
@@ -180,7 +180,7 @@ export const StyleBanner = () => {
             alt="Featured Image"
             width={600} // Adjust width as needed
             height={300} // Adjust height as needed
-            className="w-full h-full object-cover rounded-xl min-h-[300px] max-h-[500px] "
+            className="w-full h-full object-cover rounded-md min-h-[300px] max-h-[500px] "
           />
         </div>
       </div>

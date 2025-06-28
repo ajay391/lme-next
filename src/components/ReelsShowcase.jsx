@@ -20,7 +20,7 @@ const Carousel = () => {
 
   const settings = {
     infinite: true,
-    slidesToShow: 3,
+    slidesToShow: 5,
     slidesToScroll: 1,
     arrows: false,
     dots: false,
@@ -73,12 +73,32 @@ const Carousel = () => {
       title: "Electric Future",
       description: "Eco-friendly innovation with futuristic design and tech.",
     },
+    {
+      image: carOne,
+      title: "Sporty Coupe",
+      description: "Sleek design, high performance — built for speed lovers.",
+    },
+    {
+      image: carTwo,
+      title: "Luxury Sedan",
+      description: "Comfort meets class with top-notch features and elegance.",
+    },
+    {
+      image: carThree,
+      title: "Urban SUV",
+      description: "Spacious and powerful — perfect for families and city drives.",
+    },
+    {
+      image: carFour,
+      title: "Electric Future",
+      description: "Eco-friendly innovation with futuristic design and tech.",
+    },
   ];
 
   return (
     <div className="carousel-container px-4">
       {/* Section Heading */}
-      <section className="py-16 px-4 sm:px-8 md:px-12 lg:px-20 xl:px-28">
+      <section className="py-16 px-4 sm:px-8 md:px-14 lg:px-14 xl:px-14">
         <div className="max-w-3xl text-start">
           <h1 className="text-5xl sm:text-4xl md:text-5xl font-bold mb-4 uppercase">
             Featured Drops: <span className="text-primary">Stand Out, Stay Ahead</span>
@@ -99,7 +119,7 @@ const Carousel = () => {
                 alt={car.title}
                 width={500}
                 height={500}
-                className="w-full h-[400px] md:h-[500px] lg:h-[600px] object-cover"
+                className="w-full h-[400px] md:h-[400px] lg:h-[400px] object-cover"
               />
 
               {/* Overlay Content */}

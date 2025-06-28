@@ -41,3 +41,65 @@ p {
 .carousel-controls button:hover {
   background-color: #555;
 }
+
+/*  */
+
+.hero-swiper .swiper-button-next,
+.hero-swiper .swiper-button-prev {
+  color: white;
+  /* background-color: rgba(0, 0, 0, 0.5); */
+  padding: 12px;
+  border-radius: 9999px;
+  transition: all 0.3s ease;
+  width:40px;
+  height:40px;}
+
+.hero-swiper .swiper-button-next:hover,
+.hero-swiper .swiper-button-prev:hover {
+  /* background-color: #ef4444; */
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.hero-swiper .swiper-button-next::after,
+.hero-swiper .swiper-button-prev::after {
+  font-size: 16px;
+  font-weight: bold;
+}
+.hero-swiper .swiper-pagination-bullet{
+  width: 10px;
+  height: 10px;
+  background-color: #ffffff;
+  opacity: 0.5;
+  margin: 0 6px;
+  transition: all 0.3s ease;
+}
+
+/* Style the active bullet */
+.hero-swiper .swiper-pagination-bullet-active {
+  background-color: #ef4444; /* Tailwind red-500 */
+  opacity: 1;
+  transform: scale(1.2);
+}
+
+.newproducts-swiper .swiper-button-next,
+.newproducts-swiper .swiper-button-prev {
+color: white;
+  background-color: rgba(0, 0, 0, 0.5);
+  /* padding: 12px; */
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  width:40px;
+  height:40px;
+}
+
+.newproducts-swiper .swiper-button-next:hover,
+.newproducts-swiper .swiper-button-prev:hover {
+  background-color: #ef4444;
+  color: white;
+}
+
+.newproducts-swiper .swiper-button-next::after,
+.newproducts-swiper .swiper-button-prev::after {
+  font-size: 16px;
+  font-weight: bold;
+}

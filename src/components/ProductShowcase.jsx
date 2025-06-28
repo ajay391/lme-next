@@ -17,7 +17,7 @@ export default function ProductShowcase() {
     <div className="w-full px-4 py-8">
       {/* Main Image */}
       <div className="w-full">
-        <div className="relative w-full aspect-square min-h-[300px] sm:min-h-[400px] md:min-h-0 rounded-2xl overflow-hidden shadow-md">
+        <div className="relative w-full aspect-square min-h-[300px] sm:min-h-[400px] md:min-h-0 rounded-md overflow-hidden shadow-md">
           <Image
             src={activeImage}
             alt="Featured Product"
@@ -35,7 +35,7 @@ export default function ProductShowcase() {
             <button
               key={idx}
               onClick={() => setActiveImage(img)}
-              className={`relative aspect-square min-w-[72px] sm:min-w-0 w-20 sm:w-full border-2 rounded-3xl overflow-hidden transition ${
+              className={`relative aspect-square min-w-[72px] sm:min-w-0 w-20 sm:w-full border-2 rounded-md overflow-hidden transition ${
                 activeImage === img ? 'border-red-500' : 'border-transparent'
               }`}
             >

@@ -29,8 +29,8 @@ export default function Home() {
       <NewProducts />
       <StyleBanner />
       <BrandStatement />
-      <Carousel />
       <WeeklyDrop/>
+      <Carousel />
       {/* <Testimonials /> */}
       <WhyUs />
       <Newsletter/>
