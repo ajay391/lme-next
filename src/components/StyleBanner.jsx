@@ -1,7 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
-import styleOne from "../../public/images/home/style-1.jpg"; // Update the path to your images
-import styleTwo from "../../public/images/home/style-2.jpg"; // Update the path to your images
+import styleOne from "../../public/images/home/style-1.png"; // Update the path to your images
+import styleTwo from "../../public/images/home/style-2.png"; // Update the path to your images
 import AnimatedButton from "../components/AnimatedButton";
 import CircleButton from './CircleButton';
 

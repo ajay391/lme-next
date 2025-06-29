@@ -71,9 +71,9 @@ const Navbar = () => {
         <div className="container mx-auto flex justify-between items-center">
           {/* Left Icons */}
           <div className="flex space-x-4 items-center">
-            <Link href="#" className="hover:text-red-500"> <Instagram className="w-5 h-5 hover:text-white transition" /></Link>
-            <Link href="#" className="hover:text-red-500"> <Twitter className="w-5 h-5 hover:text-white transition" /></Link>
-            <Link href="#" className="hover:text-red-500"><Facebook className="w-5 h-5 hover:text-white transition" /></Link>
+            <a href="https://www.instagram.com/lastmanonearth.in?igsh=eXBrcWN6YjBvZWpv" target="_blank" className="hover:text-red-500"> <Instagram className="w-5 h-5 hover:text-white transition" /></a>
+            <a href="#" className="hover:text-red-500"> <Twitter className="w-5 h-5 hover:text-white transition" /></a>
+            <a href="#" className="hover:text-red-500"><Facebook className="w-5 h-5 hover:text-white transition" /></a>
           </div>
 
           {/* Right Links */}
@@ -89,7 +89,8 @@ const Navbar = () => {
           {/* Left: Logo */}
           <div className="text-gray-800 font-bold text-lg z-10">
             <Link href="/">
-              <Image src="/images/logo.png" alt="Logo" width={40} height={40} className="object-contain" />
+              <Image src="/images/logo.png" alt="Logo" width={45} height={45} className="object-contain" />
+              {/* <h3 className="text-red-500">LAST MAN ON EARTH</h3> */}
             </Link>
           </div>
 

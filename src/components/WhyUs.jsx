@@ -23,26 +23,35 @@ const features = [
     description: 'Shop with confidence using encrypted, safe, and trusted payment methods.',
   },
 ];
-
 export const WhyUs = () => (
-  <section className="bg-white py-16 px-3 sm:px-10 lg:px-24">
-    <div className=" grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
+  <section className="bg-white py-16 px-3 sm:px-2 md:px-14 lg:px-14 xl:px-14">
+    <div className="grid grid-cols-1 md:grid-cols-12 gap-12 items-start">
     
-      {/* Left Column */}
-      <div className='max-w-lg'>
-        <h2 className="text-5xl font-bold mb-4 uppercase">Why shop with us?</h2>
-        <p className="text-gray-700 text-lg">
+      {/* Left Column - 4/12 */}
+      <div className="md:col-span-4 max-w-lg">
+        <h2 className="text-4xl lg:text-5xl font-bold mb-4  uppercase">Why <span className='text-red-500'>LME?</span></h2>
+        <p className="text-gray-700 text-base">
           We blend quality, culture, and creativity to deliver products that feel as good as they look.
         </p>
       </div>
 
-      {/* Right Column */}
-      <div className="grid grid-cols-2 gap-6">
+      {/* Right Column - 8/12 */}
+      <div className="md:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
         {features.map((item, index) => (
-          <div key={index} className="text-start">
-            <div className="flex justify-start mb-5">{item.icon}</div>
-            <h3 className="font-semibold text-xl mb-3 uppercase">{item.title}</h3>
-            <p className="text-sm text-gray-600 mb-8">{item.description}</p>
+          <div key={index} className="text-start bg-black py-12 px-10 rounded-md relative">
+            {/* Icon styling */}
+            <div className="absolute top-2 right-2 opacity-20 z-0">
+              {React.cloneElement(item.icon, {
+                className: "w-20 h-20 text-white",
+              })}
+            </div>
+
+            {/* Foreground content */}
+            <div className="relative z-10">
+              {/* <div className="mb-5">{item.icon}</div> */}
+              <h3 className="font-semibold text-xl mb-5 uppercase text-white">{item.title}</h3>
+              <p className="text-sm text-white mb-0">{item.description}</p>
+            </div>
           </div>
         ))}
       </div>

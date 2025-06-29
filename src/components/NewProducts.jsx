@@ -162,9 +162,9 @@ export const NewProducts = () => {
                   <p className="text-sm text-gray-500 mt-1">{product.category}</p>
                   <div className="flex items-center gap-3 mt-1">
                     {product.oldPrice && (
-                      <p className="text-gray-400 line-through text-lg">₹{product.oldPrice}</p>
+                      <h4 className="text-gray-400 line-through text-base">₹{product.oldPrice}</h4>
                     )}
-                    <p className="text-black text-lg font-semibold">₹{product.price}</p>
+                    <h4 className="text-red-500 text-base font-medium">₹{product.price}</h4>
                   </div>
                 </div>
               </div>

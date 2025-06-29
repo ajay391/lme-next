@@ -5,30 +5,49 @@ import ProductCard from "../components/ProductCard";
 import axiosInstance from "../utils/axiosInstance";
 
 const ShopPage = () => {
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState([
+    {
+    id: "grid-ghost-01",
+    name: "Grid Ghost Tee",
+    category: "F1 Streetwear",
+    image: "/images/products/p1.png",
+    isNew: true,
+    oldPrice: 1899,
+    price: 1499,
+  },
+  {
+    id: "final-lap-02",
+    name: "Final Lap Oversized",
+    category: "Oversized T-shirt",
+    image: "/images/products/p2.png",
+    isNew: false,
+    oldPrice: 1599,
+    price: 1299,
+  },
+  ]);
   const [selectedCategory, setSelectedCategory] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      setLoading(true);
-      try {
-        const response = await axiosInstance.get('/products/');
-        setProducts(response.data);
-      } catch (error) {
-        console.error("Error fetching products:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchProducts = async () => {
+  //     setLoading(true);
+  //     try {
+  //       const response = await axiosInstance.get('/products/');
+  //       setProducts(response.data);
+  //     } catch (error) {
+  //       console.error("Error fetching products:", error);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
 
-    fetchProducts();
-  }, []);
+  //   fetchProducts();
+  // }, []);
 
   if (!isMounted) return null;
 

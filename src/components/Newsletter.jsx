@@ -3,13 +3,13 @@ import React from 'react';
 
 export const Newsletter = () => {
   return (
-    <section className="bg-gray-200 py-24 px-3 sm:px-10 lg:px-24">
+    <section className="bg-red-500 py-24 px-3 sm:px-10 lg:px-24">
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
         
         {/* Left Column */}
         <div>
-          <h2 className="text-6xl font-bold mb-4">Subscribe to Our Newsletter</h2>
-          <p className="text-gray-700 text-lg opacity-60">
+          <h2 className="text-5xl text-white font-bold mb-4 uppercase">Subscribe to Our Newsletter</h2>
+          <p className="text-white text-lg opacity-60">
             Stay updated with our latest drops, exclusive offers, and style tips — directly to your inbox.
           </p>
         </div>
@@ -23,7 +23,7 @@ export const Newsletter = () => {
           />
           <button
             type="submit"
-            className="px-6 py-3 bg-red-500 text-white rounded-md hover:bg-red-600 transition font-medium"
+            className="px-6 py-3 bg-black text-white rounded-md hover:bg-white hover:text-black transition font-medium"
           >
             Subscribe
           </button>
