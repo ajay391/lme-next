@@ -96,9 +96,9 @@ const Carousel = () => {
   ];
 
   return (
-    <div className="carousel-container px-4">
+    <div className="carousel-container">
       {/* Section Heading */}
-      <section className="py-16 px-4 sm:px-8 md:px-14 lg:px-14 xl:px-14">
+      <section className="py-16 px-3 sm:px-2 md:px-14 lg:px-14 xl:px-14">
         <div className="max-w-3xl text-start">
           <h1 className="text-5xl sm:text-4xl md:text-5xl font-bold mb-4 uppercase">
             Featured Drops: <span className="text-primary">Stand Out, Stay Ahead</span>

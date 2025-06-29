@@ -3,7 +3,7 @@ import Link from 'next/link';
 import AnimatedButton from "./AnimatedButton";
 
 export const BrandStatement = () => (
-  <section className=" text-black py-16 px-6 sm:px-10 lg:px-24">
+  <section className=" text-black py-16 px-3 sm:px-10 lg:px-24">
     <div className="flex flex-col lg:flex-row items-center justify-between max-w-7xl mx-auto">
       
       {/* Left Column: Big Impact Heading */}

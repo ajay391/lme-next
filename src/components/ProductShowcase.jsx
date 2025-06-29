@@ -3,10 +3,10 @@
 import { useState } from 'react';
 import Image from 'next/image';
 
-import car1 from "../../public/images/products/category-1.jpg";
-import car2 from "../../public/images/products/category-3.jpg";
-import car3 from "../../public/images/products/category-4.jpg";
-import car4 from "../../public/images/products/category-5.jpg";
+import car1 from "../../public/images/home/new-1.png";
+import car2 from "../../public/images/home/new-5.png";
+import car3 from "../../public/images/home/new-6.png";
+import car4 from "../../public/images/home/new-4.png";
 
 const productImages = [car1, car2, car3, car4];
 
@@ -14,7 +14,7 @@ export default function ProductShowcase() {
   const [activeImage, setActiveImage] = useState(productImages[0]);
 
   return (
-    <div className="w-full px-4 py-8">
+    <div className="w-full px-2 py-8">
       {/* Main Image */}
       <div className="w-full">
         <div className="relative w-full aspect-square min-h-[300px] sm:min-h-[400px] md:min-h-0 rounded-md overflow-hidden shadow-md">

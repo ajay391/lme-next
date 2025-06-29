@@ -35,7 +35,7 @@ export default function HomeHero() {
       <Swiper
         spaceBetween={30}
         loop={true}
-        autoplay={{ delay: 4000, disableOnInteraction: false }}
+        autoplay={{ delay: 444000, disableOnInteraction: false }}
         pagination={{ clickable: true }}
         navigation={true}
         modules={[Autoplay, Pagination, Navigation]}
@@ -44,19 +44,20 @@ export default function HomeHero() {
         {slides.map((slide) => (
           <SwiperSlide key={slide.id}>
             <div
-              className="flex items-end justify-start bg-cover bg-center py-24 px-14 lg:px-24 min-h-[80vh] text-white"
+              className="flex items-center justify-center bg-cover bg-center py-24 px-14 lg:px-24 min-h-[80vh] text-white"
               style={{ backgroundImage: `url(${slide.image})` }}
             >
               <div className="max-w-7xl w-full text-start">
-                <h1 className="text-5xl sm:text-7xl font-extrabold mb-6 leading-tight">
+                <h1 className="text-4xl sm:text-7xl font-extrabold mb-6 leading-tight">
                   {slide.heading}
                 </h1>
-                <p className="text-base sm:text-base mb-8 max-w-xl text-white opacity-60">
+                <p className="text-base w-full sm:text-base mb-8 max-w-xl text-white opacity-60">
                   {slide.description}
                 </p>
                 <AnimatedButton
                   text="Shop Now"
-                  color="#ef4444"
+                  color="#fff"
+                  textColor = "#000"
                   spanBg="#ffffff"
                   url="/shop"
                 />

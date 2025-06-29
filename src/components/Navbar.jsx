@@ -67,7 +67,7 @@ const Navbar = () => {
   return (
     <>
 
-      <div className="bg-black text-sm text-gray-400 px-4 py-2 border-b">
+      <div className="bg-black text-sm text-gray-400 px-3 sm:px-14 md:px-14 lg:px-14 xl:px-14 py-2 border-b">
         <div className="container mx-auto flex justify-between items-center">
           {/* Left Icons */}
           <div className="flex space-x-4 items-center">
@@ -84,7 +84,7 @@ const Navbar = () => {
           </div>
         </div>
       </div>
-      <nav className="bg-white p-3 py-4 border-b shadow-none sticky top-0 z-50">
+      <nav className="bg-white px-3 sm:px-14 md:px-14 lg:px-14 xl:px-14 py-4 border-b shadow-none sticky top-0 z-50">
         <div className="container mx-auto flex items-center justify-between relative">
           {/* Left: Logo */}
           <div className="text-gray-800 font-bold text-lg z-10">

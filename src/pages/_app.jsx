@@ -19,7 +19,7 @@ function App({ Component, pageProps }) {
         href="https://wa.me/918594069080" // Replace with your WhatsApp number
         target="_blank"
         rel="noopener noreferrer"
-        className="fixed bottom-6 right-6 z-50 bg-green-500 hover:bg-green-600 text-white p-2 rounded-full shadow-lg transition duration-300 ease-in-out flex items-center justify-center"
+        className="fixed bottom-6 left-6 z-50 bg-green-500 hover:bg-green-600 text-white p-2 rounded-full shadow-lg transition duration-300 ease-in-out flex items-center justify-center"
       >
         <FaWhatsapp size={26} />
       </a>

@@ -3,7 +3,7 @@ import React from 'react';
 
 export const Newsletter = () => {
   return (
-    <section className="bg-gray-200 py-24 px-6 sm:px-10 lg:px-24">
+    <section className="bg-gray-200 py-24 px-3 sm:px-10 lg:px-24">
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
         
         {/* Left Column */}

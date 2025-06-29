@@ -5,6 +5,7 @@ import { Navigation, Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+import Link from "next/link";
 
 import ProductCard from "./ProductCard";
 
@@ -113,7 +114,7 @@ const featuredProducts = [
 
 export const NewProducts = () => {
   return (
-    <section className="py-16 px-8 sm:px-14 md:px-14 lg:px-14 xl:px-14">
+    <section className="py-16 px-3 sm:px-14 md:px-14 lg:px-14 xl:px-14">
       <h2 className="text-5xl font-bold mb-4 text-start">New Drops</h2>
       <p className="text-base text-black opacity-60 mb-12 text-start max-w-2xl">
         Discover our latest collection—unique styles, premium fabrics, and perfect fits. Limited stock, once they're gone, they're gone!
@@ -129,7 +130,7 @@ export const NewProducts = () => {
         modules={[Navigation, Pagination, Autoplay]}
         breakpoints={{
           0: {
-            slidesPerView: 1,
+            slidesPerView: 2,
           },
           640: {
             slidesPerView: 2,
@@ -144,7 +145,30 @@ export const NewProducts = () => {
       >
         {featuredProducts.map((product, index) => (
           <SwiperSlide key={index}>
-            <ProductCard product={product} />
+            <Link href={`/product/${product.id}`}>
+              <div className="relative p-0 transition-all cursor-pointer">
+                <img
+                  src={product.image}
+                  alt={product.name}
+                  className="w-full h-[260px] sm:h-[340px] md:h-[360px] lg:h-[380px] xl:h-[420px] object-cover"
+                />
+                <div className="p-0">
+                  {product.isNew && (
+                    <span className="absolute top-3 left-4 bg-red-500 text-white text-sm px-3 py-0 rounded-sm">
+                      New
+                    </span>
+                  )}
+                  <h3 className="mt-5 text-xl font-bold">{product.name}</h3>
+                  <p className="text-sm text-gray-500 mt-1">{product.category}</p>
+                  <div className="flex items-center gap-3 mt-1">
+                    {product.oldPrice && (
+                      <p className="text-gray-400 line-through text-lg">₹{product.oldPrice}</p>
+                    )}
+                    <p className="text-black text-lg font-semibold">₹{product.price}</p>
+                  </div>
+                </div>
+              </div>
+            </Link>
           </SwiperSlide>
         ))}
       </Swiper>
