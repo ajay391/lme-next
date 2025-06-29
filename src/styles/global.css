@@ -3,6 +3,49 @@
 /* global.css */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
+@font-face {
+  font-family: 'Futura';
+  src: url('/fonts/futura/Futura-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Futura';
+  src: url('/fonts/futura/Futura-Book.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+
+@font-face {
+  font-family: 'Futura';
+  src: url('../../public/fonts/futura/Futura-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Futura';
+  src: url('/fonts/futura/Futura-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Futura';
+  src: url('/fonts/futura/Futura-ExtraBold.ttf') format('truetype');
+  font-weight: 800;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Futura';
+  src: url('/fonts/futura/Futura-Heavy.ttf') format('truetype');
+  font-weight: 900;
+  font-style: normal;
+}
+
 
 @tailwind base;
 @tailwind components;
@@ -10,7 +53,8 @@
 
 
 * {
-  font-family: "Big Shoulders Text", sans-serif;
+  /* font-family: "Big Shoulders Text", sans-serif; */
+  font-family: 'Futura';
   font-optical-sizing: auto;
 }
 
@@ -76,7 +120,7 @@ p {
 
 /* Style the active bullet */
 .hero-swiper .swiper-pagination-bullet-active {
-  background-color: #ef4444; /* Tailwind red-500 */
+  background-color: #fff; /* Tailwind red-500 */
   opacity: 1;
   transform: scale(1.2);
 }
@@ -107,4 +151,16 @@ p {
 .newproducts-swiper .swiper-button-next,
 .newproducts-swiper .swiper-button-prev {
   @apply hidden sm:flex;
+}
+
+@layer utilities {
+  @keyframes text-spin {
+    to {
+      rotate: 360deg;
+    }
+  }
+
+  .animate-text-spin {
+    animation: text-spin 8s linear infinite;
+  }
 }

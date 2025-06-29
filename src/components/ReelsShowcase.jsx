@@ -100,7 +100,7 @@ const Carousel = () => {
       {/* Section Heading */}
       <section className="py-16 px-3 sm:px-2 md:px-14 lg:px-14 xl:px-14">
         <div className="max-w-3xl text-start">
-          <h1 className="text-5xl sm:text-4xl md:text-5xl font-bold mb-4 uppercase">
+          <h1 className="text-4xl sm:text-4xl md:text-5xl font-bold mb-4 uppercase">
             Featured Drops: <span className="text-primary">Stand Out, Stay Ahead</span>
           </h1>
           <p className="text-base sm:text-base text-gray-600">
@@ -126,9 +126,9 @@ const Carousel = () => {
               <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-black/60 to-transparent text-white p-4 flex flex-col justify-end">
                 <h2 className="text-2xl font-semibold mb-2 px-2">{car.title}</h2>
                 <p className="text-sm mb-4 px-2">{car.description}</p>
-                <button className="w-fit px-4 py-2 bg-white text-black font-medium rounded-3xl hover:bg-red-500 hover:text-white transition flex items-center gap-2">
+                <button className="w-fit px-2 py-2 bg-transparent text-white font-medium rounded-sm  hover:text-red-500 transition flex items-center gap-2">
                   <FaInstagram className="text-xl" />
-                  <span>Explore Our Instagram</span>
+                  {/* <span>Explore Our Instagram</span> */}
                 </button>
               </div>
             </div>

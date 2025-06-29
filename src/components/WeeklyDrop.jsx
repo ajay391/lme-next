@@ -9,11 +9,11 @@ const WeeklyDrop = () => {
     <section className="flex flex-col md:flex-row items-center justify-between py-5 md:py-16 px-3 sm:px-8 md:px-12 lg:px-12 xl:px-32 gap-12 bg-black">
       {/* Left Column */}
       <div className="md:w-1/2">
-        <h2 className="text-7xl sm:text-7xl md:text-7xl lg:text-7xl xl:text-8xl font-bold uppercase mb-4 text-white">
+        <h2 className="text-5xl mt-10 sm:mt-0 sm:text-7xl md:text-7xl lg:text-7xl xl:text-8xl font-bold uppercase mb-4 text-white">
           Nightfall Oversized Hoodie
         </h2>
 
-        <p className="text-white text-xl mb-6 opacity-60">
+        <p className="text-white text-base mb-6 opacity-60">
           Introducing the limited-edition "StreetFade Tee" – crafted for everyday rebellion and effortless style. Available only this week.
         </p>
         <AnimatedButton text="Check It Out" color = "#ffffff" textColor = "#000" url="/shop" />

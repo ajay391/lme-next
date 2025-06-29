@@ -8,7 +8,7 @@ export const BrandStatement = () => (
       
       {/* Left Column: Big Impact Heading */}
       <div className="w-full lg:w-1/2 mb-10 lg:mb-0 text-center lg:text-left">
-        <h2 className="text-6xl sm:text-7xl md:text-7xl lg:text-8xl p-5 font-extrabold leading-tight uppercase ">
+        <h2 className="text-4xl sm:text-4xl md:text-7xl lg:text-7xl p-5 font-extrabold leading-tight uppercase ">
         Wear the Movement, Break the Mold.
         </h2>
       </div>
