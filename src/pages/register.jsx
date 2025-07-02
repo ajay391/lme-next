@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, useEffect } from 'react';
 import axiosInstance from '../utils/axiosInstance';
 import { useRouter } from 'next/router';
@@ -30,87 +32,80 @@ export default function RegisterPage() {
   if (!mounted) return null;
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8 bg-white p-10 rounded-lg shadow-lg">
-        <div className="text-center">
-          <h2 className="text-4xl font-bold text-gray-900">Register</h2>
-          <p className="text-lg text-gray-500 mt-2">Create a new account</p>
+    <div className="py-16 sm:py-20 flex items-center justify-center bg-gray-100 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-5xl w-full bg-white shadow-lg rounded-lg overflow-hidden grid grid-cols-1 lg:grid-cols-2">
+        {/* Left Side Image */}
+        <div className="hidden lg:block bg-black relative">
+          <img
+            src="/images/register-banner.jpg"
+            alt="Register Visual"
+            className="w-full h-full object-cover opacity-80"
+          />
+          <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center text-white text-3xl font-bold p-6">
+            Join the Movement
+          </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="mt-8 space-y-6">
-          <div className="rounded-md shadow-sm space-y-4">
-            <div>
-              <input
-                id="name"
-                name="name"
-                type="text"
-                required
-                value={form.name}
-                onChange={handleChange}
-                placeholder="Full Name"
-                className="appearance-none relative block w-full px-4 py-3 border border-gray-300 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-lg"
-              />
-            </div>
-            <div>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                required
-                value={form.email}
-                onChange={handleChange}
-                placeholder="Email Address"
-                className="appearance-none relative block w-full px-4 py-3 border border-gray-300 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-lg"
-              />
-            </div>
-            <div>
-              <input
-                id="phone"
-                name="phone"
-                type="text"
-                required
-                value={form.phone}
-                onChange={handleChange}
-                placeholder="Phone Number"
-                className="appearance-none relative block w-full px-4 py-3 border border-gray-300 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-lg"
-              />
-            </div>
-            <div>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                required
-                value={form.password}
-                onChange={handleChange}
-                placeholder="Password"
-                className="appearance-none relative block w-full px-4 py-3 border border-gray-300 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-lg"
-              />
-            </div>
+        {/* Right Side Form */}
+        <div className="p-8 sm:p-10">
+          <div className="mb-6 text-center">
+            <h2 className="text-3xl font-bold text-gray-800">Create Account</h2>
+            <p className="text-gray-600 mt-2 text-sm">Sign up to get started with exclusive streetwear drops</p>
           </div>
 
-          <div>
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <input
+              name="name"
+              value={form.name}
+              onChange={handleChange}
+              required
+              placeholder="Full Name"
+              className="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-500 focus:outline-none text-gray-800"
+            />
+            <input
+              name="email"
+              value={form.email}
+              onChange={handleChange}
+              type="email"
+              required
+              placeholder="Email Address"
+              className="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-500 focus:outline-none text-gray-800"
+            />
+            <input
+              name="phone"
+              value={form.phone}
+              onChange={handleChange}
+              required
+              placeholder="Phone Number"
+              className="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-500 focus:outline-none text-gray-800"
+            />
+            <input
+              name="password"
+              value={form.password}
+              onChange={handleChange}
+              type="password"
+              required
+              placeholder="Password"
+              className="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-500 focus:outline-none text-gray-800"
+            />
+
             <button
               type="submit"
-              className="w-full flex justify-center py-3 px-6 border border-transparent text-lg font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="w-full py-3 bg-black text-white font-semibold rounded-md hover:bg-red-600 transition duration-200"
             >
               Register
             </button>
-          </div>
 
-          {message && (
-            <div className="text-sm text-red-500 mt-2 text-center">{message}</div>
-          )}
+            {message && <div className="text-sm text-center text-red-500">{message}</div>}
+          </form>
 
-          <div className="text-center mt-4">
-            <p className="text-sm text-gray-600">
-              Already have an account?{' '}
-              <a href="/login" className="font-semibold text-indigo-600 hover:text-indigo-700">
-                Login here
-              </a>
-            </p>
-          </div>
-        </form>
+          <p className="text-center text-sm text-gray-500 mt-6">
+            Already have an account?{' '}
+            <a href="/login" className="text-red-500 hover:underline text-base font-normal">
+              Login here
+            </a>
+          </p>
+        </div>
       </div>
     </div>
   );

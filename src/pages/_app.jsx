@@ -27,7 +27,7 @@ function App({ Component, pageProps }) {
         position="top-right"
         toastOptions={{
           style: {
-            marginTop: "60px", // Set your desired top offset
+            marginTop: "120px", // Set your desired top offset
           },
         }}
       />

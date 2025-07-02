@@ -1,18 +1,20 @@
+'use client';
+
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
 import { login } from '../store/authSlice';
 import axiosInstance from '../utils/axiosInstance';
-import Link from "next/link";
-import { Eye, EyeOff } from "lucide-react";
-import toast from "react-hot-toast";
+import Link from 'next/link';
+import { Eye, EyeOff } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 export default function LoginPage() {
   const [form, setForm] = useState({ phone: '', password: '' });
+  const [showPassword, setShowPassword] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const router = useRouter();
   const dispatch = useDispatch();
-  const [mounted, setMounted] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -30,10 +32,10 @@ export default function LoginPage() {
 
       if (access && refresh) {
         dispatch(login({ access, refresh }));
-        toast.success("Login Success");
+        toast.success('Login Success');
         router.push('/');
       } else {
-        toast.error("Tokens not received");
+        toast.error('Tokens not received');
       }
     } catch (err) {
       toast.error(err.response?.data?.error || 'Login failed');
@@ -47,61 +49,81 @@ export default function LoginPage() {
   if (!mounted) return null;
 
   return (
-    <div className="flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-300 p-6 py-10">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-10">
-        <div className="text-start mb-8">
-          <h2 className="text-3xl font-extrabold text-gray-800 mb-3">Welcome Back!</h2>
-          <p className="text-gray-500 text-base">Sign in to your account</p>
+    <div className="py-16 sm:py-20 flex items-center justify-center bg-gray-100 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-5xl w-full bg-white shadow-lg rounded-lg overflow-hidden grid grid-cols-1 lg:grid-cols-2">
+        
+        {/* Left Side Visual */}
+        <div className="hidden lg:block bg-black relative">
+          <img
+            src="/images/login-banner.jpg"
+            alt="Login Visual"
+            className="w-full h-full object-cover opacity-80"
+          />
+          <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center text-white text-3xl font-bold p-6">
+            Welcome Back
+          </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="space-y-4">
-            <label htmlFor="phone" className="block text-lg font-semibold text-gray-700 mt-10">
-              Phone <span className='text-red-500 '>*</span>
-            </label>
-            <input
-              type="text"
-              name="phone"
-              value={form.phone}
-              onChange={handleChange}
-              placeholder="Enter Phone number"
-              className="w-full px-4 py-3 mt-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
+        {/* Right Side Login Form */}
+        <div className="p-8 sm:p-10">
+          <div className="mb-6 text-center">
+            <h2 className="text-3xl font-bold text-gray-800">Login</h2>
+            <p className="text-gray-600 mt-2 text-sm">Sign in to your account</p>
+          </div>
 
-            <div className="relative w-full">
-              <label htmlFor="password" className="block text-lg font-semibold text-gray-700 mt-5">
-                Password <span className="text-red-500">*</span>
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div>
+              <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+                {/* Phone Number <span className="text-red-500">*</span> */}
               </label>
               <input
-                type={showPassword ? "text" : "password"}
+                name="phone"
+                type="text"
+                value={form.phone}
+                onChange={handleChange}
+                required
+                placeholder="Enter your phone number"
+                className="mt-2 w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-500 focus:outline-none"
+              />
+            </div>
+
+            <div className="relative">
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                {/* Password <span className="text-red-500">*</span> */}
+              </label>
+              <input
                 name="password"
+                type={showPassword ? 'text' : 'password'}
                 value={form.password}
                 onChange={handleChange}
-                placeholder="Enter Password"
-                className="w-full px-4 py-3 mt-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                required
+                placeholder="Enter your password"
+                className="mt-2 w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-500 focus:outline-none"
               />
               <button
                 type="button"
                 onClick={togglePasswordVisibility}
-                className="absolute right-4 top-[3.5rem] text-gray-500 focus:outline-none"
+                className="absolute right-3 top-[55%] -translate-y-1/2 text-gray-500 "
               >
                 {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
               </button>
             </div>
-          </div>
 
-          <button
-            type="submit"
-            className="w-full py-3 bg-red-500 text-white rounded-lg font-semibold hover:bg-red-600 transition-colors"
-          >
-            Login
-          </button>
-        </form>
+            <button
+              type="submit"
+              className="w-full py-3 bg-black text-white font-semibold rounded-md hover:bg-red-600 transition duration-200"
+            >
+              Login
+            </button>
+          </form>
 
-        <p className="text-center text-base text-gray-500 mt-6">
-          Don't have an account?{" "}
-          <Link href="/register" className="text-indigo-600 hover:text-indigo-500">Register here</Link>
-        </p>
+          <p className="text-center text-sm text-gray-500 mt-6">
+            Don't have an account?{' '}
+            <Link href="/register" className="text-red-500 hover:underline text-base font-normal">
+              Register here
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );

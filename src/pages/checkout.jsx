@@ -101,7 +101,9 @@ export default function CheckoutPage() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-10">
-      <h2 className="text-3xl font-bold mb-6 text-center">Checkout</h2>
+      <div className="mb-6 text-sm text-gray-500">
+        <span className="hover:underline cursor-pointer">Home</span> / <span className="text-black ">Checkout</span>
+      </div>
 
       {orderSuccess ? (
         <div className="bg-green-100 p-6 rounded text-center">
@@ -152,7 +154,7 @@ export default function CheckoutPage() {
           </div>
 
           {/* Checkout Form */}
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={handleSubmit(onSubmit)} className="text-base space-y-4 checkout-form">
             <div>
               <label className="block font-medium mb-1">Full Name</label>
               <input

@@ -58,8 +58,12 @@
   font-optical-sizing: auto;
 }
 
-p {
+p, .footer-links ul li a , .checkout-form * {
   font-family: 'Poppins', sans-serif;
+}
+.footer-links ul li a {
+  font-size: 14px;
+  font-weight: 100;
 }
 
 .poppins-font{

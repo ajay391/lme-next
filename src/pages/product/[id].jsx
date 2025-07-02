@@ -47,6 +47,29 @@ const ProductViewPage = () => {
     fetchProduct();
   }, [id]);
 
+
+//   useEffect(() => {
+//   if (!id) return;
+
+//   const mockProduct = {
+//     id: "grid-ghost-01",
+//     name: "Grid Ghost Tee",
+//     category: { id: 1, name: "F1 Streetwear" },
+//     price: 1499,
+//     oldPrice: 1899,
+//     description: "Premium cotton oversized tee inspired by the F1 grid aesthetics.",
+//     image: "/images/products/p1.png",
+//     images: ["/images/products/p2.png", "/images/products/p1.png"],
+//     available_sizes: "S,M,L,XL",
+//     available_colors: "black,white,red",
+//   };
+
+//   setProduct(mockProduct);
+//   setSelectedImage(mockProduct.image);
+//   setSizeList(mockProduct.available_sizes.split(","));
+//   setColorList(mockProduct.available_colors.split(","));
+// }, [id]);
+
   if (!id || !product) return <div className="p-10 text-center">Loading...</div>;
 
   return (
@@ -57,7 +80,7 @@ const ProductViewPage = () => {
           <img
             src={selectedImage || product.image}
             alt={product.name}
-            className="w-full h-[500px] object-cover rounded-3xl"
+            className="w-full h-[500px] object-cover rounded-md"
           />
 
           {/* Thumbnails */}
@@ -67,7 +90,7 @@ const ProductViewPage = () => {
                 key={i}
                 src={img}
                 onClick={() => setSelectedImage(img)}
-                className={`w-20 h-20 object-cover cursor-pointer border rounded-xl ${
+                className={`w-20 h-20 object-cover cursor-pointer border rounded-md ${
                   selectedImage === img ? "border-red-500" : "border-transparent"
                 }`}
               />
@@ -77,15 +100,15 @@ const ProductViewPage = () => {
 
         {/* Product Info */}
         <div>
-          <h2 className="text-3xl font-bold mb-2">{product.name}</h2>
+          <h2 className="text-2xl font-normal mb-5">{product.name}</h2>
           <p className="text-sm text-gray-500 mb-2">{product.category?.name}</p>
-          <p className="text-xl text-gray-700 mb-4">₹{product.price}</p>
-          {product.description && <p className="mb-4">{product.description}</p>}
+          <h4 className="text-xl text-red-500 mb-4">₹{product.price}</h4>
+          {product.description && <p className="text-sm mb-4 text-gray-500">{product.description}</p>}
 
           {/* Size Selector */}
           {sizeList.length > 0 && (
             <div className="mb-4">
-              <h4 className="font-semibold mb-1">Select Size:</h4>
+              <p className="text-sm text-gray-500 font-normal mb-1 ">Select Size:</p>
               <div className="flex space-x-2">
                 {sizeList.map((size, index) => (
                   <button
@@ -105,7 +128,7 @@ const ProductViewPage = () => {
           {/* Color Selector */}
           {colorList.length > 0 && (
             <div className="mb-4">
-              <h4 className="font-semibold mb-1">Available Colors:</h4>
+              <p className="text-sm text-gray-500 font-normal mb-1">Available Colors:</p>
               <div className="flex space-x-2">
                 {colorList.map((color, index) => (
                   <div
@@ -126,7 +149,7 @@ const ProductViewPage = () => {
 
           {/* Quantity Selector */}
           <div className="mb-4">
-            <label className="block font-semibold mb-1">Quantity:</label>
+            <p className="block text-sm text-gray-500 font-normal mb-1">Quantity:</p>
             <input
               type="number"
               value={quantity}

@@ -9,7 +9,7 @@ export const Newsletter = () => {
         {/* Left Column */}
         <div>
           <h2 className="text-5xl text-white font-bold mb-4 uppercase">Subscribe to Our Newsletter</h2>
-          <p className="text-white text-lg opacity-60">
+          <p className="text-white text-base opacity-60">
             Stay updated with our latest drops, exclusive offers, and style tips — directly to your inbox.
           </p>
         </div>
