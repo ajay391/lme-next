@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef, memo } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useSelector, useDispatch } from "react-redux";
-import { ShoppingCart, Heart ,Instagram, Twitter, Facebook, User } from "lucide-react";
+import { ShoppingCart, Heart, Instagram, Twitter, Facebook, User } from "lucide-react";
 import { IoPersonOutline } from "react-icons/io5";
 // import logo from "../../public/images/logo.png";
 // import profile from "../../public/images/profile.png";
@@ -12,10 +12,12 @@ import { login, logout } from "../store/authSlice";
 import { useRouter } from "next/router";
 import { fetchWishlist } from "../store/wishlistSlice";
 
+
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isLogoutConfirmOpen, setIsLogoutConfirmOpen] = useState(false);
   const profileRef = useRef(null);
   const dispatch = useDispatch();
   const router = useRouter();
@@ -98,7 +100,7 @@ const Navbar = () => {
           <div className="hidden md:flex items-center space-x-6 z-10">
             <Link href="/" className="text-lg text-gray-800 hover:text-red-500">Home</Link>
             <Link href="/shop" className="text-lg text-gray-800 hover:text-red-500">Shop</Link>
-            <Link href="/about" className="text-lg text-gray-800 hover:text-red-500">About Us</Link>
+            <Link href="/about-us" className="text-lg text-gray-800 hover:text-red-500">About Us</Link>
 
             {/* Wishlist */}
             <Link href="/wishlist">
@@ -149,7 +151,7 @@ const Navbar = () => {
                         Profile
                       </Link>
                       <button
-                        onClick={handleLogout}
+                         onClick={() => setIsLogoutConfirmOpen(true)}
                         className="w-full text-left text-gray-800 hover:text-red-500 px-4 py-2"
                       >
                         Logout
@@ -197,51 +199,114 @@ const Navbar = () => {
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="fixed inset-0 bg-white/90 backdrop-blur-sm z-50 px-6 py-10 flex flex-col items-center justify-center space-y-4 text-lg font-medium text-gray-800">
+          <div className="fixed inset-0 z-50 bg-white/80 backdrop-blur-md flex flex-col items-center px-6 py-10 overflow-y-auto">
+            {/* Close Button */}
             <button
               onClick={toggleMobileMenu}
-              className="absolute top-4 right-6 text-3xl font-bold text-gray-700 hover:text-red-500 transition"
+              className="absolute top-4 right-4 text-gray-700 hover:text-red-500 transition text-2xl font-bold"
             >
               ×
             </button>
 
-            <nav className="flex flex-col gap-2 w-full max-w-sm">
-              <Link href="/" onClick={toggleMobileMenu} className="w-full text-center py-3 rounded hover:bg-gray-100 hover:text-red-500 transition">
+            {/* Profile Display (Optional: Add only if needed) */}
+            {/* <div className="mt-10 mb-6 text-center">
+      <Image src={profile} alt="User" width={60} height={60} className="rounded-full mx-auto" />
+      <p className="text-base font-semibold mt-2">{authState.user?.name}</p>
+    </div> */}
+
+            <nav className="mt-10 flex flex-col gap-3 w-full max-w-xs text-center">
+              <Link
+                href="/"
+                onClick={toggleMobileMenu}
+                className="block py-3 rounded-md text-gray-800 hover:text-red-600 hover:bg-red-100 transition font-medium"
+              >
                 Home
               </Link>
-              <Link href="/shop" onClick={toggleMobileMenu} className="w-full text-center py-3 rounded hover:bg-gray-100 hover:text-red-500 transition">
+              <Link
+                href="/shop"
+                onClick={toggleMobileMenu}
+                className="block py-3 rounded-md text-gray-800 hover:text-red-600 hover:bg-red-100 transition font-medium"
+              >
                 Shop
               </Link>
-              <Link href="/about" onClick={toggleMobileMenu} className="w-full text-center py-3 rounded hover:bg-gray-100 hover:text-red-500 transition">
+              <Link
+                href="/about-us"
+                onClick={toggleMobileMenu}
+                className="block py-3 rounded-md text-gray-800 hover:text-red-600 hover:bg-red-100 transition font-medium"
+              >
                 About Us
               </Link>
-              <Link href="/wishlist" onClick={toggleMobileMenu} className="w-full text-center py-3 rounded hover:bg-gray-100 hover:text-red-500 transition">
+              <Link
+                href="/wishlist"
+                onClick={toggleMobileMenu}
+                className="block py-3 rounded-md text-gray-800 hover:text-red-600 hover:bg-red-100 transition font-medium"
+              >
                 Wishlist
               </Link>
-              <Link href="/cart" onClick={toggleMobileMenu} className="w-full text-center py-3 rounded hover:bg-gray-100 hover:text-red-500 transition">
+              <Link
+                href="/cart"
+                onClick={toggleMobileMenu}
+                className="block py-3 rounded-md text-gray-800 hover:text-red-600 hover:bg-red-100 transition font-medium"
+              >
                 Cart
               </Link>
 
               {authState.isAuthenticated ? (
                 <>
-                  <Link href="/profile" onClick={toggleMobileMenu} className="w-full text-center py-3 rounded hover:bg-gray-100 hover:text-red-500 transition">
+                  <Link
+                    href="/profile"
+                    onClick={toggleMobileMenu}
+                    className="block py-3 rounded-md text-gray-800 hover:text-red-600 hover:bg-red-100 transition font-medium"
+                  >
                     Profile
                   </Link>
                   <button
-                    onClick={handleLogout}
-                    className="w-full text-center py-3 rounded hover:bg-gray-100 text-red-600 transition"
+                    onClick={() => setIsLogoutConfirmOpen(true)}
+                    className="block w-full py-3 rounded-md text-red-600 hover:bg-red-50 hover:text-red-700 transition font-medium"
                   >
                     Logout
                   </button>
                 </>
               ) : (
-                <Link href="/login" onClick={toggleMobileMenu} className="w-full text-center py-3 rounded hover:bg-gray-100 hover:text-red-500 transition">
+                <Link
+                  href="/login"
+                  onClick={toggleMobileMenu}
+                  className="block py-3 rounded-md text-gray-800 hover:text-red-600 hover:bg-red-100 transition font-medium"
+                >
                   Login
                 </Link>
               )}
             </nav>
           </div>
         )}
+
+        {isLogoutConfirmOpen && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-sm text-center">
+              <h2 className="text-lg font-semibold text-gray-900 mb-2">Confirm Logout</h2>
+              <p className="text-gray-600 mb-4">Are you sure you want to logout?</p>
+
+              <div className="flex justify-center gap-4">
+                <button
+                  onClick={() => setIsLogoutConfirmOpen(false)}
+                  className="px-4 py-2 rounded-md border text-gray-700 hover:bg-gray-100"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() => {
+                    setIsLogoutConfirmOpen(false);
+                    handleLogout(); // Your logout function
+                  }}
+                  className="px-4 py-2 rounded-md bg-red-600 text-white hover:bg-red-700"
+                >
+                  Logout
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
 
       </nav>
     </>

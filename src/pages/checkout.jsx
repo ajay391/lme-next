@@ -51,53 +51,83 @@ export default function CheckoutPage() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const onSubmit = async (data) => {
-    if (cartItems.length === 0) {
-      alert("Your cart is empty.");
-      return;
-    }
+  if (cartItems.length === 0) {
+    alert("Your cart is empty.");
+    return;
+  }
 
-    setIsSubmitting(true);
+  const amount = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
-    const orderData = {
-      full_name: data.fullName,
-      phone_number: data.phone,
-      street_address: data.street,
-      city: data.city,
-      state: data.state,
-      postal_code: data.postalCode,
-      country: data.country,
-      total_price: cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0),
-      items: cartItems.map(item => ({
-        product: item.id, // must match Product model PK
-        quantity: item.quantity,
-        price: item.price,
-      })),
+  try {
+    // 1. Create Razorpay Order
+    const razorRes = await axiosInstance.post("/orders/create-razorpay-order/", { amount });
+
+    const options = {
+      key: razorRes.data.key,
+      amount: razorRes.data.amount,
+      currency: razorRes.data.currency,
+      name: "Nowhere Store",
+      description: "Test Transaction",
+      order_id: razorRes.data.order_id,
+      handler: async function (response) {
+        // 2. Handle successful payment
+        try {
+          const orderData = {
+            full_name: data.fullName,
+            phone_number: data.phone,
+            street_address: data.street,
+            city: data.city,
+            state: data.state,
+            postal_code: data.postalCode,
+            country: data.country,
+            total_price: amount,
+            items: cartItems.map(item => ({
+              product: item.id,
+              quantity: item.quantity,
+              price: item.price,
+            })),
+            payment_id: response.razorpay_payment_id,
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_signature: response.razorpay_signature,
+          };
+
+          const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/checkout/`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+            },
+            body: JSON.stringify(orderData),
+          });
+
+          if (res.ok) {
+            setOrderSuccess(true);
+            dispatch(clearCart());
+          } else {
+            alert("Order failed to save.");
+          }
+        } catch (err) {
+          console.error("Payment success but order save failed:", err);
+        }
+      },
+      prefill: {
+        name: data.fullName,
+        email: data.email,
+        contact: data.phone,
+      },
+      theme: {
+        color: "#000000",
+      },
     };
 
-    try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/checkout/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-        },
-        body: JSON.stringify(orderData),
-      });
+    const rzp = new Razorpay(options);
+    rzp.open();
+  } catch (error) {
+    console.error("Error in Razorpay Payment:", error);
+    alert("Something went wrong while initiating payment.");
+  }
+};
 
-      if (res.ok) {
-        setOrderSuccess(true);
-        dispatch(clearCart());
-      } else {
-        const errorData = await res.json();
-        console.error("Order failed:", errorData);
-        alert("Failed to place order");
-      }
-    } catch (error) {
-      console.error("Order error:", error);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-10">

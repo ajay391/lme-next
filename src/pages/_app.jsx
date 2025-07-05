@@ -15,7 +15,7 @@ function App({ Component, pageProps }) {
   return (
     <Provider store={store}>
       <Navbar />
-        <a
+      <a
         href="https://wa.me/918594069080" // Replace with your WhatsApp number
         target="_blank"
         rel="noopener noreferrer"
@@ -24,13 +24,20 @@ function App({ Component, pageProps }) {
         <FaWhatsapp size={26} />
       </a>
       <Toaster
-        position="top-right"
+        position="top-center"
         toastOptions={{
           style: {
-            marginTop: "120px", // Set your desired top offset
+            // Style for individual toasts
+            padding: "10px 16px",
+            fontSize: "14px",
           },
         }}
+        containerStyle={{
+          top: 20, // Offset from top
+          right: 0,
+        }}
       />
+
       <PersistGate loading={null} persistor={persistor}>
         <Component {...pageProps} />
       </PersistGate>
