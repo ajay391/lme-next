@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { clearCart } from "../store/cartSlice";
 import { useState, useEffect } from "react";
 import axiosInstance from "../utils/axiosInstance";
+import Script from "next/script";
 
 
 export default function CheckoutPage() {
