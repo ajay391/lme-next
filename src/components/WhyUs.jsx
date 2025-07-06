@@ -23,7 +23,7 @@ const features = [
     description: 'Shop with confidence using encrypted, safe, and trusted payment methods.',
   },
 ];
-export const WhyUs = () => (
+const WhyUs = () => (
   <section className="bg-white py-16 px-3 sm:px-2 md:px-14 lg:px-14 xl:px-14">
     <div className="grid grid-cols-1 md:grid-cols-12 gap-12 items-start">
     
@@ -58,3 +58,4 @@ export const WhyUs = () => (
     </div>
   </section>
 );
+export default WhyUs;

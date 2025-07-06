@@ -6,6 +6,7 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 
+import Image from "next/image";
 import AnimatedButton from "./AnimatedButton";
 
 const slides = [
@@ -31,7 +32,7 @@ const slides = [
 
 export default function HomeHero() {
   return (
-    <section className="">
+    <section className="relative">
       <Swiper
         spaceBetween={30}
         loop={true}
@@ -41,26 +42,36 @@ export default function HomeHero() {
         modules={[Autoplay, Pagination, Navigation]}
         className="hero-swiper"
       >
-        {slides.map((slide) => (
+        {slides.map((slide, i) => (
           <SwiperSlide key={slide.id}>
-            <div
-              className="flex items-center justify-center bg-cover bg-center py-24 px-14 lg:px-24 min-h-[80vh] text-white"
-              style={{ backgroundImage: `url(${slide.image})` }}
-            >
-              <div className="max-w-7xl w-full text-start">
-                <h1 className="text-4xl sm:text-6xl md:text-6xl lg:text-7xl max-w-[700px] font-semibold mb-6 text-white leading-tight uppercase">
-                  {slide.heading}
-                </h1>
-                <p className="text-base w-full sm:text-base mb-8 max-w-xl text-white opacity-60">
-                  {slide.description}
-                </p>
-                <AnimatedButton
-                  text="Shop Now"
-                  color="#fff"
-                  textColor = "#000"
-                  spanBg="#ffffff"
-                  url="/shop"
-                />
+            <div className="relative min-h-[80vh] w-full">
+              {/* ✅ Optimized Background Image */}
+              <Image
+                src={slide.image}
+                alt={slide.heading}
+                fill
+                priority={i === 0}
+                sizes="100vw"
+                className="object-cover"
+              />
+
+              {/* Overlay Content */}
+              <div className="absolute inset-0 z-10 flex items-center justify-start px-6 sm:px-12 lg:px-24 text-white">
+                <div className="max-w-7xl">
+                  <h1 className="text-4xl sm:text-6xl md:text-6xl lg:text-7xl max-w-[700px] font-semibold mb-6 leading-tight uppercase">
+                    {slide.heading}
+                  </h1>
+                  <p className="text-base sm:text-lg mb-8 max-w-xl opacity-70">
+                    {slide.description}
+                  </p>
+                  <AnimatedButton
+                    text="Shop Now"
+                    color="#fff"
+                    textColor="#000"
+                    spanBg="#ffffff"
+                    url="/shop"
+                  />
+                </div>
               </div>
             </div>
           </SwiperSlide>

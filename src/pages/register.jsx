@@ -3,11 +3,13 @@
 import { useState, useEffect } from 'react';
 import axiosInstance from '../utils/axiosInstance';
 import { useRouter } from 'next/router';
+import toast from 'react-hot-toast';
 
 export default function RegisterPage() {
   const [form, setForm] = useState({ name: '', email: '', phone: '', password: '' });
   const [message, setMessage] = useState('');
   const [mounted, setMounted] = useState(false);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -20,12 +22,15 @@ export default function RegisterPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
-      const res = await axiosInstance.post('/auth/register/', form);
-      setMessage('Registration successful!');
+      await axiosInstance.post('/auth/register/', form);
+      toast.success('Registration successful!');
       router.push('/login');
     } catch (err) {
-      setMessage(err.response?.data?.error || 'Something went wrong');
+      toast.error(err.response?.data?.error || 'Something went wrong');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -89,11 +94,35 @@ export default function RegisterPage() {
               className="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-500 focus:outline-none text-gray-800"
             />
 
-            <button
+           <button
               type="submit"
-              className="w-full py-3 bg-red-500 text-white font-semibold rounded-md hover:bg-black transition duration-200"
+              disabled={loading}
+              className={`w-full py-3 text-white font-semibold rounded-md transition duration-200 ${
+                loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-red-500 hover:bg-black'
+              }`}
             >
-              Register
+              {loading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                    ></path>
+                  </svg>
+                  Creating Account...
+                </span>
+              ) : (
+                'Register'
+              )}
             </button>
 
             {message && <div className="text-sm text-center text-red-500">{message}</div>}

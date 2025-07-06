@@ -107,7 +107,7 @@ const Navbar = () => {
               <div className="relative flex items-center text-gray-800 hover:text-red-500">
                 <Heart className="w-5 h-5" />
                 {authState.isAuthenticated && wishlistItemCount > 0 && (
-                  <span className="absolute top-[-5px] right-[-10px] text-xs bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center">
+                  <span className="absolute top-[-5px] right-[-10px] text-[10px] bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center">
                     {wishlistItemCount}
                   </span>
                 )}
@@ -119,7 +119,7 @@ const Navbar = () => {
               <div className="relative flex items-center text-gray-800 hover:text-red-500">
                 <ShoppingCart className="w-5 h-5" />
                 {cartItemCount > 0 && (
-                  <span className="absolute top-[-5px] right-[-10px] text-xs bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center">
+                  <span className="absolute top-[-5px] right-[-10px] text-[10px] bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center">
                     {cartItemCount}
                   </span>
                 )}
@@ -145,14 +145,14 @@ const Navbar = () => {
                     <>
                       <Link
                         href="/profile"
-                        className="block text-gray-800 hover:text-red-500 px-4 py-2"
+                        className="block text-gray-800 rounded-sm hover:bg-red-100 hover:text-red-500 px-4 py-2"
                         onClick={() => setIsProfileOpen(false)}
                       >
                         Profile
                       </Link>
                       <button
                          onClick={() => setIsLogoutConfirmOpen(true)}
-                        className="w-full text-left text-gray-800 hover:text-red-500 px-4 py-2"
+                        className="w-full text-left text-gray-800 rounded-sm hover:bg-red-100 hover:text-red-500 px-4 py-2"
                       >
                         Logout
                       </button>

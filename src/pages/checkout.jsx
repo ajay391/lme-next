@@ -130,6 +130,11 @@ export default function CheckoutPage() {
 
 
   return (
+    <>
+    <Script
+      src="https://checkout.razorpay.com/v1/checkout.js"
+      strategy="lazyOnload"
+    />
     <div className="max-w-4xl mx-auto px-4 py-10">
       <div className="mb-6 text-sm text-gray-500">
         <span className="hover:underline cursor-pointer">Home</span> / <span className="text-black ">Checkout</span>
@@ -352,5 +357,6 @@ export default function CheckoutPage() {
         </div>
       )}
     </div>
+    </>
   );
 }

@@ -45,28 +45,32 @@ const Profile = () => {
   const [expandedOrderId, setExpandedOrderId] = useState(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  useEffect(() => {
-    const fetchProfileData = async () => {
-      try {
-        const res = await axiosInstance.get("/auth/profile-data/");
-        const data = res.data;
+  const [isLoading, setIsLoading] = useState(true);
 
-        setForm({
-          name: data.user.name,
-          email: data.user.email,
-          phone: data.user.phone || "",
-          address: data.user.address || "",
-        });
-        setAddresses(data.addresses || []);
-        setOrders(data.orders || []);
-        setWishlist(data.wishlist || []);
-      } catch (err) {
-        console.error("Failed to load profile data:", err);
-      }
-    };
+useEffect(() => {
+  const fetchProfileData = async () => {
+    try {
+      const res = await axiosInstance.get("/auth/profile-data/");
+      const data = res.data;
 
-    fetchProfileData();
-  }, []);
+      setForm({
+        name: data.user.name,
+        email: data.user.email,
+        phone: data.user.phone || "",
+        address: data.user.address || "",
+      });
+      setAddresses(data.addresses || []);
+      setOrders(data.orders || []);
+      setWishlist(data.wishlist || []);
+    } catch (err) {
+      console.error("Failed to load profile data:", err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  fetchProfileData();
+}, []);
 
   const handleUpdate = (e) => {
     e.preventDefault();
@@ -145,6 +149,48 @@ const Profile = () => {
     router.push("/login");
   };
 
+ if (isLoading) {
+  return (
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 animate-pulse">
+      <div className="flex flex-col md:flex-row gap-8">
+        {/* Sidebar Skeleton */}
+        <div className="hidden md:block w-full h-fit md:w-72 bg-white rounded-2xl shadow-md p-6">
+          <div className="flex flex-col items-center mb-8">
+            <div className="w-24 h-24 mb-4 rounded-full bg-gray-200" />
+            <div className="h-4 bg-gray-200 rounded w-2/3 mb-2" />
+            <div className="h-3 bg-gray-200 rounded w-1/2" />
+          </div>
+          <div className="space-y-3">
+            <div className="h-4 bg-gray-200 rounded" />
+            <div className="h-4 bg-gray-200 rounded" />
+            <div className="h-4 bg-gray-200 rounded" />
+            <div className="h-4 bg-gray-200 rounded" />
+          </div>
+        </div>
+
+        {/* Main Section Skeleton */}
+        <div className="flex-1 space-y-6">
+          {/* Profile Card */}
+          <div className="bg-white rounded-xl shadow-md p-6 border border-gray-100">
+            <div className="h-6 bg-gray-200 rounded w-1/3 mb-4" />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div className="h-4 bg-gray-200 rounded w-2/3" />
+              <div className="h-4 bg-gray-200 rounded w-1/2" />
+              <div className="h-4 bg-gray-200 rounded w-3/4" />
+            </div>
+          </div>
+
+          {/* Orders Skeleton */}
+          <div className="bg-white rounded-xl shadow-md p-6 border border-gray-100 space-y-4">
+            {[...Array(2)].map((_, i) => (
+              <div key={i} className="h-20 bg-gray-200 rounded-md" />
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
   return (
     <div className=" bg-gray-50">
@@ -779,3 +825,22 @@ const Profile = () => {
 };
 
 export default Profile;
+
+// pages/profile.jsx
+export async function getServerSideProps(context) {
+  const { req } = context;
+  const token = req.cookies?.access_token;
+
+  if (!token) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {}, // can pass token or other data
+  };
+}

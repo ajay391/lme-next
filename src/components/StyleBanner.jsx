@@ -5,7 +5,7 @@ import styleTwo from "../../public/images/home/style-2.png"; // Update the path 
 import AnimatedButton from "../components/AnimatedButton";
 import CircleButton from './CircleButton';
 
-export const StyleBanner = () => {
+const StyleBanner = () => {
   return (
       <div className="py-5 md:py-16 px-3 sm:px-8 md:px-14 lg:px-14 xl:px-14">
 
@@ -193,3 +193,4 @@ export const StyleBanner = () => {
     </div>
   );
 };
+export default StyleBanner;

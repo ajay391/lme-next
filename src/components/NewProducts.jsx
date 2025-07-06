@@ -8,6 +8,7 @@ import "swiper/css/pagination";
 import Link from "next/link";
 
 import ProductCard from "./ProductCard";
+import Image from "next/image";
 
 
 const featuredProducts = [
@@ -112,7 +113,7 @@ const featuredProducts = [
 ];
 
 
-export const NewProducts = () => {
+const NewProducts = () => {
   return (
     <section className="py-16 px-3 sm:px-14 md:px-14 lg:px-14 xl:px-14">
       <h2 className="text-4xl font-bold mb-4 text-start">New Drops</h2>
@@ -147,11 +148,16 @@ export const NewProducts = () => {
           <SwiperSlide key={index}>
             <Link href={`/product/${product.id}`}>
               <div className="relative p-0 transition-all cursor-pointer">
-                <img
+                <div className="relative w-full h-[260px] sm:h-[340px] md:h-[360px] lg:h-[380px] xl:h-[400px]">
+                <Image
                   src={product.image}
                   alt={product.name}
-                  className="w-full h-[260px] sm:h-[340px] md:h-[360px] lg:h-[380px] xl:h-[420px] object-cover"
+                  fill
+                  className="object-cover"
+                  sizes="(min-width: 1154px) 25vw, (min-width: 991px) 33vw, 50vw"
+                  priority={index === 0}
                 />
+              </div>
                 <div className="p-0">
                   {product.isNew && (
                     <span className="absolute top-3 left-4 bg-red-500 text-white text-sm px-3 py-0 rounded-sm">
@@ -175,3 +181,4 @@ export const NewProducts = () => {
     </section>
   );
 };
+export default NewProducts;

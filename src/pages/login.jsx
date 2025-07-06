@@ -8,6 +8,7 @@ import axiosInstance from '../utils/axiosInstance';
 import Link from 'next/link';
 import { Eye, EyeOff } from 'lucide-react';
 import toast from 'react-hot-toast';
+import Cookies from 'js-cookie';
 
 export default function LoginPage() {
   const [form, setForm] = useState({ phone: '', password: '' });
@@ -15,6 +16,7 @@ export default function LoginPage() {
   const [mounted, setMounted] = useState(false);
   const router = useRouter();
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -25,22 +27,27 @@ export default function LoginPage() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const res = await axiosInstance.post('/auth/login/', form);
-      const { access, refresh } = res.data.tokens || {};
+  e.preventDefault();
+  setLoading(true); // 🟢 Start loading
+  try {
+    const res = await axiosInstance.post('/auth/login/', form);
+    const { access, refresh } = res.data.tokens || {};
 
-      if (access && refresh) {
-        dispatch(login({ access, refresh }));
-        toast.success('Login Success');
-        router.push('/');
-      } else {
-        toast.error('Tokens not received');
-      }
-    } catch (err) {
-      toast.error(err.response?.data?.error || 'Login failed');
+    if (access && refresh) {
+      Cookies.set('access_token', access, { expires: 1 });
+      Cookies.set('refresh_token', refresh, { expires: 7 });
+      dispatch(login({ access, refresh }));
+      toast.success('Login Success');
+      router.push('/profile');
+    } else {
+      toast.error('Tokens not received');
     }
-  };
+  } catch (err) {
+    toast.error(err.response?.data?.error || 'Login failed');
+  } finally {
+    setLoading(false); // 🔴 Stop loading
+  }
+};
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -109,11 +116,35 @@ export default function LoginPage() {
               </button>
             </div>
 
-            <button
+           <button
               type="submit"
-              className="w-full py-3 bg-red-500 text-white font-semibold rounded-md hover:bg-black transition duration-200"
+              disabled={loading}
+              className={`w-full py-3 text-white font-semibold rounded-md transition duration-200 ${
+                loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-red-500 hover:bg-black'
+              }`}
             >
-              Login
+              {loading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                    ></path>
+                  </svg>
+                  Logging in...
+                </span>
+              ) : (
+                'Login'
+              )}
             </button>
           </form>
 

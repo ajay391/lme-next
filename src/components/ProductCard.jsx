@@ -16,7 +16,7 @@ const ProductCard = ({ product }) => {
               New
             </span>
           )}
-          <h3 className="mt-5 text-md font-medium line-clamp-2 ">{product.name}</h3>
+          <h3 className="mt-5 text-md font-medium line-clamp-2">{product.name}</h3>
           <p className="text-sm text-gray-400 mt-1">{product.category}</p>
           <div className="flex items-center gap-3 mt-1">
             {product.oldPrice && (

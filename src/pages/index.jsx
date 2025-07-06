@@ -1,39 +1,31 @@
+import dynamic from "next/dynamic";
 import Head from "next/head";
-import { useState, useEffect } from 'react';
-import HomeHero from "../components/HomeHero";
-import { StyleBanner } from "../components/StyleBanner";
-import { NewProducts } from "../components/NewProducts";
-import { BrandStatement } from "../components/BrandStatement";
-import { Testimonials } from "../components/Testimonials";
-import { WhyUs } from "../components/WhyUs";
 
-import  Carousel  from "../components/ReelsShowcase"
-import WeeklyDrop from "../components/WeeklyDrop";
-import { Newsletter } from "../components/Newsletter";
+const HomeHero = dynamic(() => import("../components/HomeHero"), { ssr: true });
+const NewProducts = dynamic(() => import("../components/NewProducts"));
+const StyleBanner = dynamic(() => import("../components/StyleBanner"));
+const BrandStatement = dynamic(() => import("../components/BrandStatement"));
+const WeeklyDrop = dynamic(() => import("../components/WeeklyDrop"));
+const Carousel = dynamic(() => import('../components/ReelsShowcase'), { ssr: false }); // fixed ✅
+const WhyUs = dynamic(() => import("../components/WhyUs"));
+const Newsletter = dynamic(() => import("../components/Newsletter"));
 
 export default function Home() {
-  const [isMounted, setIsMounted] = useState(false);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  if (!isMounted) return null;
-
   return (
     <>
       <Head>
         <title>Last Man On Earth | Clothing</title>
+        <meta name="description" content="Premium streetwear. Oversized fits, bold designs." />
       </Head>
+
       <HomeHero />
       <NewProducts />
       <StyleBanner />
       <BrandStatement />
-      <WeeklyDrop/>
+      <WeeklyDrop />
       <Carousel />
-      {/* <Testimonials /> */}
       <WhyUs />
-      <Newsletter/>
+      <Newsletter />
     </>
   );
 }

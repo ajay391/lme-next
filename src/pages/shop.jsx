@@ -17,7 +17,7 @@ const ShopPage = ({ products }) => {
   const categories = ["Oversized T-shirt", "T-shirt"];
 
   const [filteredProducts, setFilteredProducts] = useState([]);
-const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
   setLoading(true);
@@ -84,7 +84,7 @@ const [loading, setLoading] = useState(true);
           </div>
 
           <div className="flex items-center gap-2">
-            <label className="text-sm font-medium">Sort:</label>
+            <label className="text-sm font-medium">Sort By:</label>
             <select
               onChange={(e) => setSortOrder(e.target.value)}
               value={sortOrder}
@@ -187,7 +187,15 @@ const [loading, setLoading] = useState(true);
 
         {/* Product List */}
         {loading ? (
-          <p className="text-center text-gray-600 py-10">Loading filtered products...</p>
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {[...Array(8)].map((_, i) => (
+              <div key={i} className="animate-pulse border border-gray-200 rounded-lg p-4">
+                <div className="bg-gray-200 h-48 w-full mb-4 rounded" />
+                <div className="h-4 bg-gray-200 rounded w-3/4 mb-2" />
+                <div className="h-4 bg-gray-200 rounded w-1/2" />
+              </div>
+            ))}
+          </div>
         ) : filteredProducts.length === 0 ? (
           <div className="text-center text-gray-600 py-10">
             <h2 className="text-xl font-semibold mb-2">No products found</h2>

@@ -20,7 +20,7 @@ export const removeFromWishlist = createAsyncThunk('wishlist/removeFromWishlist'
 export const clearWishlist = createAsyncThunk('wishlist/clearWishlist', async (_, { getState }) => {
   const { wishlist } = getState();
   await Promise.all(
-    wishlist.items.map((item) => axios.delete(`/wishlist/${item.id}/`))
+    wishlist.items.map((item) => axios.delete(`/wishlist/${item.id}/delete/`))
   );
   return [];
 });

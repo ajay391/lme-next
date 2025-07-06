@@ -15,7 +15,7 @@ const AddToWishlistButton = ({ product }) => {
   return (
     <button
       onClick={handleAddToWishlist}
-      className="mt-2 px-4 py-2 border border-black text-black rounded hover:bg-black hover:text-white transition"
+      className="mt-2 px-4 py-2 border border-black text-black rounded-sm hover:bg-black hover:text-white transition"
     >
       Add to Wishlist
     </button>

@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import Cookies from 'js-cookie';
 
 interface AuthState {
   isAuthenticated: boolean;
@@ -33,6 +34,8 @@ const authSlice = createSlice({
       state.refresh_token = null;
 
       if (typeof window !== "undefined") {
+        Cookies.remove('access_token');
+        Cookies.remove('refresh_token');
         localStorage.removeItem("access_token");
         localStorage.removeItem("refresh_token");
       }
