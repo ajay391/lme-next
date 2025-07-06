@@ -38,7 +38,7 @@ export default function LoginPage() {
       Cookies.set('refresh_token', refresh, { expires: 7 });
       dispatch(login({ access, refresh }));
       toast.success('Login Success');
-      router.push('/profile');
+      router.push('/');
     } else {
       toast.error('Tokens not received');
     }
