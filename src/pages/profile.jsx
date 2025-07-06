@@ -181,11 +181,11 @@ useEffect(() => {
           </div>
 
           {/* Orders Skeleton */}
-          <div className="bg-white rounded-xl shadow-md p-6 border border-gray-100 space-y-4">
+          {/* <div className="bg-white rounded-xl shadow-md p-6 border border-gray-100 space-y-4">
             {[...Array(2)].map((_, i) => (
               <div key={i} className="h-20 bg-gray-200 rounded-md" />
             ))}
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

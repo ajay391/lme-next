@@ -76,7 +76,7 @@ const TermsPage = () => {
           <h2 className="text-2xl font-semibold mb-2">10. Contact Us</h2>
           <p>
             📧 Email: <a href="mailto:lastmanonearth.india@gmail.com" className="text-red-500 hover:underline">lastmanonearth.india@gmail.com</a><br />
-            📞 Phone: +91-8594069080<br />
+            📞 Phone: +91-XXXXX-XXXXX<br />
             📍 Address: Kerala,India
           </p>
         </section>

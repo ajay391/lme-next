@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AddToCartButton from "../../components/AddToCartButton";
 import AddToWishlistButton from "../../components/AddToWishlistButton";
 import axios from "axios";
@@ -11,6 +11,14 @@ const ProductViewPage = ({ product, relatedProducts }) => {
   const [selectedImage, setSelectedImage] = useState(product.image);
   const [selectedColor, setSelectedColor] = useState("");
   const [openSection, setOpenSection] = useState(null);
+
+  useEffect(() => {
+    setSelectedImage(product.image);
+    setSelectedSize("");
+    setQuantity(1);
+    setSelectedColor("");
+    setOpenSection(null);
+  }, [product]);
 
   const sizeList =
     typeof product.available_sizes === "string"
@@ -189,7 +197,7 @@ const ProductViewPage = ({ product, relatedProducts }) => {
 
       {/* Related Products Section */}
       {relatedProducts?.length > 0 && (
-        <div className="mt-16 mb-10 max-w-6xl mx-auto">
+        <div className="mt-16 px-4 sm:px-4 mb-10 max-w-6xl mx-auto">
           <h3 className="text-xl font-semibold mb-6">Related Products</h3>
           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {relatedProducts.map((product) => (

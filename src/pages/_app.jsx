@@ -16,7 +16,7 @@ function App({ Component, pageProps }) {
     <Provider store={store}>
       <Navbar />
       <a
-        href="https://wa.me/918594069080" // Replace with your WhatsApp number
+        href="https://wa.me/XXXXX-XXXXX" // Replace with your WhatsApp number
         target="_blank"
         rel="noopener noreferrer"
         className="fixed bottom-6 left-6 z-50 bg-green-500 hover:bg-green-600 text-white p-2 rounded-full shadow-lg transition duration-300 ease-in-out flex items-center justify-center"

@@ -1,28 +1,39 @@
 import Link from "next/link";
+import Image from "next/image";
 
 const ProductCard = ({ product }) => {
   return (
-    <Link href={`/product/${product.id}`}>
-      <div className="relative p-0 transition-all">
-        <img
-          src={product.image}
-          alt={product.name}
-          className="w-full h-[250px] sm:h-[340px] md:h-[360px] lg:h-[380px] xl:h-[380px] object-cover "
-        />
-        <div className="p-0">
-          {/* "New" tag only if isNew is true */}
+    <Link href={`/product/${product.id}`} passHref>
+      <div className="relative group rounded-sm overflow-hidden bg-white ">
+        {/* Product Image */}
+        <div className="relative w-full h-[250px] sm:h-[320px] md:h-[360px] lg:h-[380px] overflow-hidden">
+          <Image
+            src={product.image}
+            alt={product.name}
+            fill
+            sizes="(max-width: 768px) 100vw, 25vw"
+            className="object-cover transition-transform hover:scale-[1.05]"
+            placeholder="blur"
+            blurDataURL="/images/placeholder.png" // optional blur fallback
+          />
           {product.isNew && (
-            <span className="absolute top-3 left-4 bg-red-500 text-white text-sm px-3 py-0 rounded-sm">
+            <span className="absolute top-3 left-3 bg-red-500 text-white text-xs px-2 py-1 rounded-sm uppercase tracking-wide shadow-md">
               New
             </span>
           )}
-          <h3 className="mt-5 text-md font-medium line-clamp-2">{product.name}</h3>
+        </div>
+
+        {/* Product Info */}
+        <div className="p-0">
+          <h3 className="mt-5 text-base font-medium line-clamp-2">{product.name}</h3>
           <p className="text-sm text-gray-400 mt-1">{product.category}</p>
-          <div className="flex items-center gap-3 mt-1">
+          <div className="flex items-center gap-2">
             {product.oldPrice && (
-              <h4 className="text-gray-400 line-through text-base">₹{product.oldPrice}</h4>
+              <span className="text-sm text-gray-400 line-through">
+                ₹{product.oldPrice}
+              </span>
             )}
-            <h4 className="text-red-500 text-base font-medium">₹{product.price}</h4>
+            <span className="text-lg font-medium text-red-500">₹{product.price}</span>
           </div>
         </div>
       </div>

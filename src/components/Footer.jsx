@@ -1,59 +1,82 @@
 'use client';
 
-import { Instagram, Twitter, Facebook } from 'lucide-react';
+import { Instagram, Twitter, Facebook, Mail, Phone } from 'lucide-react';
 import Image from 'next/image';
 
 export default function Footer() {
   return (
     <footer className="bg-white text-white pt-0 mt-0 border-t-2 border-gray-200">
-      <div className="max-w-6xl mx-auto px-3 sm:px-3 lg:px-0 grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-12 py-16 text-sm">
+      <div className="max-w-6xl mx-auto px-4 sm:px-4 lg:px-4 xl:px-0 grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-12 py-16 text-sm">
         {/* Brand Info */}
         <div>
-          {/* <h4 className="text-lg text-white font-semibold mb-4">LME</h4> */}
-          <Image src="/images/logo.png" alt="Logo" width={55} height={55} className="object-contain mb-5" />
-          
-          <p className="text-base text-gray-400 leading-relaxed">
-            Premium streetwear for the bold. Oversized fits, clean designs, and everyday comfort.
+          <h4 className="text-2xl sm:text-lg text-red-500 font-semibold mb-4 uppercase">Last Man On Earth</h4>
+          {/* <Image src="/images/logo.png" alt="Logo" width={55} height={55} className="object-contain mb-5" /> */}
+
+          <p className="text-base text-gray-400 leading-relaxed mb-7 ">
+           Elevate your everyday style with bold, oversized streetwear. Designed for comfort, crafted for impact.
           </p>
+          <ul className="text-base text-gray-600 font-medium flex items-center justify-start gap-4">
+            <li className="flex items-center hover:text-red-500">
+              <a href="https://www.instagram.com/lastmanonearth.in?igsh=eXBrcWN6YjBvZWpv" target="_blank" rel="noopener noreferrer"><Instagram className="w-6 h-6" /></a>
+            </li>
+            <li className="flex items-center hover:text-red-500">
+              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer"><Facebook className="w-6 h-6" /></a>
+            </li>
+            <li className="flex items-center hover:text-red-500" >
+              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer"><Twitter className="w-6 h-6" /></a>
+            </li>
+          </ul>
         </div>
 
         {/* Quick Links */}
-        <div className='footer-links'>
-          <h4 className="text-lg text-black font-medium mb-4">Quick Links</h4>
-          <ul className="space-y-2 md:space-y-3 text-base text-gray-400 font-medium">
-            <li><a href="/shop" className="hover:text-red-500">Shop</a></li>
-            <li><a href="/about" className="hover:text-red-500">About Us</a></li>
-            <li><a href="/contact" className="hover:text-red-500">Contact</a></li>
-            <li><a href="/faq" className="hover:text-red-500">FAQs</a></li>
-          </ul>
-        </div>
 
-        {/* Support */}
-        <div className='footer-links'>
-          <h4 className="text-lg text-black font-medium mb-4">Customer Support</h4>
-          <ul className="space-y-2 md:space-y-3 text-base text-gray-400 font-medium">
-            <li><a href="/shipping" className="hover:text-red-500">Shipping Info</a></li>
-            <li><a href="/refund" className="hover:text-red-500">Returns & Exchanges</a></li>
-            <li><a href="/privacy" className="hover:text-red-500">Privacy Policy</a></li>
-            <li><a href="/terms" className="hover:text-red-500">Terms of Service</a></li>
-          </ul>
+
+        {/* Quick Links and Support - grouped on smaller screens */}
+        <div className="md:col-span-2 grid grid-cols-2 gap-8">
+          {/* Quick Links */}
+          <div className="footer-links">
+            <h4 className="text-lg text-black font-medium mb-4">Quick Links</h4>
+            <ul className="space-y-2 md:space-y-3 text-base text-gray-400 font-medium">
+              <li><a href="/shop" className="hover:text-red-500">Shop</a></li>
+              <li><a href="/about-us" className="hover:text-red-500">About Us</a></li>
+              <li><a href="/support" className="hover:text-red-500">Support</a></li>
+              <li><a href="/faq" className="hover:text-red-500">FAQs</a></li>
+            </ul>
+          </div>
+
+          {/* Customer Support */}
+          <div className="footer-links">
+            <h4 className="text-lg text-black font-medium mb-4">Customer Support</h4>
+            <ul className="space-y-2 md:space-y-3 text-base text-gray-400 font-medium">
+              <li><a href="/shipping" className="hover:text-red-500">Shipping Info</a></li>
+              <li><a href="/refund" className="hover:text-red-500">Returns & Exchanges</a></li>
+              <li><a href="/privacy" className="hover:text-red-500">Privacy Policy</a></li>
+              <li><a href="/terms" className="hover:text-red-500">Terms of Service</a></li>
+            </ul>
+          </div>
         </div>
 
         {/* Social */}
         <div className='footer-links'>
-          <h4 className="text-lg text-black font-medium mb-4">Follow Us</h4>
-          <ul className="space-y-2 md:space-y-3 text-base text-gray-400 font-medium">
-            <li className="flex items-center gap-2 hover:text-red-500">
-              <Instagram className="w-5 h-5" />
-              <a href="https://www.instagram.com/lastmanonearth.in?igsh=eXBrcWN6YjBvZWpv" target="_blank" rel="noopener noreferrer">Instagram</a>
+          <h4 className="text-lg text-black font-medium mb-4">Contact Us</h4>
+          <ul className="text-base text-gray-400 font-medium space-y-3">
+            <li className="flex items-center gap-2 hover:text-red-500 break-words">
+              <Phone className="w-5 h-5 shrink-0" />
+              <p
+               
+                className="break-all text-sm"
+              >
+                +91 XXXXX-XXXXX
+              </p>
             </li>
-            <li className="flex items-center gap-2 hover:text-red-500">
-              <Facebook className="w-5 h-5" />
-              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">Facebook</a>
-            </li>
-            <li className="flex items-center gap-2 hover:text-red-500">
-              <Twitter className="w-5 h-5" />
-              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">Twitter</a>
+            <li className="flex items-center gap-2 hover:text-red-500 break-words">
+              <Mail className="w-5 h-5 shrink-0" />
+              <a
+               
+                className="break-all text-sm"
+              >
+                lme.india@gmail.com
+              </a>
             </li>
           </ul>
         </div>

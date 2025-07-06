@@ -52,7 +52,7 @@ const ShippingPage = () => {
           </p>
           <ul className="mt-2 text-gray-600">
             <li>📧 Email: <a href="mailto:lastmanonearth.india@gmail.com" className="text-red-500 hover:underline">lastmanonearth.india@gmail.com</a></li>
-            <li>📞 Phone: +91-8594069080</li>
+            <li>📞 Phone: +91-XXXXX-XXXXX</li>
             <li>📍 Address: Kerala,India</li>
           </ul>
         </section>

@@ -22,7 +22,7 @@ export default function ContactPage() {
 
             <div>
               <h2 className="text-lg font-semibold text-gray-700">📞 Phone</h2>
-              <p className="text-gray-600">+91-8594069080</p>
+              <p className="text-gray-600">+91-XXXXX - XXXXX</p>
             </div>
 
             <div>

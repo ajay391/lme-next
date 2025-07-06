@@ -5,6 +5,7 @@ import {
   removeFromWishlist,
   clearWishlist,
 } from '../store/wishlistSlice';
+import Link from 'next/link';
 
 const WishlistPage = () => {
   const wishlistItems = useSelector((state) => state.wishlist.items);
@@ -25,7 +26,7 @@ const WishlistPage = () => {
       ) : (
         <>
           {/* Header Row */}
-          <div className="hidden sm:grid grid-cols-6 gap-4 px-4 py-3 border-b font-semibold text-gray-700 text-sm">
+          <div className="hidden sm:grid grid-cols-5 gap-4 px-4 py-3 border-b font-semibold text-gray-700 text-sm">
             <div className="col-span-2">Product</div>
             <div className="">Unit Price</div>
             <div className="">Stock</div>
@@ -37,7 +38,7 @@ const WishlistPage = () => {
             {wishlistItems.map((item) => (
               <div
                 key={item.id}
-                className="grid grid-cols-1 sm:grid-cols-6 gap-4 items-center bg-white shadow-sm p-4 rounded-lg border"
+                className="grid grid-cols-1 sm:grid-cols-5 gap-4 items-center bg-white shadow-sm p-4 rounded-lg border"
               >
                 {/* Image + Product */}
                 <div className="sm:col-span-2 flex items-center gap-4">
@@ -68,13 +69,21 @@ const WishlistPage = () => {
                 </div>
 
                 {/* Actions */}
-                <div className="text-right">
+                <div className="text-left">
+                <div className="flex sm:justify-start flex-col sm:flex-row gap-2 sm:items-center text-left">
+                  <Link
+                    href={`/product/${item.product_detail?.id}`}
+                    className="text-sm text-center text-blue-600 hover:underline"
+                  >
+                    View 
+                  </Link>
                   <button
                     onClick={() => dispatch(removeFromWishlist({ id: item.id }))}
                     className="text-sm text-red-500 hover:underline"
                   >
                     Remove
                   </button>
+                </div>
                 </div>
               </div>
             ))}
