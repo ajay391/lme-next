@@ -9,6 +9,7 @@ import Link from "next/link";
 
 import ProductCard from "./ProductCard";
 import Image from "next/image";
+import { ArrowRight, ChevronRight } from "lucide-react";
 
 
 const featuredProducts = [
@@ -26,8 +27,8 @@ const featuredProducts = [
     ],
     category: "T-Shirts",
     description: "A comfortable black tee, perfect for any occasion.",
-        sizes: ["S", "M", "L", "XL"],
-    isNew: true, 
+    sizes: ["S", "M", "L", "XL"],
+    isNew: true,
   },
   {
     id: 2,
@@ -42,8 +43,8 @@ const featuredProducts = [
     ],
     category: "Hoodies",
     description: "A clean, urban-style hoodie in white with minimalist design.",
-        sizes: ["S", "M", "L", "XL"],
-    isNew: true, 
+    sizes: ["S", "M", "L", "XL"],
+    isNew: true,
   },
   {
     id: 3,
@@ -58,8 +59,8 @@ const featuredProducts = [
     ],
     category: "T-Shirts",
     description: "A graphic tee that showcases the Nowhere brand with bold prints.",
-        sizes: ["S", "M", "L", "XL"],
-    isNew: true, 
+    sizes: ["S", "M", "L", "XL"],
+    isNew: true,
   },
   {
     id: 1,
@@ -75,8 +76,8 @@ const featuredProducts = [
     ],
     category: "T-Shirts",
     description: "A comfortable black tee, perfect for any occasion.",
-        sizes: ["S", "M", "L", "XL"],
-    isNew: true, 
+    sizes: ["S", "M", "L", "XL"],
+    isNew: true,
   },
   {
     id: 2,
@@ -91,8 +92,8 @@ const featuredProducts = [
     ],
     category: "Hoodies",
     description: "A clean, urban-style hoodie in white with minimalist design.",
-        sizes: ["S", "M", "L", "XL"],
-    isNew: true, 
+    sizes: ["S", "M", "L", "XL"],
+    isNew: true,
   },
   {
     id: 3,
@@ -107,8 +108,8 @@ const featuredProducts = [
     ],
     category: "T-Shirts",
     description: "A graphic tee that showcases the Nowhere brand with bold prints.",
-        sizes: ["S", "M", "L", "XL"],
-    isNew: true, 
+    sizes: ["S", "M", "L", "XL"],
+    isNew: true,
   },
 ];
 
@@ -117,9 +118,20 @@ const NewProducts = () => {
   return (
     <section className="py-16 px-3 sm:px-14 md:px-14 lg:px-14 xl:px-14">
       <h2 className="text-4xl font-bold mb-4 text-start">New Drops</h2>
-      <p className="text-base sm:text-base text-black opacity-60 mb-12 text-start max-w-2xl">
+      <p className="text-base sm:text-base text-black opacity-60 mb-8 text-start max-w-2xl">
         Discover our latest collection—unique styles, premium fabrics, and perfect fits. Limited stock, once they're gone, they're gone!
       </p>
+      <div className="text-end mb-3">
+        <Link href="/shop">
+          <button className="group inline-flex items-center gap-2 text-black hover:text-red-500 transition px-0 py-2 text-sm font-medium">
+            View All
+            <ChevronRight
+              size={16}
+              className="transition-transform duration-200 ease-in-out group-hover:translate-x-1"
+            />
+          </button>
+        </Link>
+      </div>
 
       <Swiper
         className="newproducts-swiper text-sm"
@@ -149,15 +161,15 @@ const NewProducts = () => {
             <Link href={`/product/${product.id}`}>
               <div className="relative p-0 transition-all cursor-pointer">
                 <div className="relative w-full h-[260px] sm:h-[340px] md:h-[360px] lg:h-[380px] xl:h-[400px]">
-                <Image
-                  src={product.image}
-                  alt={product.name}
-                  fill
-                  className="object-cover"
-                  sizes="(min-width: 1154px) 25vw, (min-width: 991px) 33vw, 50vw"
-                  priority={index === 0}
-                />
-              </div>
+                  <Image
+                    src={product.image}
+                    alt={product.name}
+                    fill
+                    className="object-cover"
+                    sizes="(min-width: 1154px) 25vw, (min-width: 991px) 33vw, 50vw"
+                    priority={index === 0}
+                  />
+                </div>
                 <div className="p-0">
                   {product.isNew && (
                     <span className="absolute top-3 left-4 bg-red-500 text-white text-sm px-3 py-0 rounded-sm">

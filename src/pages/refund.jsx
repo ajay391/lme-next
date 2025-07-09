@@ -5,7 +5,7 @@ import React from "react";
 const CancelRefundPage = () => {
   return (
     <div className="max-w-4xl mx-auto px-4 py-10 text-gray-800">
-      <h1 className="text-4xl font-bold mb-6 text-red-500">Cancellation & Refund Policy</h1>
+      <h1 className="text-4xl font-bold mb-6 text-red-500 uppercase" >Cancellation & Refund Policy</h1>
       <p className="text-sm text-gray-500 mb-10">Last updated: June 29, 2025</p>
 
       <div className="space-y-8 text-base leading-relaxed">
@@ -13,7 +13,7 @@ const CancelRefundPage = () => {
           <h2 className="text-2xl font-semibold mb-2">1. Order Cancellation</h2>
           <p>
             You can cancel your order within <strong>24 hours</strong> of placing it. To cancel, please contact us immediately at{" "}
-            <a href="mailto:support@yourbrand.com" className="text-red-500 hover:underline">lastmanonearth.india@gmail.com</a>.
+            <a href="mailto:support@yourbrand.com" className="text-red-500 hover:underline">lme.india@gmail.com</a>.
           </p>
           <p>
             Orders already dispatched cannot be cancelled. Once shipped, please refer to the return policy.
@@ -57,7 +57,7 @@ const CancelRefundPage = () => {
             For any queries related to cancellation or refund, reach out to us at:
           </p>
           <ul className="mt-2 text-gray-600">
-            <li>📧 Email: <a href="mailto:lastmanonearth.india@gmail.com" className="text-red-500 hover:underline">lastmanonearth.india@gmail.com</a></li>
+            <li>📧 Email: <a href="mailto:lme.india@gmail.com" className="text-red-500 hover:underline">lme.india@gmail.com</a></li>
             <li>📞 Phone: +91-XXXXX-XXXXX</li>
             <li>📍 Address: Kerala, India</li>
           </ul>

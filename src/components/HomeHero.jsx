@@ -56,7 +56,7 @@ export default function HomeHero() {
               />
 
               {/* Overlay Content */}
-              <div className="absolute inset-0 z-10 flex items-center justify-start px-6 sm:px-12 lg:px-24 text-white">
+              <div className="absolute inset-0 z-10 flex text-center sm:text-start items-center justify-start px-12 sm:px-12 lg:px-24 text-white">
                 <div className="max-w-7xl">
                   <h1 className="text-4xl sm:text-6xl md:text-6xl lg:text-7xl max-w-[700px] font-semibold mb-6 leading-tight uppercase">
                     {slide.heading}

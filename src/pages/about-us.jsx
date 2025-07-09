@@ -10,7 +10,7 @@ export default function AboutPage() {
       </Head>
 
       <div className="max-w-6xl mx-auto px-4 py-12 text-gray-800">
-        <h1 className="text-4xl font-bold text-red-500 mb-6">About Us</h1>
+        <h1 className="text-4xl font-bold text-red-500 mb-6 uppercase">About Us</h1>
         <p className="text-lg text-gray-600 mb-8">
           Welcome to <strong className=''>Last Man on Earth</strong>, where style meets comfort and creativity. We’re not just a clothing brand —
           we’re a movement to redefine fashion for the bold and expressive.

@@ -5,7 +5,7 @@ import React from "react";
 const ShippingPage = () => {
   return (
     <div className="max-w-4xl mx-auto px-4 py-10 text-gray-800">
-      <h1 className="text-4xl font-bold mb-6 text-red-500">Shipping & Delivery Policy</h1>
+      <h1 className="text-4xl font-bold mb-6 text-red-500 uppercase">Shipping & Delivery Policy</h1>
       <p className="text-sm text-gray-500 mb-10">Last updated: June 29, 2025</p>
 
       <div className="space-y-8 text-base leading-relaxed">
@@ -51,7 +51,7 @@ const ShippingPage = () => {
             For any shipping or delivery-related queries, feel free to reach out to:
           </p>
           <ul className="mt-2 text-gray-600">
-            <li>📧 Email: <a href="mailto:lastmanonearth.india@gmail.com" className="text-red-500 hover:underline">lastmanonearth.india@gmail.com</a></li>
+            <li>📧 Email: <a href="mailto:lme.india@gmail.com" className="text-red-500 hover:underline">lme.india@gmail.com</a></li>
             <li>📞 Phone: +91-XXXXX-XXXXX</li>
             <li>📍 Address: Kerala,India</li>
           </ul>

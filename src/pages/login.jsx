@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux';
 import { login } from '../store/authSlice';
 import axiosInstance from '../utils/axiosInstance';
 import Link from 'next/link';
+import Image from "next/image";
 import { Eye, EyeOff } from 'lucide-react';
 import toast from 'react-hot-toast';
 import Cookies from 'js-cookie';
@@ -66,15 +67,17 @@ export default function LoginPage() {
             alt="Login Visual"
             className="w-full h-full object-cover opacity-80"
           />
-          <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center text-white text-3xl font-bold p-6">
-            Welcome Back
+          <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center text-white text-xl font-normal p-6">
+            <Image src="/images/logo.png" alt="Logo" width={100} height={100} className="object-contain mb-5" />
+            
+           <h6>Limits Don't Exist</h6> 
           </div>
         </div>
 
         {/* Right Side Login Form */}
         <div className="p-8 sm:p-10">
           <div className="mb-6 text-center">
-            <h2 className="text-3xl font-bold text-gray-800">Login</h2>
+            <h2 className="text-3xl font-bold text-gray-800">Welcome Back</h2>
             <p className="text-gray-600 mt-2 text-sm">Sign in to your account</p>
           </div>
 
@@ -139,11 +142,12 @@ export default function LoginPage() {
                       fill="currentColor"
                       d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
                     ></path>
+                    Si
                   </svg>
-                  Logging in...
+                  signing in...
                 </span>
               ) : (
-                'Login'
+                'Sign In'
               )}
             </button>
           </form>
@@ -151,7 +155,7 @@ export default function LoginPage() {
           <p className="text-center text-sm text-gray-500 mt-6">
             Don't have an account?{' '}
             <Link href="/register" className="text-red-500 hover:underline text-base font-normal">
-              Register here
+              Sign up here
             </Link>
           </p>
         </div>

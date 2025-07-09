@@ -5,7 +5,7 @@ import React from "react";
 const TermsPage = () => {
   return (
     <div className="max-w-4xl mx-auto px-4 py-10 text-gray-800">
-      <h1 className="text-4xl font-bold mb-6 text-red-500">Terms and Conditions</h1>
+      <h1 className="text-4xl font-bold mb-6 text-red-500 uppercase">Terms and Conditions</h1>
       <p className="text-sm text-gray-500 mb-10">Last updated: June 29, 2025</p>
 
       <div className="space-y-8 text-base leading-relaxed">
@@ -75,7 +75,7 @@ const TermsPage = () => {
         <section>
           <h2 className="text-2xl font-semibold mb-2">10. Contact Us</h2>
           <p>
-            📧 Email: <a href="mailto:lastmanonearth.india@gmail.com" className="text-red-500 hover:underline">lastmanonearth.india@gmail.com</a><br />
+            📧 Email: <a href="mailto:lme.india@gmail.com" className="text-red-500 hover:underline">lme.india@gmail.com</a><br />
             📞 Phone: +91-XXXXX-XXXXX<br />
             📍 Address: Kerala,India
           </p>

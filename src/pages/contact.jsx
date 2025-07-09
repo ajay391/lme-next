@@ -9,7 +9,7 @@ export default function ContactPage() {
       </Head>
 
       <div className="max-w-5xl mx-auto px-4 py-12 text-gray-800">
-        <h1 className="text-4xl font-bold mb-4 text-red-500">Contact Us</h1>
+        <h1 className="text-4xl font-bold mb-4 text-red-500 uppercase">Contact Us</h1>
         <p className="text-gray-600 mb-8">We'd love to hear from you. Please fill out the form below or reach out directly.</p>
 
         <div className="grid md:grid-cols-2 gap-10">
@@ -17,7 +17,7 @@ export default function ContactPage() {
           <div className="space-y-6">
             <div>
               <h2 className="text-lg font-semibold text-gray-700">📧 Email</h2>
-              <p className="text-gray-600">lastmanonearth.india@gmail.com</p>
+              <p className="text-gray-600">lme.india@gmail.com</p>
             </div>
 
             <div>

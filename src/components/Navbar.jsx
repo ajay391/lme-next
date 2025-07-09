@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef, memo } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useSelector, useDispatch } from "react-redux";
-import { ShoppingCart, Heart, Instagram, Twitter, Facebook, User } from "lucide-react";
+import { ShoppingCart, Heart, Instagram, Twitter, Facebook, User, Menu, X } from "lucide-react";
 import { IoPersonOutline } from "react-icons/io5";
 // import logo from "../../public/images/logo.png";
 // import profile from "../../public/images/profile.png";
@@ -74,8 +74,8 @@ const Navbar = () => {
           {/* Left Icons */}
           <div className="flex space-x-4 items-center">
             <a href="https://www.instagram.com/lastmanonearth.in?igsh=eXBrcWN6YjBvZWpv" target="_blank" className="hover:text-red-500"> <Instagram className="w-5 h-5 hover:text-white transition" /></a>
-            <a href="#" className="hover:text-red-500"> <Twitter className="w-5 h-5 hover:text-white transition" /></a>
             <a href="#" className="hover:text-red-500"><Facebook className="w-5 h-5 hover:text-white transition" /></a>
+            <a href="#" className="hover:text-red-500"> <Twitter className="w-5 h-5 hover:text-white transition" /></a>
           </div>
 
           {/* Right Links */}
@@ -151,7 +151,7 @@ const Navbar = () => {
                         Profile
                       </Link>
                       <button
-                         onClick={() => setIsLogoutConfirmOpen(true)}
+                        onClick={() => setIsLogoutConfirmOpen(true)}
                         className="w-full text-left text-gray-800 rounded-sm hover:bg-red-100 hover:text-red-500 px-4 py-2"
                       >
                         Logout
@@ -193,92 +193,87 @@ const Navbar = () => {
                 )}
               </div>
             </Link>
-            <button onClick={toggleMobileMenu} className="text-2xl">☰</button>
+            <button onClick={toggleMobileMenu} className="text-gray-800 hover:text-red-500 transition md:hidden">
+              {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
           </div>
         </div>
 
         {/* Mobile Menu */}
-        {isMobileMenuOpen && (
-          <div className="fixed inset-0 z-50 bg-white/80 backdrop-blur-md flex flex-col items-center px-6 py-10 overflow-y-auto">
-            {/* Close Button */}
-            <button
+
+        {/* Mobile Slide-Down Menu */}
+        <div
+          className={`absolute left-0 right-0 bg-white shadow-md z-40 transition-all duration-300 ease-in-out overflow-hidden uppercase ${isMobileMenuOpen ? 'max-h-[500px] opacity-100 translate-y-4' : 'max-h-0 opacity-0 -translate-y-2'
+            }`}
+        >
+          <nav className="flex flex-col items-start gap-0 md:hidden">
+            <Link
+              href="/"
               onClick={toggleMobileMenu}
-              className="absolute top-4 right-4 text-gray-700 hover:text-red-500 transition text-2xl font-bold"
+              className="block w-full px-3 border-t py-4 text-gray-800 hover:text-red-600 transition font-medium"
             >
-              ×
-            </button>
+              Home
+            </Link>
+            <Link
+              href="/shop"
+              onClick={toggleMobileMenu}
+              className="block w-full px-3 border-t py-4 text-gray-800 hover:text-red-600 transition font-medium"
+            >
+              Shop
+            </Link>
+            <Link
+              href="/about-us"
+              onClick={toggleMobileMenu}
+              className="block w-full px-3 border-t py-4 text-gray-800 hover:text-red-600 transition font-medium"
+            >
+              About Us
+            </Link>
+            <Link
+              href="/wishlist"
+              onClick={toggleMobileMenu}
+              className="block w-full px-3 border-t py-4 text-gray-800 hover:text-red-600 transition font-medium"
+            >
+              Wishlist
+            </Link>
+            <Link
+              href="/cart"
+              onClick={toggleMobileMenu}
+              className="block w-full px-3 border-t py-4 text-gray-800 hover:text-red-600 transition font-medium"
+            >
+              Cart
+            </Link>
 
-            {/* Profile Display (Optional: Add only if needed) */}
-            {/* <div className="mt-10 mb-6 text-center">
-      <Image src={profile} alt="User" width={60} height={60} className="rounded-full mx-auto" />
-      <p className="text-base font-semibold mt-2">{authState.user?.name}</p>
-    </div> */}
-
-            <nav className="mt-10 flex flex-col gap-3 w-full max-w-xs text-center">
-              <Link
-                href="/"
-                onClick={toggleMobileMenu}
-                className="block py-3 rounded-md text-gray-800 hover:text-red-600 hover:bg-red-100 transition font-medium"
-              >
-                Home
-              </Link>
-              <Link
-                href="/shop"
-                onClick={toggleMobileMenu}
-                className="block py-3 rounded-md text-gray-800 hover:text-red-600 hover:bg-red-100 transition font-medium"
-              >
-                Shop
-              </Link>
-              <Link
-                href="/about-us"
-                onClick={toggleMobileMenu}
-                className="block py-3 rounded-md text-gray-800 hover:text-red-600 hover:bg-red-100 transition font-medium"
-              >
-                About Us
-              </Link>
-              <Link
-                href="/wishlist"
-                onClick={toggleMobileMenu}
-                className="block py-3 rounded-md text-gray-800 hover:text-red-600 hover:bg-red-100 transition font-medium"
-              >
-                Wishlist
-              </Link>
-              <Link
-                href="/cart"
-                onClick={toggleMobileMenu}
-                className="block py-3 rounded-md text-gray-800 hover:text-red-600 hover:bg-red-100 transition font-medium"
-              >
-                Cart
-              </Link>
-
-              {authState.isAuthenticated ? (
-                <>
-                  <Link
-                    href="/profile"
-                    onClick={toggleMobileMenu}
-                    className="block py-3 rounded-md text-gray-800 hover:text-red-600 hover:bg-red-100 transition font-medium"
-                  >
-                    Profile
-                  </Link>
-                  <button
-                    onClick={() => setIsLogoutConfirmOpen(true)}
-                    className="block w-full py-3 rounded-md text-red-600 hover:bg-red-50 hover:text-red-700 transition font-medium"
-                  >
-                    Logout
-                  </button>
-                </>
-              ) : (
+            {authState.isAuthenticated ? (
+              <>
                 <Link
-                  href="/login"
+                  href="/profile"
                   onClick={toggleMobileMenu}
-                  className="block py-3 rounded-md text-gray-800 hover:text-red-600 hover:bg-red-100 transition font-medium"
+                  className="block w-full px-3 border-t py-4 text-gray-800 hover:text-red-600 transition font-medium"
                 >
-                  Login
+                  Profile
                 </Link>
-              )}
-            </nav>
-          </div>
-        )}
+                <button
+                  onClick={() => {
+                    toggleMobileMenu();
+                    setIsLogoutConfirmOpen(true);
+                  }}
+                  className="block w-full px-3 border-t py-4 text-start text-red-600 hover:text-red-700 transition font-medium uppercase"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <Link
+                href="/login"
+                onClick={toggleMobileMenu}
+                className="block w-full px-3 border-t py-4 text-gray-800 hover:text-red-600 transition font-medium uppercase"
+              >
+                Login
+              </Link>
+            )}
+          </nav>
+        </div>
+
 
         {isLogoutConfirmOpen && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">

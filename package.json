@@ -17,6 +17,7 @@
     "cloudinary": "^2.6.1",
     "cookie": "^1.0.2",
     "formidable": "^3.5.4",
+    "framer-motion": "^12.23.0",
     "js-cookie": "^3.0.5",
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.488.0",

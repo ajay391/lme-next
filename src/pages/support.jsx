@@ -1,7 +1,7 @@
 export default function SupportPage() {
   return (
     <div className="max-w-2xl mx-auto py-16 px-4">
-      <h1 className="text-3xl font-bold mb-6">Customer Support</h1>
+      <h1 className="text-3xl font-bold mb-6 uppercase">Customer Support</h1>
       <p className="mb-4 text-gray-600">Need help with an order, refund, or issue? Please submit your support request below.</p>
 
       <form className="space-y-4">

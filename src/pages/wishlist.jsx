@@ -6,6 +6,9 @@ import {
   clearWishlist,
 } from '../store/wishlistSlice';
 import Link from 'next/link';
+import { Eye, Trash2 } from 'lucide-react';
+import { FaEye } from 'react-icons/fa';
+import { BiSolidTrashAlt } from "react-icons/bi";
 
 const WishlistPage = () => {
   const wishlistItems = useSelector((state) => state.wishlist.items);
@@ -30,7 +33,7 @@ const WishlistPage = () => {
             <div className="col-span-2">Product</div>
             <div className="">Unit Price</div>
             <div className="">Stock</div>
-            <div className="text-right">Action</div>
+            <div className="">Action</div>
           </div>
 
           {/* Item Rows */}
@@ -48,7 +51,7 @@ const WishlistPage = () => {
                     className="w-20 h-20 object-cover rounded"
                   />
                   <div>
-                    <h3 className="text-base font-semibold text-gray-800">
+                    <h3 className="text-base pr-3 font-semibold text-gray-800">
                       {item.product_detail?.name}
                     </h3>
                     {/* <p className="text-sm text-gray-500">Size: {item.size}</p>
@@ -63,25 +66,25 @@ const WishlistPage = () => {
 
                 {/* Stock */}
                 <div>
-                  <span className="inline-block px-2 py-1 text-xs  bg-green-100 text-green-600">
-                    In Stock
+                  <span className="inline-block px-2 py-1 text-xs bg-green-100 text-green-600">
+                   &bull; In Stock
                   </span>
                 </div>
 
                 {/* Actions */}
                 <div className="text-left">
-                <div className="flex sm:justify-start flex-col sm:flex-row gap-2 sm:items-center text-left">
+                <div className="flex justify-end sm:justify-start sm:flex-row gap-2 sm:items-center text-left">
                   <Link
                     href={`/product/${item.product_detail?.id}`}
-                    className="text-sm text-center text-blue-600 hover:underline"
+                    className="text-sm text-center text-black"
                   >
-                    View 
+                    <FaEye size={20}/>
                   </Link>
                   <button
                     onClick={() => dispatch(removeFromWishlist({ id: item.id }))}
-                    className="text-sm text-red-500 hover:underline"
+                    className="text-sm text-red-500 "
                   >
-                    Remove
+                    <BiSolidTrashAlt size={20}/>
                   </button>
                 </div>
                 </div>
@@ -90,12 +93,12 @@ const WishlistPage = () => {
           </div>
 
           {/* Clear Wishlist Button */}
-          <div className="mt-10 flex justify-end">
+          <div className="mt-8 flex justify-end">
             <button
               onClick={() => dispatch(clearWishlist())}
-              className="bg-red-500 text-white px-6 py-2 rounded hover:bg-red-600 transition"
+              className=" text-red-500 px-0 py-2 rounded transition"
             >
-              Clear Wishlist
+              Remove All Items
             </button>
           </div>
         </>
