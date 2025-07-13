@@ -277,14 +277,14 @@ const Navbar = () => {
 
         {isLogoutConfirmOpen && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-sm text-center">
+            <div className="bg-white rounded-sm shadow-lg p-6 w-80 sm:w-full max-w-sm text-center">
               <h2 className="text-lg font-semibold text-gray-900 mb-2">Confirm Logout</h2>
               <p className="text-gray-600 mb-4">Are you sure you want to logout?</p>
 
               <div className="flex justify-center gap-4">
                 <button
                   onClick={() => setIsLogoutConfirmOpen(false)}
-                  className="px-4 py-2 rounded-md border text-gray-700 hover:bg-gray-100"
+                  className="px-4 py-2 rounded-sm border text-gray-700 hover:bg-gray-100"
                 >
                   Cancel
                 </button>
@@ -293,7 +293,7 @@ const Navbar = () => {
                     setIsLogoutConfirmOpen(false);
                     handleLogout(); // Your logout function
                   }}
-                  className="px-4 py-2 rounded-md bg-red-600 text-white hover:bg-red-700"
+                  className="px-4 py-2 rounded-sm bg-red-600 text-white hover:bg-red-700"
                 >
                   Logout
                 </button>

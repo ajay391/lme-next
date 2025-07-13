@@ -81,7 +81,7 @@ const ShopPage = ({ products }) => {
   return (
     <>
       <Head>
-        <title>Shop | Your Store</title>
+        <title>Shop | LME</title>
         <meta
           name="description"
           content="Explore our latest collection of oversized T-shirts and more."

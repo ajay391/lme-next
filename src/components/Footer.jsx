@@ -75,7 +75,7 @@ export default function Footer() {
                
                 className="break-all text-sm"
               >
-                lme.india@gmail.com
+                lme.store.in@gmail.com
               </a>
             </li>
           </ul>

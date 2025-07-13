@@ -5,12 +5,161 @@ import { useState, useEffect } from "react";
 import axiosInstance from "../utils/axiosInstance";
 import Script from "next/script";
 import { CircleCheck } from "lucide-react";
-
+import shopCart from "../../public/images/shopping-bag.png";
+import jsPDF from "jspdf";
+import Image from "next/image";
+import logoBase64 from "../utils/logoBase";
+import toast from "react-hot-toast";
 
 export default function CheckoutPage() {
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart.items);
   const [orderSuccess, setOrderSuccess] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
+  const [orderDetails, setOrderDetails] = useState(null);
+
+  const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
+  const shippingCharge = 0;
+  // {
+  //   "id": 6,
+  //   "order_id": "LME2507135ADA35",
+  //   "user": 5,
+  //   "created_at": "2025-07-13T03:39:43.729316Z",
+  //   "status": "Pending",
+  //   "total_price": "599.00",
+  //   "full_name": "Ajay P R",
+  //   "phone_number": "7736840046",
+  //   "street_address": "Anthony Vattathara Road",
+  //   "city": "Kochi",
+  //   "state": "Kerala",
+  //   "postal_code": "682304",
+  //   "country": "India",
+  //   "items": [
+  //     {
+  //       "id": 19,
+  //       "product": 1,
+  //       "product_name": "FI - Oversized Tee",
+  //       "product_image": "http://res.cloudinary.com/dxtmkvwrp/image/upload/v1751038830/tol1tjbrnlla0yxpfvt2.png",
+  //       "quantity": 1,
+  //       "price": "599.00"
+  //     }
+  //   ]
+  // }
+  const downloadOrderSummary = () => {
+    if (!orderDetails) return;
+
+    const doc = new jsPDF();
+    const left = 20;
+    let y = 20;
+    const rightAlign = 180;
+
+    try {
+      setIsDownloading(true);
+      // Add Logo
+      doc.addImage(logoBase64, "PNG", left, y, 15, 15);
+      y += 20;
+
+      // --- Title / Branding ---
+      doc.setFontSize(22);
+      doc.setTextColor(0, 0, 0);
+      doc.setFont("Helvetica", "bold");
+      // doc.text("Last Man on Earth", left, y);
+      y += 8;
+      doc.setFontSize(14);
+      doc.setTextColor(120, 120, 120);
+      doc.text("Order Summary", left, y);
+      doc.setDrawColor(0);
+      doc.line(left, y + 2, 180, y + 2); // underline
+      y += 10;
+
+      // --- Order Info ---
+      doc.setFontSize(12);
+      doc.setTextColor(60, 60, 60);
+      doc.setFont("Helvetica", "normal");
+      doc.text(`Order ID: ${orderDetails.order_id}`, left, y);
+      doc.text(`Status: ${orderDetails.status}`, left, y += 8);
+      doc.text(`Date: ${new Date(orderDetails.created_at).toLocaleString()}`, left, y += 8);
+
+      // --- Customer Info ---
+      y += 12;
+      doc.setFontSize(13);
+      doc.setTextColor(0, 0, 0);
+      doc.setFont("Helvetica", "bold");
+      doc.text("Customer Details", left, y);
+      doc.setDrawColor(220);
+      doc.line(left, y + 2, 180, y + 2);
+      y += 8;
+
+      doc.setFontSize(12);
+      doc.setTextColor(60, 60, 60);
+      doc.setFont("Helvetica", "normal");
+      doc.text(`Name: ${orderDetails.full_name}`, left, y += 8);
+      doc.text(`Phone: ${orderDetails.phone_number}`, left, y += 8);
+      const email = getValues("email") || orderDetails.email || "Not Provided";
+      doc.text(`Email: ${email}`, left, y += 8);
+      doc.text(`Address: ${orderDetails.street_address}, ${orderDetails.city}, ${orderDetails.state} - ${orderDetails.postal_code}, ${orderDetails.country}`, left, y += 8);
+
+      // --- Items ---
+      y += 14;
+      doc.setFontSize(13);
+      doc.setTextColor(0, 0, 0);
+      doc.setFont("Helvetica", "bold");
+      doc.text("Items", left, y);
+      doc.line(left, y + 2, 180, y + 2);
+      y += 8;
+
+      // Table Headers
+      doc.setFontSize(12);
+      doc.setFont("Helvetica", "bold");
+      doc.text("Item", left, y);
+      doc.text("Qty", left + 100, y);
+      doc.text("Price", rightAlign, y, { align: "right" });
+
+      y += 4;
+      doc.line(left, y + 2, 180, y + 2);
+      y += 8;
+
+      // Table Items
+      doc.setFont("Helvetica", "normal");
+      doc.setTextColor(40, 40, 40);
+
+      orderDetails.items.forEach((item, index) => {
+        y += 8;
+        const cleanPrice = parseFloat(String(item.price).replace(/[^\d.]/g, ""));
+        doc.text(`${index + 1}. ${item.product_name}`, left, y);
+        doc.text(`${item.quantity}`, left + 100, y);
+        doc.text(`Rs. ${cleanPrice.toFixed(2)}`, rightAlign, y, { align: "right" });
+      });
+
+      // --- Total ---
+      y += 12;
+      doc.setDrawColor(0);
+      doc.setLineWidth(0.5);
+      doc.line(left, y, 180, y);
+
+      y += 8;
+      const totalClean = parseFloat(String(orderDetails.total_price).replace(/[^\d.]/g, ""));
+      doc.setFont("Helvetica", "bold");
+      doc.setFontSize(13);
+      doc.text(`Total Amount:`, left + 90, y);
+      doc.text(`Rs. ${totalClean.toFixed(2)}`, rightAlign, y, { align: "right" });
+
+      // --- Footer ---
+      y += 20;
+      doc.setFont("Helvetica", "italic");
+      doc.setFontSize(11);
+      doc.setTextColor(100, 100, 100);
+      doc.text("Thank you for shopping with Lastmanonearth!", left, y);
+      doc.text("For support, contact needhelp.lme@gmail.com", left, y + 6);
+
+      // Save the file
+      doc.save(`Order_${orderDetails.order_id}.pdf`);
+    } catch (error) {
+      console.error("PDF download failed:", error);
+    } finally {
+      setIsDownloading(false); // ✅ Stop loader
+    }
+  };
 
   const {
     register,
@@ -62,6 +211,7 @@ export default function CheckoutPage() {
 
     try {
       // 1. Create Razorpay Order
+      setIsSubmitting(true);
       const razorRes = await axiosInstance.post("/orders/create-razorpay-order/", { amount });
 
       const options = {
@@ -103,14 +253,20 @@ export default function CheckoutPage() {
             });
 
             if (res.ok) {
+              const orderResponse = await res.json();
               setOrderSuccess(true);
               dispatch(clearCart());
+              setOrderDetails(orderResponse)
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+              toast.success("Order Placed Successfully")
             } else {
-              alert("Order failed to save.");
+              toast.error("Order failed to save.");
             }
           } catch (err) {
             console.error("Payment success but order save failed:", err);
-          }
+           } finally {
+          setIsSubmitting(false); // ✅ Reset submitting
+        }
         },
         prefill: {
           name: data.fullName,
@@ -126,7 +282,8 @@ export default function CheckoutPage() {
       rzp.open();
     } catch (error) {
       console.error("Error in Razorpay Payment:", error);
-      alert("Something went wrong while initiating payment.");
+      toast.error("Something went wrong while initiating payment.");
+      setIsSubmitting(false);
     }
   };
 
@@ -137,40 +294,84 @@ export default function CheckoutPage() {
         src="https://checkout.razorpay.com/v1/checkout.js"
         strategy="lazyOnload"
       />
-      <div className="max-w-4xl mx-auto px-4 py-10">
+      <div className="max-w-6xl mx-auto px-4 py-10">
         <div className="mb-6 text-sm text-gray-500">
+          {/* <h2 className="text-2xl font-bold text-gray-800 mb-6">Checkout</h2> */}
           <span className="hover:underline cursor-pointer">Home</span> / <span className="text-black ">Checkout</span>
         </div>
 
         {orderSuccess ? (
-          <div className="bg-white border border-green-200 rounded-xl shadow-md p-6 sm:p-8 text-center space-y-4 animate-fade-in">
+          <div className="bg-white rounded-sm sm:p-8 text-center space-y-6 animate-fade-in">
             <div className="flex justify-center">
-              <CircleCheck className="w-16 h-16 text-green-500" />
+              <Image
+                src={shopCart}
+                alt="Profile"
+
+                className="w-20 h-20 rounded-full object-cover"
+              />
             </div>
             <h3 className="text-2xl font-bold text-green-700">
               Your Order Has Been Placed!
             </h3>
-            <p className="text-gray-600 max-w-md mx-auto">
-              Thank you for shopping with us. A confirmation email has been sent to your registered email address with order details.
+            <p className="text-gray-600 max-w-xl mx-auto">
+              Thank you for shopping with us. We'll send you a shipping confirmation email as soon as your order ships.
             </p>
-            <div className="text-sm text-gray-500">
-              <p><strong>Order ID:</strong> #LMOE123456</p>
-              <p><strong>Estimated Delivery:</strong> 4–7 business days</p>
-            </div>
-            <div className="pt-4">
+            {orderDetails && (
+              <div className="text-sm text-gray-500">
+                <p className="mb-2 "><strong>Order ID:</strong> <span className="text-red-600 poppins-font">#{orderDetails.order_id}</span> </p>
+                <p><strong>Estimated Delivery:</strong> 4–7 business days</p>
+              </div>
+            )}
+            <div className="pt-2">
               <a
-                href="/profile"
-                className="inline-block px-5 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
+                href="/shop"
+                className="inline-block px-5 py-2 mx-2 bg-green-600 text-white rounded-sm hover:bg-green-700 transition"
               >
-                View My Orders
+                Continue Shopping
               </a>
+              <button
+                onClick={downloadOrderSummary}
+                disabled={isDownloading}
+                className="inline-flex items-center gap-2 px-5 py-2 mt-2 mx-2 bg-gray-800 text-white rounded-sm hover:bg-gray-900 transition disabled:opacity-50"
+              >
+                {isDownloading && (
+                  <svg
+                    className="animate-spin h-4 w-4 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    />
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                    />
+                  </svg>
+                )}
+                {isDownloading ? "Downloading..." : "Download Order Summary"}
+              </button>
             </div>
           </div>
         ) : (
           <div className="grid md:grid-cols-2 gap-10">
             {/* Cart Summary */}
             <div>
-              <h3 className="text-xl font-semibold mb-4">Your Cart</h3>
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-xl font-semibold">Your Cart</h3>
+                {cartItems.length > 0 && (
+                  <span className="text-sm text-gray-500">
+                    {cartItems.length} {cartItems.length === 1 ? "item" : "items"}
+                  </span>
+                )}
+              </div>
               {cartItems.length === 0 ? (
                 <div className="bg-red-100 p-4 rounded text-red-700">Your cart is empty.</div>
               ) : (
@@ -184,24 +385,35 @@ export default function CheckoutPage() {
                           className="w-20 h-20 object-cover rounded"
                         />
                         <div className="flex-1">
-                          <h4 className="font-semibold">{item.name}</h4>
-                          <p className="text-sm text-gray-500">
-                            Size: {item.size} | Color: {item.color}
+                          <h4 className="text-md font-semibold mb-1">{item.name}</h4>
+                          <p className="text-sm text-gray-500 mb-1">
+                            Size: {item.size} {item.color && ` | Color: ${item.color}`}
                           </p>
-                          <p className="text-sm">Quantity: {item.quantity}</p>
+                          <p className="text-sm text-gray-500">Quantity: {item.quantity}</p>
                         </div>
-                        <div className="font-medium">
+                        <div className="font-medium text-red-500">
+                          {/* ₹{item.price * item.quantity} */}
                           ₹{item.price * item.quantity}
                         </div>
                       </li>
                     ))}
                   </ul>
-                  <div className="text-right font-bold text-lg mt-4">
-                    Total: ₹
-                    {cartItems.reduce(
-                      (acc, item) => acc + item.price * item.quantity,
-                      0
-                    )}
+                  <div className="bg-gray-50 py-5 rounded-md shadow-sm mt-4 ">
+                    <h4 className="text-lg font-semibold text-gray-800 border-b pb-2 mb-3">Order Summary</h4>
+                    <div className="flex justify-between text-sm text-gray-600 mb-2">
+                      <span>Subtotal</span>
+                      <span>₹{subtotal.toFixed(2)}</span>
+                    </div>
+                    <div className="flex justify-between text-sm text-gray-600 mb-2">
+                      <span>Shipping</span>
+                      {/* <span>₹{shippingCharge}</span> */}
+                      <span className="bg-green-200 text-green-700 py-0 px-2 rounded-sm">Free</span>
+                    </div>
+                    <hr className="my-3" />
+                    <div className="flex justify-between text-lg font-bold text-black">
+                      <span>Total</span>
+                      <span>₹{(subtotal + shippingCharge).toFixed(2)}</span>
+                    </div>
                   </div>
                 </>
               )}
@@ -368,9 +580,35 @@ export default function CheckoutPage() {
               <button
                 disabled={isSubmitting}
                 type="submit"
-                className="w-full bg-black text-white py-2 rounded hover:bg-gray-800 transition"
+                className="w-full flex items-center justify-center gap-2 bg-black text-white py-2 rounded hover:bg-gray-800 transition disabled:opacity-50"
               >
-                {isSubmitting ? "Placing Order..." : "Place Order"}
+                {isSubmitting ? (
+                  <>
+                    <svg
+                      className="animate-spin h-5 w-5 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      />
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                      />
+                    </svg>
+                    <span>Placing Order...</span>
+                  </>
+                ) : (
+                  "Place Order"
+                )}
               </button>
             </form>
           </div>
@@ -378,4 +616,23 @@ export default function CheckoutPage() {
       </div>
     </>
   );
+}
+
+
+export async function getServerSideProps(context) {
+  const { req } = context;
+  const token = req.cookies?.access_token;
+
+  if (!token) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {}, // or pass token/user data if needed
+  };
 }

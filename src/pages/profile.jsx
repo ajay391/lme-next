@@ -13,6 +13,7 @@ import { IoIosAddCircle } from "react-icons/io";
 import { FaEdit } from "react-icons/fa";
 import { RiMenu2Fill } from "react-icons/ri";
 import { FaUser, FaBoxOpen, FaHome, FaHeart, FaSignOutAlt } from "react-icons/fa";
+import emptyOrders from "../../public/images/delete.png";
 
 const Profile = () => {
   const router = useRouter();
@@ -214,17 +215,21 @@ const Profile = () => {
           </button>
 
           <div className="hidden md:block w-full h-fit md:w-72 bg-white rounded-md shadow-md p-6">
-            <div className="flex flex-col items-center mb-8">
-              <div className="relative w-24 h-24 mb-4">
+            <div className="flex  items-center mb-8">
+              <div className="relative mr-3">
                 <Image
                   src={profile}
                   alt="Profile"
-                  fill
-                  className="rounded-full object-cover border-4 border-indigo-100"
+                  width={50}
+                  height={50}
+                  className="rounded-full object-cover "
                 />
               </div>
-              <h2 className="text-xl font-bold text-gray-900">{form.name}</h2>
-              <p className="text-gray-500 text-sm">{form.email}</p>
+              <div>
+                <h2 className="text-xl font-bold text-gray-900">{form.name}</h2>
+                <p className="text-gray-500 text-sm">{form.email}</p>
+
+              </div>
             </div>
 
 
@@ -314,14 +319,14 @@ const Profile = () => {
 
           {isLogoutConfirmOpen && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-              <div className="bg-white rounded-sm shadow-lg p-6 w-full max-w-sm text-center">
+              <div className="bg-white rounded-sm shadow-lg p-6 w-80 sm:w-full max-w-sm text-center">
                 <h2 className="text-lg font-semibold text-gray-900 mb-2">Confirm Logout</h2>
                 <p className="text-gray-600 mb-4">Are you sure you want to logout?</p>
 
                 <div className="flex justify-center gap-4">
                   <button
                     onClick={() => setIsLogoutConfirmOpen(false)}
-                    className="px-4 py-2 rounded-md border text-gray-700 hover:bg-gray-100"
+                    className="px-4 py-2 rounded-sm border text-gray-700 hover:bg-gray-100"
                   >
                     Cancel
                   </button>
@@ -330,7 +335,7 @@ const Profile = () => {
                       setIsLogoutConfirmOpen(false);
                       handleLogout(); // Your logout function
                     }}
-                    className="px-4 py-2 rounded-md bg-red-600 text-white hover:bg-red-700"
+                    className="px-4 py-2 rounded-sm bg-red-600 text-white hover:bg-red-700"
                   >
                     Logout
                   </button>
@@ -342,10 +347,10 @@ const Profile = () => {
           <div className="flex-1">
             {/* Profile Information */}
             {activeTab === "profile" && (
-              <div className="bg-white rounded-sm p-0 md:p-6 border border-gray-100">
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+              <div className="bg-white rounded-sm p-0 md:p-6 ">
+                <div className="flex flex-row justify-between items-start sm:items-center mb-6 gap-4 border-b pb-3">
                   <div>
-                    <h2 className="text-xl font-bold uppercase text-gray-900 mb-1">Profile</h2>
+                    <h2 className="text-xl font-medium uppercase text-red-500 mb-1">Profile</h2>
                     <p className="text-sm text-gray-500">Basic information about your account</p>
                   </div>
                   <button
@@ -356,7 +361,7 @@ const Profile = () => {
                   </button>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-5 gap-x-8">
+                <div className="grid grid-cols-1 sm:grid-cols-1 gap-y-5 gap-x-8 ">
                   <div>
                     <label className="block text-gray-500 text-sm mb-1">Full Name</label>
                     <p className="text-base font-medium text-gray-800">{form.name || "—"}</p>
@@ -461,11 +466,29 @@ const Profile = () => {
             {/* Orders */}
             {activeTab === "orders" && (
               <div className="bg-white rounded-sm p-0 sm:p-6">
-                <h2 className="text-xl font-medium text-gray-900 mb-6 uppercase">My Orders</h2>
+                <h2 className="text-xl font-medium text-red-500 mb-6 uppercase">My Orders</h2>
 
                 <div className="space-y-6">
                   {orders.length === 0 ? (
-                    <p className="text-gray-500 text-sm">You haven't placed any orders yet.</p>
+                    <div className="flex flex-col items-center justify-center text-center p-6 rounded-md ">
+                      <Image
+                        src={emptyOrders}
+                        alt="Profile"
+                        width={120}    // or your desired size
+                        height={120}
+                        className="object-cover mb-5"
+                      />
+                      <h3 className="text-lg font-semibold text-gray-700 mb-1">No Orders Yet</h3>
+                      <p className="text-gray-500 text-sm mb-4">
+                        Looks like you haven't placed any orders yet. Start shopping now!
+                      </p>
+                      <a
+                        href="/shop"
+                        className="inline-block bg-black text-white px-4 py-2 rounded-sm hover:bg-gray-800 transition"
+                      >
+                        Go to Shop
+                      </a>
+                    </div>
                   ) : (
                     orders.map((order) => {
                       const firstItem = order.items[0];
@@ -478,7 +501,7 @@ const Profile = () => {
                         >
                           {/* Status and Date */}
                           <div className="flex items-center justify-start gap-3">
-                            <span className={`inline-block px-3 py-1 text-xs rounded-md font-medium
+                            <span className={`inline-block px-3 py-1 text-xs rounded-sm font-medium
                               ${order.status === "Delivered"
                                 ? "bg-green-100 text-green-700"
                                 : order.status === "Shipped"
@@ -517,7 +540,7 @@ const Profile = () => {
 
                             {/* Product Details */}
                             <div className="flex flex-col justify-between gap-1">
-                              <p className="text-sm text-red-500 font-semibold ">Order ID: <span className="text-red-500 font-medium">{order.id}</span></p>
+                              <p className="text-sm text-black font-medium ">Order ID: <span className="text-red-500 font-medium">{order.order_id}</span></p>
                               <p className="text-sm text-gray-700 font-medium">
                                 {firstItem.product_name}
                                 {extraItems > 0 && (
@@ -583,7 +606,7 @@ const Profile = () => {
             {activeTab === "addresses" && (
               <div className="bg-white rounded-sm p-0 sm:p-6 ">
                 <div className="flex justify-between items-center mb-6">
-                  <h2 className="text-xl font-medium uppercase text-gray-900">Saved Addresses</h2>
+                  <h2 className="text-xl font-medium uppercase text-red-500">Saved Addresses</h2>
                   <button
                     onClick={() => setIsAddOpen(true)}
                     className="px-3 py-2 text-red-500 text-sm font-medium"
@@ -599,7 +622,7 @@ const Profile = () => {
                     {addresses.map((addr) => (
                       <div
                         key={addr.id}
-                        className="relative border rounded-lg p-5 hover:shadow-md transition bg-white"
+                        className="relative border rounded-sm p-5 hover:shadow-md transition bg-white"
                       >
                         {/* Default badge */}
                         {addr.is_default && (
@@ -688,8 +711,8 @@ const Profile = () => {
               <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 overflow-y-auto">
                 <div className="bg-white rounded-lg shadow-xl w-full max-w-xl mx-auto overflow-y-auto max-h-[90vh]">
                   <div className="p-6">
-                    <div className="flex justify-between items-center mb-6">
-                      <h3 className="text-xl font-semibold text-gray-900">Add New Address</h3>
+                    <div className="flex justify-between items-center mb-8">
+                      <h3 className="text-xl font-normal text-red-500 uppercase" >Add New Address</h3>
                       <button onClick={() => setIsAddOpen(false)} className="text-gray-400 hover:text-gray-500">
                         <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -760,8 +783,8 @@ const Profile = () => {
               <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 overflow-y-auto">
                 <div className="bg-white rounded-lg shadow-xl w-full max-w-xl mx-auto overflow-y-auto max-h-[90vh]">
                   <div className="p-6">
-                    <div className="flex justify-between items-center mb-6">
-                      <h3 className="text-xl font-semibold text-gray-900">Edit Address</h3>
+                    <div className="flex justify-between items-center mb-8">
+                      <h3 className="text-xl font-normal text-red-500 uppercase">Edit Address</h3>
                       <button
                         onClick={() => setIsAddressEditOpen(false)}
                         className="text-gray-400 hover:text-gray-600"
@@ -814,13 +837,13 @@ const Profile = () => {
                         <button
                           type="button"
                           onClick={() => setIsAddressEditOpen(false)}
-                          className="px-4 py-2 border rounded-md text-gray-700 hover:bg-gray-50"
+                          className="px-4 py-2 border rounded-sm text-gray-700 hover:bg-gray-100"
                         >
                           Cancel
                         </button>
                         <button
                           type="submit"
-                          className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+                          className="px-4 py-2 bg-red-500 text-white rounded-sm hover:bg-red-600"
                         >
                           Update Address
                         </button>
@@ -838,7 +861,7 @@ const Profile = () => {
             {activeTab === "wishlist" && (
               <div className="bg-white rounded-lg overflow-hidden">
                 <div className="px-0 pb-6 sm:p-6">
-                  <h2 className="text-xl font-medium uppercase text-gray-900">Wishlist</h2>
+                  <h2 className="text-xl font-medium uppercase text-red-500">Wishlist</h2>
                 </div>
 
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 px-0 sm:px-6">
@@ -854,9 +877,9 @@ const Profile = () => {
                       </div>
                       <div className="p-4">
                         <h3 className="font-medium text-gray-900 mb-1">{item.product_detail.name}</h3>
-                        <p className="text-sm text-gray-500 mb-1">Size: {item.size} | Color: {item.color}</p>
+                        {/* <p className="text-sm text-gray-500 mb-1">Size: {item.size} | Color: {item.color}</p> */}
                         <div className="flex justify-between items-center">
-                          <span className="font-normal">₹{item.product_detail.price}</span>
+                          <span className="font-normal text-red-500">₹{item.product_detail.price}</span>
                           <div className="flex gap-0">
                             {/* Wishlist or cart icons */}
                             <button className="p-2 text-red-500 hover:text-red-600" title="Remove">

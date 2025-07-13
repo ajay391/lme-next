@@ -9,6 +9,8 @@ import {
 import { PiShoppingCartSimple } from 'react-icons/pi';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import shopCart from "../../public/images/empty-box.png";
+import Image from 'next/image';
 
 const CartPage = () => {
   const cartItems = useSelector((state) => state.cart.items);
@@ -27,14 +29,20 @@ const CartPage = () => {
 
   return (
     <div className="max-w-6xl mx-auto px-5 sm:px-8 py-10 min-h-[70vh]">
-      <h2 className="text-2xl font-bold text-gray-800 mb-6">Your Cart</h2>
+      <h2 className="text-xl font-medium uppercase text-gray-800 mb-6">Your Cart</h2>
 
       {cartItems.length === 0 ? (
-        <div className="text-center py-20 text-gray-500 flex justify-center items-center flex-col gap-6">
-          <PiShoppingCartSimple size={80} className="text-gray-400" />
-          <h4 className="text-2xl font-semibold text-gray-700">
-             Your cart is empty.
-          </h4>
+        <div className="text-center py-10 sm:py-18 text-gray-500 flex justify-center items-center flex-col gap-6">
+          <Image
+            src={shopCart}
+            alt="Profile"
+            width={110}         // or your desired size
+            height={110}
+            className="object-cover"
+          />
+          <h2 className="text-2xl font-semibold text-gray-700">
+            Your Cart is Empty.
+          </h2>
           <p className="text-base max-w-[500px] text-gray-500">
             It looks like you haven't added any items to your cart yet. Start browsing our products and add some to your cart.
           </p>
@@ -46,12 +54,12 @@ const CartPage = () => {
         </div>
       ) : (
         <>
-          <div className="hidden sm:grid grid-cols-6 gap-4 px-4 py-3 border-b font-semibold text-gray-700 text-sm">
-            <div className="col-span-2">Product</div>
-            <div className="text-center">Quantity</div>
-            <div className="text-center">Unit Price</div>
-            <div className="text-center">Subtotal</div>
-            <div className="text-center">Action</div>
+          <div className="hidden sm:grid grid-cols-6 gap-4 px-4 py-3 border-b font-medium text-gray-700 text-sm">
+            <div className="col-span-2 poppins-font">Product</div>
+            <div className="text-center poppins-font">Quantity</div>
+            <div className="text-center poppins-font">Unit Price</div>
+            <div className="text-center poppins-font">Subtotal</div>
+            <div className="text-center poppins-font">Action</div>
           </div>
 
           <div className="space-y-6 mt-4">
@@ -67,9 +75,9 @@ const CartPage = () => {
                     className="w-20 h-20 object-cover rounded"
                   />
                   <div>
-                    <h3 className="text-base font-semibold text-gray-800">{item.name}</h3>
+                    <h3 className="text-base font-medium text-gray-800 poppins-font">{item.name}</h3>
                     <p className="text-sm text-gray-500">Size: {item.size}</p>
-                    <p className="text-sm text-gray-500">Color: {item.color}</p>
+                    {item.color && <p className="text-sm text-gray-500">Color: {item.color}</p>}
                   </div>
                 </div>
 

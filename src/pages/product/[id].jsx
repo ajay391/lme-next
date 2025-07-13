@@ -11,6 +11,10 @@ const ProductViewPage = ({ product, relatedProducts }) => {
   const [selectedImage, setSelectedImage] = useState(product.image);
   const [selectedColor, setSelectedColor] = useState("");
   const [openSection, setOpenSection] = useState(null);
+useEffect(()=>{
+
+  console.log(product, "product--------")
+},[product])
 
   useEffect(() => {
     setSelectedImage(product.image);
