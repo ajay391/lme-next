@@ -14,6 +14,10 @@ import { FaEdit } from "react-icons/fa";
 import { RiMenu2Fill } from "react-icons/ri";
 import { FaUser, FaBoxOpen, FaHome, FaHeart, FaSignOutAlt } from "react-icons/fa";
 import emptyOrders from "../../public/images/delete.png";
+import Link from "next/link";
+import emptyWishlist from "../../public/images/add-to-favorites.png";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
 
 const Profile = () => {
   const router = useRouter();
@@ -39,6 +43,7 @@ const Profile = () => {
     country: '',
     postal_code: '',
     phone_number: '',
+    email: '',
     is_default: false,
   });
 
@@ -53,6 +58,7 @@ const Profile = () => {
 
   const [isLoading, setIsLoading] = useState(true);
   const [deleteConfirmId, setDeleteConfirmId] = useState(null);
+  const [addressErrors, setAddressErrors] = useState({});
 
   useEffect(() => {
     const fetchProfileData = async () => {
@@ -79,19 +85,83 @@ const Profile = () => {
     fetchProfileData();
   }, []);
 
-  const handleUpdate = (e) => {
-    e.preventDefault();
-    setIsProfileEditOpen(false);
-  };
+ const handleUpdate = async (e) => {
+  e.preventDefault();
 
+  try {
+    await axiosInstance.put("/auth/update-profile/", {
+  name: form.name,
+});
+
+    toast.success("Profile updated");
+    setIsProfileEditOpen(false);
+  } catch (error) {
+    console.error("Profile update failed:", error);
+    toast.error("Failed to update profile");
+  }
+};
+
+  const AddressSchema = Yup.object().shape({
+    full_name: Yup.string().required("Full name is required"),
+    street_address: Yup.string().required("Street address is required"),
+    city: Yup.string().required("City is required"),
+    state: Yup.string().required("State is required"),
+    country: Yup.string().required("Country is required"),
+    postal_code: Yup.string().required("Postal code is required"),
+    phone_number: Yup.string()
+      .required("Phone number is required")
+      .matches(/^[0-9]{10}$/, "Phone number must be 10 digits"),
+    email: Yup.string()
+      .email("Invalid email format")
+      .required("Email is required"),
+    is_default: Yup.boolean(),
+  });
+
+  const validateAddressForm = () => {
+    const errors = {};
+    const requiredFields = [
+      "full_name",
+      "street_address",
+      "city",
+      "state",
+      "country",
+      "postal_code",
+      "phone_number",
+      "email"
+    ];
+
+    requiredFields.forEach((field) => {
+      if (!newAddress[field]) {
+        errors[field] = "This field is required";
+      }
+    });
+
+    // Simple email format check
+    if (newAddress.email && !/\S+@\S+\.\S+/.test(newAddress.email)) {
+      errors.email = "Invalid email address";
+    }
+
+    // Optional: check phone length
+    if (newAddress.phone_number && newAddress.phone_number.length < 10) {
+      errors.phone_number = "Phone number is too short";
+    }
+
+    return errors;
+  };
   const handleAddAddress = async () => {
+    const errors = validateAddressForm();
+    setAddressErrors(errors);
+
+    if (Object.keys(errors).length > 0) {
+      toast.error("Please fix the errors in the form.");
+      return;
+    }
+
     try {
       const res = await axiosInstance.post('/auth/my-addresses/', newAddress);
       const newAddr = res.data;
 
-      // ✅ If new address is marked as default, update existing ones in state
       let updatedAddresses = addresses;
-
       if (newAddr.is_default) {
         updatedAddresses = addresses.map((addr) => ({
           ...addr,
@@ -99,16 +169,26 @@ const Profile = () => {
         }));
       }
 
-      // ✅ Add the new one
       setAddresses([...updatedAddresses, newAddr]);
       setIsAddOpen(false);
       toast.success("Address added");
+      setNewAddress({
+        full_name: '',
+        street_address: '',
+        city: '',
+        state: '',
+        country: '',
+        postal_code: '',
+        phone_number: '',
+        email: '',
+        is_default: addresses.length === 0,
+      });
+      setAddressErrors({});
     } catch (err) {
       console.error(err);
       toast.error("Failed to add address");
     }
   };
-
 
   const handleUpdateAddress = async () => {
     try {
@@ -161,11 +241,11 @@ const Profile = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 animate-pulse">
         <div className="flex flex-col md:flex-row gap-8">
           {/* Sidebar Skeleton */}
-          <div className="hidden md:block w-full h-fit md:w-72 bg-white rounded-md shadow-md p-6">
+          <div className="hidden md:block w-full h-fit md:w-72 bg-white rounded-sm shadow-md p-6">
             <div className="flex flex-col items-center mb-8">
               <div className="w-24 h-24 mb-4 rounded-full bg-gray-200" />
-              <div className="h-4 bg-gray-200 rounded w-2/3 mb-2" />
-              <div className="h-3 bg-gray-200 rounded w-1/2" />
+              <div className="h-4 bg-gray-200 rounded-sm w-2/3 mb-2" />
+              <div className="h-3 bg-gray-200 rounded-sm w-1/2" />
             </div>
             <div className="space-y-3">
               <div className="h-4 bg-gray-200 rounded" />
@@ -179,11 +259,11 @@ const Profile = () => {
           <div className="flex-1 space-y-6">
             {/* Profile Card */}
             <div className="bg-white rounded-sm shadow-md p-6 border border-gray-100">
-              <div className="h-6 bg-gray-200 rounded w-1/3 mb-4" />
+              <div className="h-6 bg-gray-200 rounded-sm w-1/3 mb-4" />
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <div className="h-4 bg-gray-200 rounded w-2/3" />
-                <div className="h-4 bg-gray-200 rounded w-1/2" />
-                <div className="h-4 bg-gray-200 rounded w-3/4" />
+                <div className="h-4 bg-gray-200 rounded-sm w-2/3" />
+                <div className="h-4 bg-gray-200 rounded-sm w-1/2" />
+                <div className="h-4 bg-gray-200 rounded-sm w-3/4" />
               </div>
             </div>
 
@@ -214,7 +294,7 @@ const Profile = () => {
 
           </button>
 
-          <div className="hidden md:block w-full h-fit md:w-72 bg-white rounded-md shadow-md p-6">
+          <div className="hidden md:block w-full h-fit md:w-72 bg-white rounded-sm shadow-md p-6">
             <div className="flex  items-center mb-8">
               <div className="relative mr-3">
                 <Image
@@ -226,7 +306,7 @@ const Profile = () => {
                 />
               </div>
               <div>
-                <h2 className="text-xl font-bold text-gray-900">{form.name}</h2>
+                <h2 className="text-xl font-bold text-gray-900 capitalize">{form.name}</h2>
                 <p className="text-gray-500 text-sm">{form.email}</p>
 
               </div>
@@ -258,7 +338,7 @@ const Profile = () => {
               >
                 Wishlist
               </button>
-              <button onClick={() => setIsLogoutConfirmOpen(true)} className="w-full text-left px-4 py-3 rounded-sm font-medium text-gray-700 hover:bg-gray-100">
+              <button onClick={() => setIsLogoutConfirmOpen(true)} className="w-full text-left px-4 py-3 rounded-sm font-medium  text-gray-700 hover:bg-gray-100">
                 Logout
               </button>
             </nav>
@@ -307,7 +387,7 @@ const Profile = () => {
 
                   <button
                     onClick={() => setIsLogoutConfirmOpen(true)}
-                    className="w-full flex items-center text-left px-4 py-3 text-gray-500 hover:text-black hover:bg-gray-100 rounded-md transition uppercase"
+                    className="w-full flex items-center text-left px-4 py-3 text-gray-500 hover:text-black hover:bg-gray-100 rounded-sm transition uppercase"
                   >
                     {/* <FaSignOutAlt className="mr-2" /> */}
                     Logout
@@ -364,7 +444,7 @@ const Profile = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-1 gap-y-5 gap-x-8 ">
                   <div>
                     <label className="block text-gray-500 text-sm mb-1">Full Name</label>
-                    <p className="text-base font-medium text-gray-800">{form.name || "—"}</p>
+                    <p className="text-base font-medium text-gray-800 capitalize">{form.name || "—"}</p>
                   </div>
 
                   <div>
@@ -390,7 +470,7 @@ const Profile = () => {
             {/* Edit Profile Modal */}
             {isProfileEditOpen && (
               <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-                <div className="bg-white rounded-md shadow-xl w-full max-w-md">
+                <div className="bg-white rounded-sm shadow-xl w-full max-w-md">
                   <div className="p-6">
                     <div className="flex justify-between items-center mb-4">
                       <h3 className="text-lg font-bold text-gray-900">Edit Profile</h3>
@@ -411,7 +491,7 @@ const Profile = () => {
                           type="text"
                           value={form.name}
                           onChange={(e) => setForm({ ...form, name: e.target.value })}
-                          className="w-full px-4 py-2 border rounded-md focus:ring-red-500 focus:border-red-500"
+                          className="w-full px-4 py-2 border rounded-sm focus:ring-1 focus:outline-none focus:ring-black"
                         />
                       </div>
                       <div>
@@ -421,7 +501,7 @@ const Profile = () => {
                           value={form.email}
                           readOnly
                           onChange={(e) => setForm({ ...form, email: e.target.value })}
-                          className="w-full px-4 py-2 border rounded-md focus:ring-red-500 focus:border-red-500 opacity-65"
+                          className="w-full px-4 py-2 border rounded-sm focus:ring-black focus:outline-none opacity-65"
                         />
                       </div>
                       {/*<div>
@@ -470,7 +550,7 @@ const Profile = () => {
 
                 <div className="space-y-6">
                   {orders.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center text-center p-6 rounded-md ">
+                    <div className="flex flex-col items-center justify-center text-center p-6 rounded-sm ">
                       <Image
                         src={emptyOrders}
                         alt="Profile"
@@ -497,7 +577,7 @@ const Profile = () => {
                       return (
                         <div
                           key={order.id}
-                          className="rounded-lg border border-gray-200 p-5 hover:shadow-md transition space-y-4"
+                          className="rounded-sm border border-gray-200 p-5 hover:shadow-md transition space-y-4"
                         >
                           {/* Status and Date */}
                           <div className="flex items-center justify-start gap-3">
@@ -529,10 +609,10 @@ const Profile = () => {
                                 alt={firstItem.product_name}
                                 width={64}
                                 height={64}
-                                className="rounded-md border object-cover"
+                                className="rounded-sm border object-cover"
                               />
                               {extraItems > 0 && (
-                                <span className="absolute -bottom-1 -right-1 bg-black text-white text-[10px] px-1 py-[1px] rounded">
+                                <span className="absolute -bottom-1 -right-1 bg-black text-white text-[10px] px-1 py-[1px] rounded-sm">
                                   +{extraItems}
                                 </span>
                               )}
@@ -540,7 +620,7 @@ const Profile = () => {
 
                             {/* Product Details */}
                             <div className="flex flex-col justify-between gap-1">
-                              <p className="text-sm text-black font-medium ">Order ID: <span className="text-red-500 font-medium">{order.order_id}</span></p>
+                              <p className="text-sm text-black font-medium ">ORDER ID: <span className="text-red-500 font-medium">{order.order_id}</span></p>
                               <p className="text-sm text-gray-700 font-medium">
                                 {firstItem.product_name}
                                 {extraItems > 0 && (
@@ -581,12 +661,12 @@ const Profile = () => {
                                     alt={item.product_name}
                                     width={64}
                                     height={64}
-                                    className="rounded-md object-cover border"
+                                    className="rounded-sm object-cover border"
                                   />
                                   <div className="flex-1">
                                     <p className="font-medium text-gray-900">{item.product_name}</p>
-                                    <p className="text-sm text-gray-500">Qty: {item.quantity}</p>
-                                    <p className="text-sm text-gray-500">Price: ₹{item.price}</p>
+                                    <h5 className="text-sm text-gray-500">Qty: {item.quantity}</h5>
+                                    <h5 className="text-sm text-gray-500">Price: ₹{item.price}</h5>
                                   </div>
                                 </div>
                               ))}
@@ -607,9 +687,15 @@ const Profile = () => {
               <div className="bg-white rounded-sm p-0 sm:p-6 ">
                 <div className="flex justify-between items-center mb-6">
                   <h2 className="text-xl font-medium uppercase text-red-500">Saved Addresses</h2>
-                  <button
+                 <button
                     onClick={() => setIsAddOpen(true)}
-                    className="px-3 py-2 text-red-500 text-sm font-medium"
+                    className={`px-3 py-2 text-sm font-medium flex items-center gap-1 rounded-sm ${
+                      addresses.length >= 3
+                        ? "text-gray-400 cursor-not-allowed"
+                        : "text-red-500 hover:text-red-600"
+                    }`}
+                    disabled={addresses.length >= 3}
+                    title={addresses.length >= 3 ? "Maximum 3 addresses allowed" : "Add Address"}
                   >
                     <IoIosAddCircle size={26} />
                   </button>
@@ -638,6 +724,7 @@ const Profile = () => {
                             {addr.city}, {addr.state} - {addr.postal_code},<br />
                             {addr.country}
                           </p>
+                          <p className="text-gray-500 text-sm">Email: {addr.email}</p>
                           <p className="text-gray-500 text-sm">Phone: {addr.phone_number}</p>
                         </div>
 
@@ -684,7 +771,7 @@ const Profile = () => {
 
             {deleteConfirmId && (
               <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
-                <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm">
+                <div className="bg-white p-6 rounded-sm shadow-lg max-w-sm">
                   <p className="text-gray-800 mb-4">Are you sure you want to delete this address?</p>
                   <div className="flex justify-end gap-3">
                     <button
@@ -694,7 +781,7 @@ const Profile = () => {
                       Cancel
                     </button>
                     <button
-                      className="px-4 py-2 text-sm bg-red-600 text-white rounded hover:bg-red-700"
+                      className="px-4 py-2 text-sm bg-red-600 text-white rounded-sm hover:bg-red-700"
                       onClick={() => {
                         handleDeleteAddress(deleteConfirmId);
                         setDeleteConfirmId(null);
@@ -709,7 +796,7 @@ const Profile = () => {
 
             {isAddOpen && (
               <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 overflow-y-auto">
-                <div className="bg-white rounded-lg shadow-xl w-full max-w-xl mx-auto overflow-y-auto max-h-[90vh]">
+                <div className="bg-white rounded-sm shadow-xl w-full max-w-xl mx-auto overflow-y-auto max-h-[90vh]">
                   <div className="p-6">
                     <div className="flex justify-between items-center mb-8">
                       <h3 className="text-xl font-normal text-red-500 uppercase" >Add New Address</h3>
@@ -720,59 +807,105 @@ const Profile = () => {
                       </button>
                     </div>
 
-                    <form
-                      onSubmit={(e) => {
-                        e.preventDefault();
-                        handleAddAddress();
+                    <Formik
+                      initialValues={{
+                        full_name: "",
+                        street_address: "",
+                        city: "",
+                        state: "",
+                        country: "",
+                        postal_code: "",
+                        phone_number: "",
+                        email: "",
+                        is_default: addresses.length === 0,
                       }}
-                      className="grid grid-cols-1 md:grid-cols-2 gap-4"
+                      validationSchema={AddressSchema}
+                      onSubmit={async (values, { setSubmitting, resetForm }) => {
+                        try {
+                          const res = await axiosInstance.post("/auth/my-addresses/", values);
+                          let updatedAddresses = addresses;
+
+                          if (res.data.is_default) {
+                            updatedAddresses = addresses.map((addr) => ({
+                              ...addr,
+                              is_default: false,
+                            }));
+                          }
+
+                          setAddresses([...updatedAddresses, res.data]);
+                          toast.success("Address added");
+                          setIsAddOpen(false);
+                          resetForm();
+                        } catch (err) {
+                          toast.error("Failed to add address");
+                        } finally {
+                          setSubmitting(false);
+                        }
+                      }}
                     >
-                      {Object.entries(newAddress)
-                        .filter(([key]) => !["id", "created_at", "updated_at", "user", "is_default"].includes(key))
-                        .map(([key, value]) => (
-                          <div key={key} className="col-span-1">
-                            <label className="block text-sm font-medium text-gray-700 capitalize mb-1">
-                              {key.replace(/_/g, " ")}
-                            </label>
-                            <input
-                              value={value}
-                              onChange={(e) => setNewAddress({ ...newAddress, [key]: e.target.value })}
-                              className="w-full px-4 py-2 border rounded-md focus:ring-indigo-500 focus:border-indigo-500"
-                              required
+                      {({ isSubmitting }) => (
+                        <Form className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          {/* Text fields */}
+                          {[
+                            "full_name",
+                            "street_address",
+                            "city",
+                            "state",
+                            "country",
+                            "postal_code",
+                            "phone_number",
+                            "email",
+                          ].map((field) => (
+                            <div key={field} className="col-span-1">
+                              <label className="block text-sm font-medium text-gray-700 capitalize mb-1">
+                                {field.replace(/_/g, " ")}
+                              </label>
+                              <Field
+                                name={field}
+                                className="w-full px-4 py-2 border rounded-sm focus:ring-indigo-500 focus:border-indigo-500"
+                              />
+                              <ErrorMessage
+                                name={field}
+                                component="div"
+                                className="text-xs text-red-500 mt-1"
+                              />
+                            </div>
+                          ))}
+
+                          {/* Checkbox */}
+                          <div className="col-span-full flex items-center gap-2">
+                            <Field
+                              type="checkbox"
+                              name="is_default"
+                              id="is_default"
+                              className="h-4 w-4 text-indigo-600 border-gray-300 rounded"
                             />
+                            <label htmlFor="is_default" className="text-sm text-gray-700">
+                              Set as default address
+                            </label>
                           </div>
-                        ))}
 
-                      {/* ✅ Set as Default checkbox */}
-                      <div className="col-span-full flex items-center gap-2">
-                        <input
-                          type="checkbox"
-                          id="is_default"
-                          checked={newAddress.is_default}
-                          onChange={(e) => setNewAddress({ ...newAddress, is_default: e.target.checked })}
-                          className="h-4 w-4 text-indigo-600 border-gray-300 rounded"
-                        />
-                        <label htmlFor="is_default" className="text-sm text-gray-700">
-                          Set as default address
-                        </label>
-                      </div>
+                          {/* Buttons */}
+                          <div className="col-span-full flex justify-end gap-3 pt-4">
+                            <button
+                              type="button"
+                              onClick={() => setIsAddOpen(false)}
+                              className="px-4 py-2 border rounded-sm text-gray-700 hover:bg-gray-50"
+                            >
+                              Cancel
+                            </button>
+                            <button
+                              type="submit"
+                              disabled={isSubmitting}
+                              className="px-4 py-2 bg-red-500 text-white rounded-sm hover:bg-red-600"
+                            >
+                              {isSubmitting ? "Adding..." : "Add Address"}
+                            </button>
+                          </div>
+                        </Form>
+                      )}
+                    </Formik>
 
-                      <div className="col-span-full flex justify-end gap-3 pt-4">
-                        <button
-                          type="button"
-                          onClick={() => setIsAddOpen(false)}
-                          className="px-4 py-2 border rounded-md text-gray-700 hover:bg-gray-50"
-                        >
-                          Cancel
-                        </button>
-                        <button
-                          type="submit"
-                          className="px-4 py-2 bg-red-500 text-white rounded-sm hover:bg-red-600"
-                        >
-                          Add Address
-                        </button>
-                      </div>
-                    </form>
 
                   </div>
                 </div>
@@ -781,7 +914,7 @@ const Profile = () => {
 
             {isAddressEditOpen && (
               <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 overflow-y-auto">
-                <div className="bg-white rounded-lg shadow-xl w-full max-w-xl mx-auto overflow-y-auto max-h-[90vh]">
+                <div className="bg-white rounded-sm shadow-xl w-full max-w-xl mx-auto overflow-y-auto max-h-[90vh]">
                   <div className="p-6">
                     <div className="flex justify-between items-center mb-8">
                       <h3 className="text-xl font-normal text-red-500 uppercase">Edit Address</h3>
@@ -795,60 +928,86 @@ const Profile = () => {
                       </button>
                     </div>
 
-                    <form
-                      onSubmit={(e) => {
-                        e.preventDefault();
-                        handleUpdateAddress();
+                    <Formik
+                      initialValues={editForm}
+                      enableReinitialize
+                      validationSchema={AddressSchema}
+                      onSubmit={async (values, { setSubmitting }) => {
+                        try {
+                          const res = await axiosInstance.put(`/auth/my-addresses/${editForm.id}/`, values);
+                          const updated = addresses.map((a) =>
+                            a.id === editForm.id ? res.data : a
+                          );
+                          setAddresses(updated);
+                          toast.success("Address updated");
+                          setIsAddressEditOpen(false);
+                        } catch (err) {
+                          toast.error("Failed to update address");
+                        } finally {
+                          setSubmitting(false);
+                        }
                       }}
-                      className="grid grid-cols-1 md:grid-cols-2 gap-4"
                     >
-                      {Object.entries(editForm)
-                        .filter(([key]) => !["id", "created_at", "updated_at", "user", "is_default"].includes(key))
-                        .map(([key, value]) => (
-                          <div key={key} className="col-span-1">
-                            <label className="block text-sm font-medium text-gray-700 capitalize mb-1">
-                              {key.replace(/_/g, " ")}
-                            </label>
-                            <input
-                              type="text"
-                              value={value}
-                              onChange={(e) => setEditForm({ ...editForm, [key]: e.target.value })}
-                              className="w-full px-4 py-2 border rounded-md focus:ring-indigo-500 focus:border-indigo-500"
-                              required
+                      {({ isSubmitting }) => (
+                        <Form className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          {[
+                            "full_name",
+                            "street_address",
+                            "city",
+                            "state",
+                            "country",
+                            "postal_code",
+                            "phone_number",
+                            "email",
+                          ].map((field) => (
+                            <div key={field} className="col-span-1">
+                              <label className="block text-sm font-medium text-gray-700 capitalize mb-1">
+                                {field.replace(/_/g, " ")}
+                              </label>
+                              <Field
+                                name={field}
+                                className="w-full px-4 py-2 border rounded-sm focus:ring-indigo-500 focus:border-indigo-500"
+                              />
+                              <ErrorMessage
+                                name={field}
+                                component="div"
+                                className="text-xs text-red-500 mt-1"
+                              />
+                            </div>
+                          ))}
+
+                          {/* Set as Default checkbox */}
+                          <div className="col-span-full flex items-center gap-2 mt-2">
+                            <Field
+                              type="checkbox"
+                              name="is_default"
+                              id="is_default_edit"
+                              className="h-4 w-4 text-indigo-600 border-gray-300 rounded-sm"
                             />
+                            <label htmlFor="is_default_edit" className="text-sm text-gray-700">
+                              Set as default address
+                            </label>
                           </div>
-                        ))}
 
-                      {/* ✅ Set as Default checkbox */}
-                      <div className="col-span-full flex items-center gap-2 mt-2">
-                        <input
-                          type="checkbox"
-                          id="is_default_edit"
-                          checked={editForm.is_default}
-                          onChange={(e) => setEditForm({ ...editForm, is_default: e.target.checked })}
-                          className="h-4 w-4 text-indigo-600 border-gray-300 rounded"
-                        />
-                        <label htmlFor="is_default_edit" className="text-sm text-gray-700">
-                          Set as default address
-                        </label>
-                      </div>
-
-                      <div className="col-span-full flex justify-end gap-3 pt-4">
-                        <button
-                          type="button"
-                          onClick={() => setIsAddressEditOpen(false)}
-                          className="px-4 py-2 border rounded-sm text-gray-700 hover:bg-gray-100"
-                        >
-                          Cancel
-                        </button>
-                        <button
-                          type="submit"
-                          className="px-4 py-2 bg-red-500 text-white rounded-sm hover:bg-red-600"
-                        >
-                          Update Address
-                        </button>
-                      </div>
-                    </form>
+                          <div className="col-span-full flex justify-end gap-3 pt-4">
+                            <button
+                              type="button"
+                              onClick={() => setIsAddressEditOpen(false)}
+                              className="px-4 py-2 border rounded-sm text-gray-700 hover:bg-gray-100"
+                            >
+                              Cancel
+                            </button>
+                            <button
+                              type="submit"
+                              disabled={isSubmitting}
+                              className="px-4 py-2 bg-red-500 text-white rounded-sm hover:bg-red-600"
+                            >
+                              {isSubmitting ? "Updating..." : "Update Address"}
+                            </button>
+                          </div>
+                        </Form>
+                      )}
+                    </Formik>
                   </div>
                 </div>
               </div>
@@ -859,65 +1018,89 @@ const Profile = () => {
 
             {/* Wishlist */}
             {activeTab === "wishlist" && (
-              <div className="bg-white rounded-lg overflow-hidden">
+              <div className="bg-white rounded-sm overflow-hidden">
                 <div className="px-0 pb-6 sm:p-6">
                   <h2 className="text-xl font-medium uppercase text-red-500">Wishlist</h2>
                 </div>
 
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 px-0 sm:px-6">
-                  {wishlist.map((item) => (
-                    <div key={item.id} className="border rounded-lg overflow-hidden hover:shadow-md transition-shadow">
-                      <div className="relative aspect-square bg-gray-100">
-                        <Image
-                          src={`${process.env.NEXT_PUBLIC_IMAGE_BASE}/${item.product_detail?.image}`}
-                          alt={item.product_detail.name}
-                          fill
-                          className="object-cover"
-                        />
-                      </div>
-                      <div className="p-4">
-                        <h3 className="font-medium text-gray-900 mb-1">{item.product_detail.name}</h3>
-                        {/* <p className="text-sm text-gray-500 mb-1">Size: {item.size} | Color: {item.color}</p> */}
-                        <div className="flex justify-between items-center">
-                          <span className="font-normal text-red-500">₹{item.product_detail.price}</span>
-                          <div className="flex gap-0">
-                            {/* Wishlist or cart icons */}
-                            <button className="p-2 text-red-500 hover:text-red-600" title="Remove">
-                              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
-                              </svg>
-                            </button>
-                            <button
-                              className="p-2 text-gray-500 hover:text-indigo-600"
-                              title="View Product"
-                              onClick={() => router.push(`/product/${item.product_detail.id}`)} // or use slug if available
-                            >
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                                className="h-5 w-5"
+
+                  {wishlist.length === 0 ? (
+                    <div className="text-center py-5 sm:py-5 text-gray-500 flex flex-col items-center gap-6 col-span-full">
+                      <Image
+                        src={emptyWishlist} // Replace with your actual image path
+                        alt="Empty Wishlist"
+                        width={80}
+                        height={80}
+                        className="object-contain"
+                      />
+                      <h3 className="text-xl sm:text-2xl font-semibold text-gray-700">Your Wishlist is Empty</h3>
+                      <p className="text-sm sm:text-base max-w-md">
+                        Looks like you haven’t added any items yet. Explore our products and save your favorites.
+                      </p>
+                      <Link
+                        href="/shop"
+                        className="inline-block px-6 py-2 bg-black text-white rounded-sm hover:bg-gray-800 transition"
+                      >
+                        Browse Products
+                      </Link>
+                    </div>
+                  ) : (
+                    wishlist.map((item) => (
+                      <div key={item.id} className="border rounded-sm overflow-hidden hover:shadow-md transition-shadow">
+                        <div className="relative aspect-square bg-gray-100">
+                          <Image
+                            src={`${item.product_detail?.image}`}
+                            alt={item.product_detail.name}
+                            fill
+                            className="object-cover"
+                          />
+                        </div>
+                        <div className="p-4">
+                          <h3 className="font-medium text-gray-900 mb-1">{item.product_detail.name}</h3>
+                          {/* <p className="text-sm text-gray-500 mb-1">Size: {item.size} | Color: {item.color}</p> */}
+                          <div className="flex justify-between items-center">
+                            <span className="font-normal text-red-500">₹{item.product_detail.price}</span>
+                            <div className="flex gap-0">
+                              {/* Wishlist or cart icons */}
+                              <button className="p-2 text-red-500 hover:text-red-600" title="Remove">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                  <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
+                                </svg>
+                              </button>
+                              <button
+                                className="p-2 text-gray-500 hover:text-indigo-600"
+                                title="View Product"
+                                onClick={() => router.push(`/product/${item.product_detail.id}`)} // or use slug if available
                               >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth={2}
-                                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                                />
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth={2}
-                                  d="M2.458 12C3.732 7.943 7.523 5 12 5s8.268 2.943 9.542 7c-1.274 4.057-5.065 7-9.542 7s-8.268-2.943-9.542-7z"
-                                />
-                              </svg>
-                            </button>
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  stroke="currentColor"
+                                  className="h-5 w-5"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                                  />
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M2.458 12C3.732 7.943 7.523 5 12 5s8.268 2.943 9.542 7c-1.274 4.057-5.065 7-9.542 7s-8.268-2.943-9.542-7z"
+                                  />
+                                </svg>
+                              </button>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    ))
+                  )}
+
                 </div>
               </div>
             )}

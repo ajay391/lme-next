@@ -1,6 +1,9 @@
 import React from 'react';
 import { Truck, Star, ShieldCheck, IndianRupee } from 'lucide-react';
-
+import { BsCurrencyRupee } from "react-icons/bs";
+import { MdStarPurple500 } from "react-icons/md";
+import { LuShieldCheck } from "react-icons/lu";
+import { FaRegStar } from "react-icons/fa";
 const features = [
   {
     icon: <Truck className="w-8 h-8 text-red-500" />,
@@ -8,17 +11,17 @@ const features = [
     description: 'Shop with confidence using encrypted, safe, and trusted payment methods.',
   },
   {
-    icon: <ShieldCheck className="w-8 h-8 text-red-500" />,
+    icon: <LuShieldCheck className="w-8 h-8 text-red-500" />,
     title: 'Premium Quality',
     description: 'Get your streetwear fast and free, with no extra shipping costs on all orders.',
   },
   {
-    icon: <IndianRupee className="w-8 h-8 text-red-500" />,
+    icon: <BsCurrencyRupee className="w-8 h-8 text-red-500" />,
     title: 'Made in India',
     description: 'Get your streetwear fast and free, with no extra shipping costs on all orders.',
   },
   {
-    icon: <Star className="w-8 h-8 text-red-500" />,
+    icon: <FaRegStar className="w-8 h-8 text-red-500" />,
     title: 'Limited Drops',
     description: 'Shop with confidence using encrypted, safe, and trusted payment methods.',
   },
@@ -29,7 +32,7 @@ const WhyUs = () => (
     
       {/* Left Column - 4/12 */}
       <div className="md:col-span-4 max-w-lg">
-        <h2 className="text-4xl lg:text-5xl font-bold mb-4  uppercase">Why <span className='text-red-500'>LME?</span></h2>
+        <h2 className="text-4xl lg:text-5xl font-bold mb-4 uppercase">Why <span className='text-red-500'>LME?</span></h2>
         <p className="text-gray-700 text-base">
           We blend quality, culture, and creativity to deliver products that feel as good as they look.
         </p>
@@ -38,9 +41,9 @@ const WhyUs = () => (
       {/* Right Column - 8/12 */}
       <div className="md:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
         {features.map((item, index) => (
-          <div key={index} className="text-start bg-black py-12 px-10 rounded-md relative">
+          <div key={index} className="text-start bg-black py-12 px-8 sm:px-10 rounded-sm relative">
             {/* Icon styling */}
-            <div className="absolute top-2 right-2 opacity-20 z-0">
+            <div className="absolute top-2 right-2 opacity-10 z-0">
               {React.cloneElement(item.icon, {
                 className: "w-20 h-20 text-white",
               })}

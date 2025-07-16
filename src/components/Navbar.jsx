@@ -140,19 +140,19 @@ const Navbar = () => {
               </button>
 
               {isProfileOpen && (
-                <div className="absolute top-12 right-0 bg-white shadow-md rounded-md w-40 p-2 border border-gray-200 z-50">
+                <div className="absolute top-12 right-0 bg-white shadow-md rounded-sm w-40 p-1 border border-gray-200 z-50">
                   {authState.isAuthenticated ? (
                     <>
                       <Link
                         href="/profile"
-                        className="block text-gray-800 rounded-sm hover:bg-red-100 hover:text-red-500 px-4 py-2"
+                        className="block text-gray-800 rounded-sm hover:bg-black hover:text-white px-4 py-2"
                         onClick={() => setIsProfileOpen(false)}
                       >
                         Profile
                       </Link>
                       <button
                         onClick={() => setIsLogoutConfirmOpen(true)}
-                        className="w-full text-left text-gray-800 rounded-sm hover:bg-red-100 hover:text-red-500 px-4 py-2"
+                        className="w-full text-left text-gray-800 rounded-sm hover:bg-black hover:text-white px-4 py-2"
                       >
                         Logout
                       </button>

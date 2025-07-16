@@ -18,6 +18,8 @@ export default function LoginPage() {
   const router = useRouter();
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
+  const { next } = router.query;
+  const [redirectTo, setRedirectTo] = useState('/');
 
   useEffect(() => {
     setMounted(true);
@@ -26,6 +28,12 @@ export default function LoginPage() {
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
+
+  useEffect(() => {
+    if (typeof next === 'string') {
+      setRedirectTo(next);
+    }
+  }, [next]);
 
   const handleSubmit = async (e) => {
   e.preventDefault();
@@ -39,7 +47,7 @@ export default function LoginPage() {
       Cookies.set('refresh_token', refresh, { expires: 7 });
       dispatch(login({ access, refresh }));
       toast.success('Login Success');
-      router.push('/');
+       router.push(redirectTo);  
     } else {
       toast.error('Tokens not received');
     }
@@ -58,20 +66,20 @@ export default function LoginPage() {
 
   return (
     <div className="py-16 sm:py-20 flex items-center justify-center bg-gray-100 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-5xl w-full bg-white shadow-lg rounded-lg overflow-hidden grid grid-cols-1 lg:grid-cols-2">
+      <div className="max-w-5xl w-full bg-white shadow-md rounded-sm overflow-hidden grid grid-cols-1 lg:grid-cols-2">
         
         {/* Left Side Visual */}
         <div className="hidden lg:block bg-black relative">
           <img
-            src="/images/login-banner.jpg"
+            src="/images/register.png"
             alt="Login Visual"
-            className="w-full h-full object-cover opacity-80"
+            className="w-full h-full max-h-[450px] object-cover"
           />
-          <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center text-white text-xl font-normal p-6">
+          {/* <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center text-white text-xl font-normal p-6">
             <Image src="/images/logo.png" alt="Logo" width={100} height={100} className="object-contain mb-5" />
             
-           <h6>Limits Don't Exist</h6> 
-          </div>
+           <h6 className="uppercase">Limits Don't Exist</h6> 
+          </div> */}
         </div>
 
         {/* Right Side Login Form */}
@@ -93,7 +101,7 @@ export default function LoginPage() {
                 onChange={handleChange}
                 required
                 placeholder="Enter your phone number"
-                className="mt-2 w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-500 focus:outline-none"
+                className="mt-2 w-full px-4 py-3 border border-gray-300 rounded-sm focus:ring-1 focus:ring-red-500 focus:outline-none"
               />
             </div>
 
@@ -108,7 +116,7 @@ export default function LoginPage() {
                 onChange={handleChange}
                 required
                 placeholder="Enter your password"
-                className="mt-2 w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-500 focus:outline-none"
+                className="mt-2 w-full px-4 py-3 border border-gray-300 rounded-sm focus:ring-1 focus:ring-red-500 focus:outline-none"
               />
               <button
                 type="button"
@@ -122,7 +130,7 @@ export default function LoginPage() {
            <button
               type="submit"
               disabled={loading}
-              className={`w-full py-3 text-white font-semibold rounded-md transition duration-200 ${
+              className={`w-full py-3 text-white font-semibold rounded-sm transition duration-200 ${
                 loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-red-500 hover:bg-black'
               }`}
             >
@@ -144,7 +152,7 @@ export default function LoginPage() {
                     ></path>
                     Si
                   </svg>
-                  signing in...
+                  Signing in...
                 </span>
               ) : (
                 'Sign In'

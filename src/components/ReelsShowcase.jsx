@@ -114,7 +114,7 @@ const Carousel = () => {
       <Slider {...settings} ref={sliderRef}>
         {carData.map((car, idx) => (
           <div key={idx} className="p-4">
-            <div className="relative overflow-hidden rounded-2xl shadow-md">
+            <div className="relative overflow-hidden rounded-sm shadow-md">
               <Image
                 src={car.image}
                 alt={car.title}
@@ -132,18 +132,18 @@ const Carousel = () => {
               /> */}
 
               {/* Overlay Content */}
-              <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-black/60 to-transparent text-white p-4 flex flex-col justify-end">
-                <h2 className="text-2xl font-semibold mb-2 px-2">{car.title}</h2>
-                {/* <p className="text-sm mb-4 px-2">{car.description}</p> */}
+              <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-black/60 to-transparent text-white p-4 flex flex-row justify-between">
+              <h2 className="text-2xl font-semibold mb-2 px-2 flex items-end">{car.title}</h2>
                 <a
                   href="https://www.instagram.com/lastmanonearth.in?igsh=eXBrcWN6YjBvZWpv"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-fit px-2 py-2 bg-transparent text-white font-medium rounded-sm hover:text-red-500 transition flex items-center gap-2"
+                  className="w-fit px-2 py-2 bg-transparent text-white font-medium rounded-sm hover:text-red-500 transition flex items-end gap-2"
                 >
                   <FaInstagram className="text-xl" />
                   {/* <span>Explore Our Instagram</span> */}
                 </a>
+                {/* <p className="text-sm mb-4 px-2">{car.description}</p> */}
 
               </div>
             </div>
@@ -152,7 +152,7 @@ const Carousel = () => {
       </Slider>
 
       {/* Custom Arrows */}
-      <div className="flex justify-start gap-4 pt-10 pb-16 px-4 sm:px-8 md:px-12 lg:px-20 xl:px-28">
+      <div className="flex justify-start gap-4 pt-10 pb-5 sm:pb-16 px-4 sm:px-8 md:px-12 lg:px-20 xl:px-28">
         <button
           onClick={prevButton}
           className="px-4 py-4 bg-black text-white rounded-full hover:bg-red-500 flex items-center gap-2"

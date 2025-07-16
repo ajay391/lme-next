@@ -25,7 +25,7 @@ const featuredProducts = [
       "/images/products/category-2.png",
       "/images/products/category-3.png"
     ],
-    category: "T-Shirts",
+    category: "T-Shirt",
     description: "A comfortable black tee, perfect for any occasion.",
     sizes: ["S", "M", "L", "XL"],
     isNew: true,
@@ -41,7 +41,7 @@ const featuredProducts = [
       "/images/products/category-3.png",
       "/images/products/category-4.png"
     ],
-    category: "Hoodies",
+    category: "T-Shirt",
     description: "A clean, urban-style hoodie in white with minimalist design.",
     sizes: ["S", "M", "L", "XL"],
     isNew: true,
@@ -57,7 +57,7 @@ const featuredProducts = [
       "/images/products/category-4.png",
       "/images/products/category-5.png"
     ],
-    category: "T-Shirts",
+    category: "Oversized T-Shirt",
     description: "A graphic tee that showcases the Nowhere brand with bold prints.",
     sizes: ["S", "M", "L", "XL"],
     isNew: true,
@@ -74,7 +74,7 @@ const featuredProducts = [
       "/images/products/category-2.png",
       "/images/products/category-3.png"
     ],
-    category: "T-Shirts",
+    category: "Oversized T-Shirt",
     description: "A comfortable black tee, perfect for any occasion.",
     sizes: ["S", "M", "L", "XL"],
     isNew: true,
@@ -90,7 +90,7 @@ const featuredProducts = [
       "/images/products/category-3.png",
       "/images/products/category-4.png"
     ],
-    category: "Hoodies",
+    category: "T-Shirt",
     description: "A clean, urban-style hoodie in white with minimalist design.",
     sizes: ["S", "M", "L", "XL"],
     isNew: true,
@@ -106,7 +106,7 @@ const featuredProducts = [
       "/images/products/category-4.png",
       "/images/products/category-5.png"
     ],
-    category: "T-Shirts",
+    category: "T-Shirt",
     description: "A graphic tee that showcases the Nowhere brand with bold prints.",
     sizes: ["S", "M", "L", "XL"],
     isNew: true,
@@ -117,13 +117,13 @@ const featuredProducts = [
 const NewProducts = () => {
   return (
     <section className="py-16 px-3 sm:px-14 md:px-14 lg:px-14 xl:px-14">
-      <h2 className="text-4xl font-bold mb-4 text-start">New Drops</h2>
+      <h2 className="text-4xl font-bold mb-4 text-start uppercase">New Drops</h2>
       <p className="text-base sm:text-base text-black opacity-60 mb-8 text-start max-w-2xl">
         Discover our latest collection—unique styles, premium fabrics, and perfect fits. Limited stock, once they're gone, they're gone!
       </p>
       <div className="text-end mb-3">
         <Link href="/shop">
-          <button className="group inline-flex items-center gap-2 text-black hover:text-red-500 transition px-0 py-2 text-sm font-medium">
+          <button className="group inline-flex items-center gap-2 text-red-500 hover:text-red-500 transition px-0 py-2 text-sm font-medium uppercase">
             View All
             <ChevronRight
               size={16}
@@ -135,7 +135,7 @@ const NewProducts = () => {
 
       <Swiper
         className="newproducts-swiper text-sm"
-        spaceBetween={20}
+        // spaceBetween={20}
         loop={true}
         navigation={true}
         pagination={false}
@@ -144,15 +144,19 @@ const NewProducts = () => {
         breakpoints={{
           0: {
             slidesPerView: 2,
+            spaceBetween: 10,
           },
           640: {
             slidesPerView: 2,
+            spaceBetween: 20,
           },
           991: {
             slidesPerView: 3,
+            spaceBetween: 20,
           },
           1154: {
             slidesPerView: 4,
+            spaceBetween: 20,
           },
         }}
       >
@@ -179,10 +183,10 @@ const NewProducts = () => {
                   <h3 className="mt-5 text-lg font-medium">{product.name}</h3>
                   <p className="text-sm text-gray-500 mt-1">{product.category}</p>
                   <div className="flex items-center gap-3 mt-1">
-                    {product.oldPrice && (
-                      <h4 className="text-gray-400 line-through text-base">₹{product.oldPrice}</h4>
+                    {product.old_price && (
+                      <h4 className="text-gray-400 line-through text-lg">₹{product.old_price}</h4>
                     )}
-                    <h4 className="text-red-500 text-base font-medium">₹{product.price}</h4>
+                    <h4 className="text-red-500 text-lg font-medium">₹{product.price}</h4>
                   </div>
                 </div>
               </div>

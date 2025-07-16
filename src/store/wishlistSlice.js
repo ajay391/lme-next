@@ -6,11 +6,29 @@ export const fetchWishlist = createAsyncThunk('wishlist/fetchWishlist', async ()
   const res = await axios.get('/wishlist/');
   return res.data;
 });
+export const addToWishlist = createAsyncThunk(
+  'wishlist/addToWishlist',
+  async (item, { rejectWithValue }) => {
+    try {
+      const res = await axios.post('/wishlist/add/', item);
+      return res.data;
+    } catch (error) {
+      let errorMessage =
+        error?.response?.data?.detail ||
+        error?.response?.data?.message ||
+        error?.message ||
+        'Something went wrong.';
 
-export const addToWishlist = createAsyncThunk('wishlist/addToWishlist', async (item) => {
-  const res = await axios.post('/wishlist/add/', item);
-  return res.data;
-});
+      // Customize specific error messages
+      if (errorMessage === 'Authentication credentials were not provided.') {
+        errorMessage = 'Please login to add item to wishlist.';
+      }
+
+      return rejectWithValue(errorMessage);
+    }
+  }
+);
+
 
 export const removeFromWishlist = createAsyncThunk('wishlist/removeFromWishlist', async ({ id }) => {
   await axios.delete(`/wishlist/${id}/delete/`);

@@ -8,7 +8,32 @@ import { motion, AnimatePresence } from "framer-motion";
 import { HiAdjustmentsHorizontal } from "react-icons/hi2";
 
 
-const ShopPage = ({ products }) => {
+const ShopPage = ({ initialProducts, initialCount, pageSize }) => {
+
+  const [products, setProducts] = useState(initialProducts);
+  const [count, setCount] = useState(initialCount);
+  const [currentPage, setCurrentPage] = useState(1);
+
+
+  const totalPages = Math.ceil(count / pageSize);
+
+  // Fetch data when page changes
+  useEffect(() => {
+  const fetchProducts = async () => {
+    setLoading(true);
+    try {
+      const res = await axiosInstance.get(`/products/?page=${currentPage}`);
+      setProducts(res.data.results);
+      setCount(res.data.count);
+      window.scrollTo({ top: 0, behavior: "smooth" }); // ✅ Scroll to top
+    } catch (err) {
+      console.error("Error fetching page:", err);
+    }
+    setLoading(false);
+  };
+
+  fetchProducts();
+}, [currentPage]);
 
   console.log(products)
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -207,13 +232,13 @@ const ShopPage = ({ products }) => {
                 <div className="flex justify-between gap-3">
                   <button
                     onClick={handleResetFilters}
-                    className="flex-1 text-sm px-4 py-2 border border-gray-300 text-gray-700 rounded hover:bg-gray-100"
+                    className="flex-1 text-sm px-4 py-2 border border-gray-300 text-gray-700 rounded-sm hover:bg-gray-100"
                   >
                     Reset
                   </button>
                   <button
                     onClick={handleApplyFilters}
-                    className="flex-1 text-sm px-4 py-2 bg-black text-white rounded hover:bg-red-600"
+                    className="flex-1 text-sm px-4 py-2 bg-black text-white rounded-sm hover:bg-red-600"
                   >
                     Apply
                   </button>
@@ -237,7 +262,7 @@ const ShopPage = ({ products }) => {
           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {[...Array(8)].map((_, i) => (
               <div key={i} className="animate-pulse border border-gray-200 rounded-lg p-4">
-                <div className="bg-gray-200 h-48 w-full mb-4 rounded" />
+                <div className="bg-gray-200 h-64 w-full mb-4 rounded" />
                 <div className="h-4 bg-gray-200 rounded w-3/4 mb-2" />
                 <div className="h-4 bg-gray-200 rounded w-1/2" />
               </div>
@@ -245,7 +270,7 @@ const ShopPage = ({ products }) => {
           </div>
         ) : filteredProducts.length === 0 ? (
           <div className="text-center text-gray-600 py-10 ">
-            <h2 className="text-xl font-semibold mb-2">No products found</h2>
+            <h2 className="text-2xl font-semibold mb-2 uppercase">No products found</h2>
             <p className="mb-4">We couldn't find any items that match your filters.</p>
             <button
               onClick={() => {
@@ -254,19 +279,58 @@ const ShopPage = ({ products }) => {
                 setIsAvailable(false);
                 setSortOrder("");
               }}
-              className="px-4 py-2 bg-black text-white rounded hover:bg-red-600 transition"
+              className="px-4 py-2 bg-black text-white rounded-sm hover:bg-red-600 transition"
             >
               View All Products
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 ">
-            {filteredProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
+          <>
+            {/* Product Grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6">
+              {filteredProducts.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="mt-12 flex justify-center items-center gap-2 flex-wrap text-sm">
+                <button
+                  onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
+                  disabled={currentPage === 1}
+                  className="px-4 py-2 rounded-sm border bg-white text-gray-700 hover:bg-gray-100 disabled:opacity-50"
+                >
+                  Previous
+                </button>
+
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((num) => (
+                  <button
+                    key={num}
+                    onClick={() => setCurrentPage(num)}
+                    className={`px-4 py-2 rounded-sm border transition ${num === currentPage
+                        ? "bg-black text-white"
+                        : "bg-white text-gray-700 hover:bg-gray-100"
+                      }`}
+                  >
+                    {num}
+                  </button>
+                ))}
+
+                <button
+                  onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
+                  disabled={currentPage === totalPages}
+                  className="px-4 py-2 rounded-sm border bg-white text-gray-700 hover:bg-gray-100 disabled:opacity-50"
+                >
+                  Next
+                </button>
+              </div>
+            )}
+          </>
+
         )}
       </div>
+      
     </>
   );
 };
@@ -275,17 +339,20 @@ export default ShopPage;
 
 export async function getServerSideProps() {
   try {
-    const res = await axiosInstance.get("/products/");
+    const res = await axiosInstance.get(`/products/?page=1`);
     return {
       props: {
-        products: res.data,
+        initialProducts: res.data.results,
+        initialCount: res.data.count,
+        pageSize: 12,
       },
     };
   } catch (error) {
-    console.error("Error fetching products:", error);
     return {
       props: {
-        products: [],
+        initialProducts: [],
+        initialCount: 0,
+        pageSize: 12,
       },
     };
   }

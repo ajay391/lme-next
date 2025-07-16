@@ -17,6 +17,7 @@
     "cloudinary": "^2.6.1",
     "cookie": "^1.0.2",
     "formidable": "^3.5.4",
+    "formik": "^2.4.6",
     "framer-motion": "^12.23.0",
     "js-cookie": "^3.0.5",
     "jsonwebtoken": "^9.0.2",
@@ -37,7 +38,8 @@
     "redux-persist": "^6.0.0",
     "slick-carousel": "^1.8.1",
     "swiper": "^11.2.10",
-    "twilio": "^5.5.2"
+    "twilio": "^5.5.2",
+    "yup": "^1.6.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

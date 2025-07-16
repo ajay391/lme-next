@@ -42,13 +42,13 @@ export default function RegisterPage() {
         {/* Left Side Image */}
         <div className="hidden lg:block bg-black relative">
           <img
-            src="/images/register-banner.jpg"
+            src="/images/register.png"
             alt="Register Visual"
-            className="w-full h-full object-cover opacity-80"
+            className="w-full h-full max-h-[512px] object-cover"
           />
-          <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center text-white text-3xl font-bold p-6">
+          {/* <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center text-white text-3xl font-bold p-6">
             Join the Movement
-          </div>
+          </div> */}
         </div>
 
         {/* Right Side Form */}
@@ -65,7 +65,7 @@ export default function RegisterPage() {
               onChange={handleChange}
               required
               placeholder="Full Name"
-              className="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-500 focus:outline-none text-gray-800"
+              className="w-full px-4 py-3 border border-gray-300 rounded-sm focus:ring-1 focus:ring-red-500 focus:outline-none text-gray-800"
             />
             <input
               name="email"
@@ -74,7 +74,7 @@ export default function RegisterPage() {
               type="email"
               required
               placeholder="Email Address"
-              className="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-500 focus:outline-none text-gray-800"
+              className="w-full px-4 py-3 border border-gray-300 rounded-sm focus:ring-1 focus:ring-red-500 focus:outline-none text-gray-800"
             />
             <input
               name="phone"
@@ -82,7 +82,7 @@ export default function RegisterPage() {
               onChange={handleChange}
               required
               placeholder="Phone Number"
-              className="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-500 focus:outline-none text-gray-800"
+              className="w-full px-4 py-3 border border-gray-300 rounded-sm focus:ring-1 focus:ring-red-500 focus:outline-none text-gray-800"
             />
             <input
               name="password"
@@ -91,13 +91,13 @@ export default function RegisterPage() {
               type="password"
               required
               placeholder="Password"
-              className="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-500 focus:outline-none text-gray-800"
+              className="w-full px-4 py-3 border border-gray-300 rounded-sm focus:ring-1 focus:ring-red-500 focus:outline-none text-gray-800"
             />
 
            <button
               type="submit"
               disabled={loading}
-              className={`w-full py-3 text-white font-semibold rounded-md transition duration-200 ${
+              className={`w-full py-3 text-white font-semibold rounded-sm transition duration-200 ${
                 loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-red-500 hover:bg-black'
               }`}
             >
