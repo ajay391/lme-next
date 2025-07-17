@@ -1,5 +1,5 @@
 // pages/shop.js
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import ProductCard from "../components/ProductCard";
 import axiosInstance from "../utils/axiosInstance";
 import Head from "next/head";
@@ -19,21 +19,21 @@ const ShopPage = ({ initialProducts, initialCount, pageSize }) => {
 
   // Fetch data when page changes
   useEffect(() => {
-  const fetchProducts = async () => {
-    setLoading(true);
-    try {
-      const res = await axiosInstance.get(`/products/?page=${currentPage}`);
-      setProducts(res.data.results);
-      setCount(res.data.count);
-      window.scrollTo({ top: 0, behavior: "smooth" }); // ✅ Scroll to top
-    } catch (err) {
-      console.error("Error fetching page:", err);
-    }
-    setLoading(false);
-  };
+    const fetchProducts = async () => {
+      setLoading(true);
+      try {
+        const res = await axiosInstance.get(`/products/?page=${currentPage}`);
+        setProducts(res.data.results);
+        setCount(res.data.count);
+        window.scrollTo({ top: 0, behavior: "smooth" }); // ✅ Scroll to top
+      } catch (err) {
+        console.error("Error fetching page:", err);
+      }
+      setLoading(false);
+    };
 
-  fetchProducts();
-}, [currentPage]);
+    fetchProducts();
+  }, [currentPage]);
 
   console.log(products)
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -50,37 +50,37 @@ const ShopPage = ({ initialProducts, initialCount, pageSize }) => {
   const categories = ["Oversized T-shirt", "T-shirt"];
   const sizes = ["S", "M", "L", "XL"];
 
-  const [filteredProducts, setFilteredProducts] = useState([]);
+  // const [filteredProducts, setFilteredProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    setLoading(true);
-    let result = [...products];
+  const filteredProducts = useMemo(() => {
+  if (loading) return [];
+  let filtered = [...products];
 
-    if (selectedCategory) {
-      result = result.filter((p) => p.category === selectedCategory);
-    }
+  if (selectedCategory) {
+    filtered = filtered.filter((p) => p.category === selectedCategory);
+  }
 
-    if (selectedSizes.length > 0) {
-      result = result.filter((p) => {
-        const productSizes = p.available_sizes?.split(",").map((s) => s.trim());
-        return productSizes?.some((size) => selectedSizes.includes(size));
-      });
-    }
+  if (selectedSizes.length > 0) {
+    filtered = filtered.filter((p) =>
+      selectedSizes.some((size) => p.available_sizes.includes(size))
+    );
+  }
 
-    if (isAvailable) {
-      result = result.filter((p) => p.available === true);
-    }
+  if (isAvailable) {
+    filtered = filtered.filter((p) => p.in_stock === true);
+  }
 
-    if (sortOrder === "lowToHigh") {
-      result.sort((a, b) => a.price - b.price);
-    } else if (sortOrder === "highToLow") {
-      result.sort((a, b) => b.price - a.price);
-    }
+  if (sortOrder === "lowToHigh") {
+    filtered.sort((a, b) => a.price - b.price);
+  } else if (sortOrder === "highToLow") {
+    filtered.sort((a, b) => b.price - a.price);
+  }
 
-    setFilteredProducts(result);
-    setLoading(false);
-  }, [products, selectedCategory, selectedSizes, isAvailable, sortOrder]);
+  return filtered;
+}, [products, selectedCategory, selectedSizes, isAvailable, sortOrder, loading]);
+
+
 
   const handleApplyFilters = () => {
     setSelectedCategory(tempCategory);
@@ -268,8 +268,8 @@ const ShopPage = ({ initialProducts, initialCount, pageSize }) => {
               </div>
             ))}
           </div>
-        ) : filteredProducts.length === 0 ? (
-          <div className="text-center text-gray-600 py-10 ">
+        )  : !loading && filteredProducts.length === 0 ? (
+          <div className="text-center text-gray-600 py-10">
             <h2 className="text-2xl font-semibold mb-2 uppercase">No products found</h2>
             <p className="mb-4">We couldn't find any items that match your filters.</p>
             <button
@@ -327,10 +327,10 @@ const ShopPage = ({ initialProducts, initialCount, pageSize }) => {
               </div>
             )}
           </>
-
         )}
+
       </div>
-      
+
     </>
   );
 };

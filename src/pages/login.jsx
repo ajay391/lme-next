@@ -1,23 +1,24 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
 import { login } from '../store/authSlice';
 import axiosInstance from '../utils/axiosInstance';
 import Link from 'next/link';
-import Image from "next/image";
+import Image from 'next/image';
 import { Eye, EyeOff } from 'lucide-react';
 import toast from 'react-hot-toast';
 import Cookies from 'js-cookie';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 
 export default function LoginPage() {
-  const [form, setForm] = useState({ phone: '', password: '' });
   const [showPassword, setShowPassword] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
   const dispatch = useDispatch();
-  const [loading, setLoading] = useState(false);
   const { next } = router.query;
   const [redirectTo, setRedirectTo] = useState('/');
 
@@ -25,38 +26,45 @@ export default function LoginPage() {
     setMounted(true);
   }, []);
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
   useEffect(() => {
     if (typeof next === 'string') {
       setRedirectTo(next);
     }
   }, [next]);
 
-  const handleSubmit = async (e) => {
-  e.preventDefault();
-  setLoading(true); // 🟢 Start loading
-  try {
-    const res = await axiosInstance.post('/auth/login/', form);
-    const { access, refresh } = res.data.tokens || {};
+  const formik = useFormik({
+    initialValues: {
+      phone: '',
+      password: '',
+    },
+    validationSchema: Yup.object({
+      phone: Yup.string()
+        .matches(/^\d{10}$/, 'Phone number must be exactly 10 digits')
+        .required('Phone number is required'),
+      password: Yup.string().required('Password is required'),
+    }),
+    onSubmit: async (values) => {
+      setLoading(true);
+      try {
+        const res = await axiosInstance.post('/auth/login/', values);
+        const { access, refresh } = res.data.tokens || {};
 
-    if (access && refresh) {
-      Cookies.set('access_token', access, { expires: 1 });
-      Cookies.set('refresh_token', refresh, { expires: 7 });
-      dispatch(login({ access, refresh }));
-      toast.success('Login Success');
-       router.push(redirectTo);  
-    } else {
-      toast.error('Tokens not received');
-    }
-  } catch (err) {
-    toast.error(err.response?.data?.error || 'Login failed');
-  } finally {
-    setLoading(false); // 🔴 Stop loading
-  }
-};
+        if (access && refresh) {
+          Cookies.set('access_token', access, { expires: 1 });
+          Cookies.set('refresh_token', refresh, { expires: 7 });
+          dispatch(login({ access, refresh }));
+          toast.success('Login Success');
+          router.push(redirectTo);
+        } else {
+          toast.error('Tokens not received');
+        }
+      } catch (err) {
+        toast.error(err.response?.data?.error || 'Login failed');
+      } finally {
+        setLoading(false);
+      }
+    },
+  });
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -67,7 +75,6 @@ export default function LoginPage() {
   return (
     <div className="py-16 sm:py-20 flex items-center justify-center bg-gray-100 px-4 sm:px-6 lg:px-8">
       <div className="max-w-5xl w-full bg-white shadow-md rounded-sm overflow-hidden grid grid-cols-1 lg:grid-cols-2">
-        
         {/* Left Side Visual */}
         <div className="hidden lg:block bg-black relative">
           <img
@@ -75,11 +82,6 @@ export default function LoginPage() {
             alt="Login Visual"
             className="w-full h-full max-h-[450px] object-cover"
           />
-          {/* <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center text-white text-xl font-normal p-6">
-            <Image src="/images/logo.png" alt="Logo" width={100} height={100} className="object-contain mb-5" />
-            
-           <h6 className="uppercase">Limits Don't Exist</h6> 
-          </div> */}
         </div>
 
         {/* Right Side Login Form */}
@@ -89,45 +91,45 @@ export default function LoginPage() {
             <p className="text-gray-600 mt-2 text-sm">Sign in to your account</p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={formik.handleSubmit} className="space-y-5">
             <div>
-              <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
-                {/* Phone Number <span className="text-red-500">*</span> */}
-              </label>
               <input
                 name="phone"
                 type="text"
-                value={form.phone}
-                onChange={handleChange}
-                required
+                value={formik.values.phone}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
                 placeholder="Enter your phone number"
-                className="mt-2 w-full px-4 py-3 border border-gray-300 rounded-sm focus:ring-1 focus:ring-red-500 focus:outline-none"
+                className="w-full px-4 py-3 border border-gray-300 rounded-sm focus:ring-1 focus:ring-red-500 focus:outline-none"
               />
+              {formik.touched.phone && formik.errors.phone && (
+                <div className="text-sm text-red-500 mt-1">{formik.errors.phone}</div>
+              )}
             </div>
 
             <div className="relative">
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                {/* Password <span className="text-red-500">*</span> */}
-              </label>
               <input
                 name="password"
                 type={showPassword ? 'text' : 'password'}
-                value={form.password}
-                onChange={handleChange}
-                required
+                value={formik.values.password}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
                 placeholder="Enter your password"
-                className="mt-2 w-full px-4 py-3 border border-gray-300 rounded-sm focus:ring-1 focus:ring-red-500 focus:outline-none"
+                className="w-full px-4 py-3 border border-gray-300 rounded-sm focus:ring-1 focus:ring-red-500 focus:outline-none"
               />
               <button
                 type="button"
                 onClick={togglePasswordVisibility}
-                className="absolute right-3 top-[55%] -translate-y-1/2 text-gray-500 "
+                className="absolute right-3 top-[55%] -translate-y-1/2 text-gray-500"
               >
                 {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
               </button>
+              {formik.touched.password && formik.errors.password && (
+                <div className="text-sm text-red-500 mt-1">{formik.errors.password}</div>
+              )}
             </div>
 
-           <button
+            <button
               type="submit"
               disabled={loading}
               className={`w-full py-3 text-white font-semibold rounded-sm transition duration-200 ${
@@ -150,7 +152,6 @@ export default function LoginPage() {
                       fill="currentColor"
                       d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
                     ></path>
-                    Si
                   </svg>
                   Signing in...
                 </span>

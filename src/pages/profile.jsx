@@ -353,7 +353,7 @@ const Profile = () => {
               />
 
               {/* Sheet Panel */}
-              <div className="relative w-full bg-white rounded-t-xl shadow-lg p-6 max-h-[90vh] overflow-y-auto">
+              <div className="relative w-full bg-white rounded-t-md shadow-lg p-6 max-h-[90vh] overflow-y-auto">
                 <div className="flex justify-between items-center mb-4">
                   <h2 className="text-lg font-semibold text-gray-800">My Account</h2>
                   <button onClick={() => setIsMenuOpen(false)} className="text-gray-400 hover:text-gray-600">

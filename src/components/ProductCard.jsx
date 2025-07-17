@@ -26,7 +26,7 @@ const ProductCard = ({ product }) => {
         {/* Product Info */}
         <div className="p-0">
           <h3 className="mt-5 text-base sm:text-lg font-medium line-clamp-2">{product.name}</h3>
-          {/* <p className="text-sm text-gray-400 mt-1 capitalize">{product.category}</p> */}
+          <p className="text-sm text-gray-400 mt-1 capitalize">{product.category}</p>
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-0 sm:gap-3">
             {product.old_price && (
               <span className="text-base sm:text-base text-gray-400 line-through">

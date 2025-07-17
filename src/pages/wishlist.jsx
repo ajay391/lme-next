@@ -99,7 +99,7 @@ const WishlistPage = () => {
       ) : (
         <>
           {/* Header Row */}
-          <div className="hidden sm:grid grid-cols-5 gap-6 px-4 py-3 border-b font-medium text-gray-700 text-sm ">
+          <div className="hidden sm:grid grid-cols-5 gap-6 sm:gap-0 md:gap-0 lg:gap-6  px-0 sm:px-0 md:px-0 py-3 border-b font-medium text-gray-700 text-sm ">
             <div className="col-span-2 poppins-font">Product</div>
             <div className="poppins-font">Price</div>
             <div className="poppins-font">Stock</div>
@@ -113,7 +113,7 @@ const WishlistPage = () => {
               return (
                 <div
                   key={item.id}
-                  className="grid grid-cols-1 sm:grid-cols-5 gap-6 items-center bg-white px-0 sm:px-4 py-6 rounded-sm border-b sm:border-0 sm:border-b"
+                  className="grid grid-cols-1 sm:grid-cols-5 gap-6 sm:gap-0 md:gap-0 lg:gap-6  items-center bg-white px-0 sm:px-0 md:px-0 py-6 rounded-sm border-b sm:border-0 sm:border-b"
                 >
                   {/* Image + Product */}
                   <div className="sm:col-span-2 flex items-center gap-4">
@@ -165,11 +165,11 @@ const WishlistPage = () => {
                           setSelectedItem(item);
                           setIsSizeModalOpen(true);
                         }}
-                        className="text-sm px-2 text-black rounded-sm"
+                        className="text-sm px-0 text-black rounded-sm"
                         title="Add to Cart"
                       >
-                        {/* Add to Cart */}
-                        <MdAddShoppingCart size={20} />
+                        Add to Cart
+                        {/* <MdAddShoppingCart size={20} /> */}
                       </button>
 
                       {/* <Link

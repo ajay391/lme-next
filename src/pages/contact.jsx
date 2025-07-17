@@ -37,7 +37,7 @@ export default function ContactPage() {
               <label className="block text-gray-700 font-medium">Name</label>
               <input
                 type="text"
-                className="w-full mt-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
+                className="w-full mt-1 border border-gray-300 rounded-sm px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
                 placeholder="Your Name"
                 required
               />
@@ -47,7 +47,7 @@ export default function ContactPage() {
               <label className="block text-gray-700 font-medium">Email</label>
               <input
                 type="email"
-                className="w-full mt-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
+                className="w-full mt-1 border border-gray-300 rounded-sm px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
                 placeholder="you@example.com"
                 required
               />
@@ -56,7 +56,7 @@ export default function ContactPage() {
             <div>
               <label className="block text-gray-700 font-medium">Message</label>
               <textarea
-                className="w-full mt-1 border border-gray-300 rounded-lg px-4 py-2 h-32 resize-none focus:outline-none focus:ring-2 focus:ring-red-500"
+                className="w-full mt-1 border border-gray-300 rounded-sm px-4 py-2 h-32 resize-none focus:outline-none focus:ring-2 focus:ring-red-500"
                 placeholder="Your message here..."
                 required
               />
@@ -64,7 +64,7 @@ export default function ContactPage() {
 
             <button
               type="submit"
-              className="bg-red-500 text-white font-semibold px-6 py-2 rounded hover:bg-red-600 transition"
+              className="bg-red-500 text-white font-semibold px-6 py-2 rounded-sm hover:bg-red-600 transition"
             >
               Send Message
             </button>

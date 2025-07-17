@@ -1,13 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 import axiosInstance from '../utils/axiosInstance';
 import { useRouter } from 'next/router';
 import toast from 'react-hot-toast';
 
 export default function RegisterPage() {
-  const [form, setForm] = useState({ name: '', email: '', phone: '', password: '' });
-  const [message, setMessage] = useState('');
   const [mounted, setMounted] = useState(false);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -16,23 +16,36 @@ export default function RegisterPage() {
     setMounted(true);
   }, []);
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      await axiosInstance.post('/auth/register/', form);
-      toast.success('Registration successful!');
-      router.push('/login');
-    } catch (err) {
-      toast.error(err.response?.data?.error || 'Something went wrong');
-    } finally {
-      setLoading(false);
-    }
-  };
+  const formik = useFormik({
+    initialValues: {
+      name: '',
+      email: '',
+      phone: '',
+      password: '',
+    },
+    validationSchema: Yup.object({
+      name: Yup.string().required('Name is required'),
+      email: Yup.string().email('Invalid email address').required('Email is required'),
+       phone: Yup.string()
+    .matches(/^\d{10}$/, 'Phone number must be exactly 10 digits')
+    .required('Phone number is required'),
+      password: Yup.string()
+        .min(6, 'Password must be at least 6 characters')
+        .required('Password is required'),
+    }),
+    onSubmit: async (values) => {
+      setLoading(true);
+      try {
+        await axiosInstance.post('/auth/register/', values);
+        toast.success('Registration successful!');
+        router.push('/login');
+      } catch (err) {
+        toast.error(err.response?.data?.error || 'Something went wrong');
+      } finally {
+        setLoading(false);
+      }
+    },
+  });
 
   if (!mounted) return null;
 
@@ -46,9 +59,6 @@ export default function RegisterPage() {
             alt="Register Visual"
             className="w-full h-full max-h-[512px] object-cover"
           />
-          {/* <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center text-white text-3xl font-bold p-6">
-            Join the Movement
-          </div> */}
         </div>
 
         {/* Right Side Form */}
@@ -58,43 +68,66 @@ export default function RegisterPage() {
             <p className="text-gray-600 mt-2 text-sm">Sign up to get started with exclusive streetwear drops</p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-5">
-            <input
-              name="name"
-              value={form.name}
-              onChange={handleChange}
-              required
-              placeholder="Full Name"
-              className="w-full px-4 py-3 border border-gray-300 rounded-sm focus:ring-1 focus:ring-red-500 focus:outline-none text-gray-800"
-            />
-            <input
-              name="email"
-              value={form.email}
-              onChange={handleChange}
-              type="email"
-              required
-              placeholder="Email Address"
-              className="w-full px-4 py-3 border border-gray-300 rounded-sm focus:ring-1 focus:ring-red-500 focus:outline-none text-gray-800"
-            />
-            <input
-              name="phone"
-              value={form.phone}
-              onChange={handleChange}
-              required
-              placeholder="Phone Number"
-              className="w-full px-4 py-3 border border-gray-300 rounded-sm focus:ring-1 focus:ring-red-500 focus:outline-none text-gray-800"
-            />
-            <input
-              name="password"
-              value={form.password}
-              onChange={handleChange}
-              type="password"
-              required
-              placeholder="Password"
-              className="w-full px-4 py-3 border border-gray-300 rounded-sm focus:ring-1 focus:ring-red-500 focus:outline-none text-gray-800"
-            />
+          <form onSubmit={formik.handleSubmit} className="space-y-4">
+            <div>
+              <input
+                name="name"
+                placeholder="Full Name"
+                value={formik.values.name}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                className="w-full px-4 py-3 border border-gray-300 rounded-sm focus:ring-1 focus:ring-red-500 focus:outline-none text-gray-800"
+              />
+              {formik.touched.name && formik.errors.name && (
+                <div className="text-sm text-red-500 mt-1">{formik.errors.name}</div>
+              )}
+            </div>
 
-           <button
+            <div>
+              <input
+                name="email"
+                type="email"
+                placeholder="Email Address"
+                value={formik.values.email}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                className="w-full px-4 py-3 border border-gray-300 rounded-sm focus:ring-1 focus:ring-red-500 focus:outline-none text-gray-800"
+              />
+              {formik.touched.email && formik.errors.email && (
+                <div className="text-sm text-red-500 mt-1">{formik.errors.email}</div>
+              )}
+            </div>
+
+            <div>
+              <input
+                name="phone"
+                placeholder="Phone Number"
+                value={formik.values.phone}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                className="w-full px-4 py-3 border border-gray-300 rounded-sm focus:ring-1 focus:ring-red-500 focus:outline-none text-gray-800"
+              />
+              {formik.touched.phone && formik.errors.phone && (
+                <div className="text-sm text-red-500 mt-1">{formik.errors.phone}</div>
+              )}
+            </div>
+
+            <div>
+              <input
+                name="password"
+                type="password"
+                placeholder="Password"
+                value={formik.values.password}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                className="w-full px-4 py-3 border border-gray-300 rounded-sm focus:ring-1 focus:ring-red-500 focus:outline-none text-gray-800"
+              />
+              {formik.touched.password && formik.errors.password && (
+                <div className="text-sm text-red-500 mt-1">{formik.errors.password}</div>
+              )}
+            </div>
+
+            <button
               type="submit"
               disabled={loading}
               className={`w-full py-3 text-white font-semibold rounded-sm transition duration-200 ${
@@ -124,8 +157,6 @@ export default function RegisterPage() {
                 'Register'
               )}
             </button>
-
-            {message && <div className="text-sm text-center text-red-500">{message}</div>}
           </form>
 
           <p className="text-center text-sm text-gray-500 mt-6">
