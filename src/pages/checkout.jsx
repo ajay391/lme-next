@@ -377,7 +377,6 @@ export default function CheckoutPage() {
               <Image
                 src={shopCart}
                 alt="Profile"
-
                 className="w-20 h-20 rounded-full object-cover"
               />
             </div>
@@ -465,27 +464,27 @@ export default function CheckoutPage() {
                 )}
               </div>
               {cartItems.length === 0 ? (
-                <div className="bg-red-100 p-4 rounded text-red-700">Your cart is empty.</div>
+                <div className="bg-red-100 p-4 rounded-sm text-red-700">Your cart is empty.</div>
               ) : (
                 <>
                   <ul className="space-y-4">
                     {cartItems.map((item, index) => (
-                      <li key={index} className="flex gap-4 border rounded-sm p-4">
+                      <li key={index} className="flex gap-4 border-b sm:border rounded-sm py-2 sm:p-2">
                         <img
                           src={item.image}
                           alt={item.name}
-                          className="w-20 h-20 object-cover rounded"
+                          className="w-20 h-20 object-cover rounded-sm"
                         />
                         <div className="flex-1">
-                          <h4 className="text-md font-semibold mb-1 poppins-font">{item.name}</h4>
+                          <h4 className="text-md font-semibold mb-1 poppins-font line-clamp-1">{item.name}</h4>
                           <p className="text-sm text-gray-500 mb-1">
                             Size: {item.size} {item.color && ` | Color: ${item.color}`}
                           </p>
                           <p className="text-sm text-gray-500">Quantity: {item.quantity}</p>
                         </div>
                         <div className="text-lg font-medium text-red-500">
-                          {/* ₹{item.price * item.quantity} */}
-                          ₹{item.price * item.quantity}
+                          {/* Rs. {item.price * item.quantity} */}
+                          Rs. {item.price * item.quantity}
                         </div>
                       </li>
                     ))}
@@ -494,11 +493,11 @@ export default function CheckoutPage() {
                     <h4 className="text-lg font-semibold text-gray-800 border-b pb-2 mb-3">Order Summary</h4>
                     <div className="flex justify-between text-sm text-gray-600 mb-4">
                       <p>Subtotal</p>
-                      <span className="">₹{subtotal.toFixed(2)}</span>
+                      <span className="">Rs. {subtotal.toFixed(2)}</span>
                     </div>
                     <div className="flex justify-between text-sm text-gray-600 mb-4">
                       <p>Shipping</p>
-                      {/* <span>₹{shippingCharge}</span> */}
+                      {/* <span>Rs. {shippingCharge}</span> */}
                       <span className="bg-green-200 text-green-700 py-0 px-2 rounded-sm">Free</span>
                     </div>
                     <hr className="my-3" />
@@ -682,7 +681,7 @@ export default function CheckoutPage() {
                   <button
                     disabled={isSubmitting}
                     type="submit"
-                    className="w-full flex items-center justify-center gap-2 bg-black text-white py-2 rounded hover:bg-gray-800 transition disabled:opacity-50"
+                    className="w-full flex items-center justify-center gap-2 bg-black text-white py-2 rounded-sm hover:bg-gray-800 transition disabled:opacity-50"
                   >
                     {isSubmitting ? (
                       <>
@@ -717,6 +716,11 @@ export default function CheckoutPage() {
             </Formik>
           </div>
         )}
+      </div>
+      <div className="w-full bg-black py-2 overflow-hidden group">
+        <div className="animate-marquee group-hover:[animation-play-state:paused] whitespace-nowrap text-white text-sm sm:text-base font-medium uppercase">
+          Free shipping on all orders | New arrivals now live! | Premium quality T-shirts & more
+        </div>
       </div>
     </>
   );

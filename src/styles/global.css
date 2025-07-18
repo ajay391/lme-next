@@ -170,11 +170,11 @@ p, .footer-links ul li a , .checkout-form * {
 }
 
 @keyframes marquee {
-  0% { transform: translateX(100%); }
+  0% { transform: translateX(200%); }
   100% { transform: translateX(-100%); }
 }
 
 .animate-marquee {
   display: inline-block;
-  animation: marquee 15s linear infinite;
+  animation: marquee 30s linear infinite;
 }

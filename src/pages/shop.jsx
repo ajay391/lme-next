@@ -299,7 +299,7 @@ const ShopPage = ({ initialProducts, initialCount, pageSize }) => {
                 <button
                   onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
                   disabled={currentPage === 1}
-                  className="px-4 py-2 rounded-sm border bg-white text-gray-700 hover:bg-gray-100 disabled:opacity-50"
+                  className="px-4 py-2 border border-black bg-black hover:bg-white hover:text-black text-white disabled:opacity-60"
                 >
                   Previous
                 </button>
@@ -309,7 +309,7 @@ const ShopPage = ({ initialProducts, initialCount, pageSize }) => {
                     key={num}
                     onClick={() => setCurrentPage(num)}
                     className={`px-4 py-2 rounded-sm border transition ${num === currentPage
-                        ? "bg-black text-white"
+                        ? "bg-red-500 text-white"
                         : "bg-white text-gray-700 hover:bg-gray-100"
                       }`}
                   >
@@ -320,7 +320,7 @@ const ShopPage = ({ initialProducts, initialCount, pageSize }) => {
                 <button
                   onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
                   disabled={currentPage === totalPages}
-                  className="px-4 py-2 rounded-sm border bg-white text-gray-700 hover:bg-gray-100 disabled:opacity-50"
+                  className="px-4 py-2 border border-black bg-black hover:bg-white hover:text-black text-white disabled:opacity-60"
                 >
                   Next
                 </button>

@@ -85,14 +85,14 @@ const CartPage = () => {
                     className="w-20 h-20 object-cover rounded-sm"
                   />
                   <div>
-                    <h3 className="text-base font-medium text-gray-800 poppins-font">{item.name}</h3>
+                    <h3 className="text-base font-medium text-gray-800 poppins-font line-clamp-2">{item.name}</h3>
                     <p className="text-sm text-gray-500">Size: {item.size}</p>
                     {item.color && <p className="text-sm text-gray-500">Color: {item.color}</p>}
                   </div>
                 </div>
 
                 <div className="hidden sm:table-cell text-center text-gray-700 font-medium">
-                  ₹{item.price}
+                  Rs. {item.price}
                 </div>
                 <div className="text-center flex justify-between sm:justify-center">
                   <div className="inline-flex items-center gap-2 rounded-sm px-0 py-1 ">
@@ -131,15 +131,15 @@ const CartPage = () => {
                   {/* <span className="font-medium text-red-500">₹{item.price}</span> */}
                   <div className="flex justify-between">
                     <span className="font-medium mr-3">Price</span>
-                    <span className="font-medium text-red-500">₹{item.price}</span>
+                    <span className="font-medium text-red-500">Rs. {item.price}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="font-medium mr-2">Total:</span>
-                    <span className="font-medium text-black">₹{(item.price * item.quantity).toFixed(2)}</span>
+                    <span className="font-medium text-black">Rs. {(item.price * item.quantity).toFixed(2)}</span>
                   </div>
                 </div>
                 <div className="hidden sm:table-cell text-center text-gray-700 font-medium">
-                  ₹{(item.price * item.quantity).toFixed(2)}
+                  Rs. {(item.price * item.quantity).toFixed(2)}
                 </div>
 
 
@@ -158,7 +158,7 @@ const CartPage = () => {
 
           <div className="mt-5 flex flex-col sm:flex-row justify-between items-center gap-4 border-0 pt-6">
             <h4 className="text-xl font-medium text-gray-800">
-              Subtotal: <span className=''> ₹{totalPrice.toFixed(2)}</span>
+              Subtotal: <span className=''> Rs. {totalPrice.toFixed(2)}</span>
             </h4>
             <div className="flex gap-3 w-full sm:w-fit">
               {/* <button
