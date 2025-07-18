@@ -147,8 +147,11 @@ export default function CheckoutPage() {
 
       orderDetails.items.forEach((item, index) => {
         y += 8;
+
         const cleanPrice = parseFloat(String(item.price).replace(/[^\d.]/g, ""));
-        doc.text(`${index + 1}. ${item.product_name}`, left, y);
+        const size = item.size ? ` (Size: ${item.size})` : ""; // ✅ Check and include size if available
+
+        doc.text(`${index + 1}. ${item.product_name}${size}`, left, y);
         doc.text(`${item.quantity}`, left + 100, y);
         doc.text(`Rs. ${cleanPrice.toFixed(2)}`, rightAlign, y, { align: "right" });
       });
@@ -232,16 +235,16 @@ export default function CheckoutPage() {
     setFieldValue("country", address.country);
     setFieldValue("phone", address.phone_number);
 
-   setTouched({
-  fullName: false,
-  email: false,
-  street: false,
-  city: false,
-  state: false,
-  postalCode: false,
-  country: false,
-  phone: false,
-});
+    setTouched({
+      fullName: false,
+      email: false,
+      street: false,
+      city: false,
+      state: false,
+      postalCode: false,
+      country: false,
+      phone: false,
+    });
   }
 
 
@@ -255,19 +258,19 @@ export default function CheckoutPage() {
     }
     const errors = await formikHelpers.validateForm();
 
-  if (Object.keys(errors).length > 0) {
-    // 👇 Force all error fields to show messages
-    formikHelpers.setTouched(
-      Object.keys(errors).reduce((acc, key) => {
-        acc[key] = true;
-        return acc;
-      }, {}),
-      true
-    );
+    if (Object.keys(errors).length > 0) {
+      // 👇 Force all error fields to show messages
+      formikHelpers.setTouched(
+        Object.keys(errors).reduce((acc, key) => {
+          acc[key] = true;
+          return acc;
+        }, {}),
+        true
+      );
 
-    toast.error("Please fill all required fields correctly.");
-    return;
-  }
+      toast.error("Please fill all required fields correctly.");
+      return;
+    }
 
     const amount = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
@@ -299,6 +302,7 @@ export default function CheckoutPage() {
               items: cartItems.map(item => ({
                 product: item.id,
                 quantity: item.quantity,
+                size: item.size,
                 price: item.price,
               })),
               payment_id: response.razorpay_payment_id,

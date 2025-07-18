@@ -31,7 +31,7 @@ const featuredProducts = [
     isNew: true,
   },
   {
-    id: 2,
+    id: 1,
     name: "Formula 1 - Oversized T-shirt",
     slug: "urban-white-hoodie",
     price: "599",
@@ -47,7 +47,7 @@ const featuredProducts = [
     isNew: true,
   },
   {
-    id: 3,
+    id: 1,
     name: "Formula 1 - Oversized T-shirt",
     slug: "nowhere-graphic-tee",
     price: "599",
@@ -80,7 +80,7 @@ const featuredProducts = [
     isNew: true,
   },
   {
-    id: 2,
+    id: 1,
     name: "Formula 1 - Oversized T-shirt",
     slug: "urban-white-hoodie",
     price: "599",
@@ -96,7 +96,7 @@ const featuredProducts = [
     isNew: true,
   },
   {
-    id: 3,
+    id: 1,
     name: "Formula 1 - Oversized T-shirt",
     slug: "nowhere-graphic-tee",
     price: "799",

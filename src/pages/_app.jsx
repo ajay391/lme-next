@@ -26,19 +26,24 @@ function App({ Component, pageProps }) {
           <FaWhatsapp size={26} />
         </a>
 
-        <Toaster
-          position="top-center"
-          toastOptions={{
-            style: {
-              padding: "10px 16px",
-              fontSize: "14px",
-            },
-          }}
-          containerStyle={{
-            top: 20,
-            right: 0,
-          }}
-        />
+       <Toaster
+  position="top-center"
+  toastOptions={{
+    duration: 4000,
+    style: {
+      padding: "8px 20px",
+      fontSize: "14px",
+      background: "#1f2937", // dark background
+      color: "#fff",         // white text
+      borderRadius: "0px",
+      boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+    },
+    
+  }}
+  containerStyle={{
+    top: 20,
+  }}
+/>
 
         <Component {...pageProps} />
         <Footer />
