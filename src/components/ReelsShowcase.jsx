@@ -64,7 +64,7 @@ const Carousel = () => {
   const prevButton = () => sliderRef.current?.slickPrev();
 
   const carData = [
-    
+
     {
       image: c6,
       title: "Redline",
@@ -87,13 +87,13 @@ const Carousel = () => {
     },
     {
       image: c8,
-       title: "Overtake",
+      title: "Overtake",
     },
     {
       image: c9,
       title: "Ghost Driver",
     },
-  
+
   ];
 
   return (
@@ -101,11 +101,12 @@ const Carousel = () => {
       {/* Section Heading */}
       <section className="py-16 px-3 sm:px-2 md:px-14 lg:px-14 xl:px-14">
         <div className="max-w-3xl text-start">
-          <h1 className="text-4xl sm:text-4xl md:text-5xl font-bold mb-4 uppercase">
-            Featured Drops <br /> <span className="text-primary text-red-500">Stand Out, Stay Ahead</span>
+          <h1 className="text-4xl sm:text-4xl md:text-4xl font-bold mb-4 uppercase">
+            Straight From The Feed <br />
+            <span className="text-red-500">Watch It. Wear It.</span>
           </h1>
           <p className="text-base sm:text-base text-gray-600">
-            Use prebuilt templates and components for a professional, stunning look. Save time and focus on content with our user-friendly, customizable design solutions.
+            The streetwear heat you scrolled past? It’s here. Watch our Insta reels to feel the drop before it hits your wardrobe.
           </p>
         </div>
       </section>
@@ -133,7 +134,7 @@ const Carousel = () => {
 
               {/* Overlay Content */}
               <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-black/60 to-transparent text-white p-4 flex flex-row justify-between">
-              <h2 className="text-2xl font-semibold mb-2 px-2 flex items-end">{car.title}</h2>
+                <h2 className="text-2xl font-semibold mb-2 px-2 flex items-end">{car.title}</h2>
                 <a
                   href="https://www.instagram.com/lastmanonearth.in?igsh=eXBrcWN6YjBvZWpv"
                   target="_blank"

@@ -260,9 +260,9 @@ const ShopPage = ({ initialProducts, initialCount, pageSize }) => {
         {/* Product Grid */}
         {loading ? (
           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {[...Array(8)].map((_, i) => (
-              <div key={i} className="animate-pulse border border-gray-200 rounded-lg p-4">
-                <div className="bg-gray-200 h-64 w-full mb-4 rounded" />
+            {[...Array(12)].map((_, i) => (
+              <div key={i} className="animate-pulse border-gray-200 rounded-sm p-4">
+                <div className="bg-gray-200 h-[250px] sm:h-[320px] md:h-[360px] lg:h-[380px] w-full mb-4 rounded-sm" />
                 <div className="h-4 bg-gray-200 rounded w-3/4 mb-2" />
                 <div className="h-4 bg-gray-200 rounded w-1/2" />
               </div>

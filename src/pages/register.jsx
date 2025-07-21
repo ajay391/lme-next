@@ -6,11 +6,18 @@ import * as Yup from 'yup';
 import axiosInstance from '../utils/axiosInstance';
 import { useRouter } from 'next/router';
 import toast from 'react-hot-toast';
+import { Eye, EyeOff } from 'lucide-react';
 
 export default function RegisterPage() {
   const [mounted, setMounted] = useState(false);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+
+  const [showPassword, setShowPassword] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
   useEffect(() => {
     setMounted(true);
@@ -26,9 +33,9 @@ export default function RegisterPage() {
     validationSchema: Yup.object({
       name: Yup.string().required('Name is required'),
       email: Yup.string().email('Invalid email address').required('Email is required'),
-       phone: Yup.string()
-    .matches(/^\d{10}$/, 'Phone number must be exactly 10 digits')
-    .required('Phone number is required'),
+      phone: Yup.string()
+        .matches(/^\d{10}$/, 'Phone number must be exactly 10 digits')
+        .required('Phone number is required'),
       password: Yup.string()
         .min(6, 'Password must be at least 6 characters')
         .required('Password is required'),
@@ -62,9 +69,9 @@ export default function RegisterPage() {
         </div>
 
         {/* Right Side Form */}
-        <div className="p-8 sm:p-10">
+        <div className="p-5 py-10 sm:p-10 flex flex-col justify-center ">
           <div className="mb-6 text-center">
-            <h2 className="text-3xl font-bold text-gray-800">Create Account</h2>
+            <h2 className="text-2xl font-bold text-gray-800">Create an account</h2>
             <p className="text-gray-600 mt-2 text-sm">Sign up to get started with exclusive streetwear drops</p>
           </div>
 
@@ -112,27 +119,33 @@ export default function RegisterPage() {
               )}
             </div>
 
-            <div>
+            <div className="relative">
               <input
                 name="password"
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 placeholder="Password"
                 value={formik.values.password}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                className="w-full px-4 py-3 border border-gray-300 rounded-sm focus:ring-1 focus:ring-red-500 focus:outline-none text-gray-800"
+                className="w-full px-4 py-3 border border-gray-300 rounded-sm focus:border-red-500 focus:outline-none text-gray-800"
               />
-              {formik.touched.password && formik.errors.password && (
-                <div className="text-sm text-red-500 mt-1">{formik.errors.password}</div>
-              )}
+              <button
+                type="button"
+                onClick={togglePasswordVisibility}
+                className="absolute right-3 top-[50%] -translate-y-1/2 text-gray-500"
+              >
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
             </div>
+            {formik.touched.password && formik.errors.password && (
+              <div className="text-sm text-red-500 mt-1" style={{marginTop:"4px"}}>{formik.errors.password}</div>
+            )}
 
             <button
               type="submit"
               disabled={loading}
-              className={`w-full py-3 text-white font-semibold rounded-sm transition duration-200 ${
-                loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-red-500 hover:bg-black'
-              }`}
+              className={`w-full py-3 text-white font-semibold rounded-sm transition duration-200 ${loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-red-500 hover:bg-black'
+                }`}
             >
               {loading ? (
                 <span className="flex items-center justify-center gap-2">
@@ -154,7 +167,7 @@ export default function RegisterPage() {
                   Creating Account...
                 </span>
               ) : (
-                'Register'
+                'Sign Up'
               )}
             </button>
           </form>
@@ -162,7 +175,7 @@ export default function RegisterPage() {
           <p className="text-center text-sm text-gray-500 mt-6">
             Already have an account?{' '}
             <a href="/login" className="text-red-500 hover:underline text-base font-normal">
-              Login here
+              Sign In here
             </a>
           </p>
         </div>

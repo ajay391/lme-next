@@ -85,9 +85,9 @@ export default function LoginPage() {
         </div>
 
         {/* Right Side Login Form */}
-        <div className="p-8 sm:p-10">
+        <div className="p-5 py-14 sm:p-10 flex flex-col justify-center ">
           <div className="mb-6 text-center">
-            <h2 className="text-3xl font-bold text-gray-800">Welcome Back</h2>
+            <h2 className="text-2xl font-bold text-gray-800 uppercase">Welcome to <span className='text-red-500'>LME</span></h2>
             <p className="text-gray-600 mt-2 text-sm">Sign in to your account</p>
           </div>
 
@@ -164,7 +164,7 @@ export default function LoginPage() {
           <p className="text-center text-sm text-gray-500 mt-6">
             Don't have an account?{' '}
             <Link href="/register" className="text-red-500 hover:underline text-base font-normal">
-              Sign up here
+              Sign Up
             </Link>
           </p>
         </div>
