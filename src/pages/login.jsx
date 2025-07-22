@@ -12,6 +12,7 @@ import toast from 'react-hot-toast';
 import Cookies from 'js-cookie';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import Head from 'next/head';
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -73,102 +74,107 @@ export default function LoginPage() {
   if (!mounted) return null;
 
   return (
-    <div className="py-16 sm:py-20 flex items-center justify-center bg-gray-100 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-5xl w-full bg-white shadow-md rounded-sm overflow-hidden grid grid-cols-1 lg:grid-cols-2">
-        {/* Left Side Visual */}
-        <div className="hidden lg:block bg-black relative">
-          <img
-            src="/images/register.png"
-            alt="Login Visual"
-            className="w-full h-full max-h-[450px] object-cover"
-          />
-        </div>
-
-        {/* Right Side Login Form */}
-        <div className="p-5 py-14 sm:p-10 flex flex-col justify-center ">
-          <div className="mb-6 text-center">
-            <h2 className="text-2xl font-bold text-gray-800 uppercase">Welcome to <span className='text-red-500'>LME</span></h2>
-            <p className="text-gray-600 mt-2 text-sm">Sign in to your account</p>
+    <>
+      <Head>
+        <title> Login | Last Man On Earth </title>
+        <meta name="description" content="Premium streetwear. Oversized fits, bold designs." />
+      </Head>
+      <div className="py-16 sm:py-20 flex items-center justify-center bg-gray-100 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-md md:max-w-5xl w-full bg-white shadow-md rounded-sm overflow-hidden grid grid-cols-1 md:grid-cols-2">
+          {/* Left Side Visual */}
+          <div className="hidden md:block bg-black relative">
+            <img
+              src="/images/register.png"
+              alt="Login Visual"
+              className="w-full h-full max-h-[450px] object-cover"
+            />
           </div>
 
-          <form onSubmit={formik.handleSubmit} className="space-y-5">
-            <div>
-              <input
-                name="phone"
-                type="text"
-                value={formik.values.phone}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                placeholder="Enter your phone number"
-                className="w-full px-4 py-3 border border-gray-300 rounded-sm focus:ring-1 focus:ring-red-500 focus:outline-none"
-              />
-              {formik.touched.phone && formik.errors.phone && (
-                <div className="text-sm text-red-500 mt-1">{formik.errors.phone}</div>
-              )}
+          {/* Right Side Login Form */}
+          <div className="p-5 py-14 sm:p-10 flex flex-col justify-center ">
+            <div className="mb-6 text-center">
+              <h2 className="text-2xl font-bold text-gray-800 uppercase">Welcome to <span className='text-red-500'>LME</span></h2>
+              <p className="text-gray-600 mt-2 text-sm">Sign in to your account</p>
             </div>
 
-            <div className="relative">
-              <input
-                name="password"
-                type={showPassword ? 'text' : 'password'}
-                value={formik.values.password}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                placeholder="Enter your password"
-                className="w-full px-4 py-3 border border-gray-300 rounded-sm focus:ring-1 focus:ring-red-500 focus:outline-none"
-              />
+            <form onSubmit={formik.handleSubmit} className="space-y-5">
+              <div>
+                <input
+                  name="phone"
+                  type="text"
+                  value={formik.values.phone}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  placeholder="Enter your phone number"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-sm focus:ring-1 focus:ring-red-500 focus:outline-none"
+                />
+                {formik.touched.phone && formik.errors.phone && (
+                  <div className="text-sm text-red-500 mt-1">{formik.errors.phone}</div>
+                )}
+              </div>
+
+              <div className="relative">
+                <input
+                  name="password"
+                  type={showPassword ? 'text' : 'password'}
+                  value={formik.values.password}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  placeholder="Enter your password"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-sm focus:ring-1 focus:ring-red-500 focus:outline-none"
+                />
+                <button
+                  type="button"
+                  onClick={togglePasswordVisibility}
+                  className="absolute right-3 top-[55%] -translate-y-1/2 text-gray-500"
+                >
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
+                {formik.touched.password && formik.errors.password && (
+                  <div className="text-sm text-red-500 mt-1">{formik.errors.password}</div>
+                )}
+              </div>
+
               <button
-                type="button"
-                onClick={togglePasswordVisibility}
-                className="absolute right-3 top-[55%] -translate-y-1/2 text-gray-500"
+                type="submit"
+                disabled={loading}
+                className={`w-full py-3 text-white font-semibold rounded-sm transition duration-200 ${loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-red-500 hover:bg-black'
+                  }`}
               >
-                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                {loading ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                      ></path>
+                    </svg>
+                    Signing in...
+                  </span>
+                ) : (
+                  'Sign In'
+                )}
               </button>
-              {formik.touched.password && formik.errors.password && (
-                <div className="text-sm text-red-500 mt-1">{formik.errors.password}</div>
-              )}
-            </div>
+            </form>
 
-            <button
-              type="submit"
-              disabled={loading}
-              className={`w-full py-3 text-white font-semibold rounded-sm transition duration-200 ${
-                loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-red-500 hover:bg-black'
-              }`}
-            >
-              {loading ? (
-                <span className="flex items-center justify-center gap-2">
-                  <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    ></circle>
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-                    ></path>
-                  </svg>
-                  Signing in...
-                </span>
-              ) : (
-                'Sign In'
-              )}
-            </button>
-          </form>
-
-          <p className="text-center text-sm text-gray-500 mt-6">
-            Don't have an account?{' '}
-            <Link href="/register" className="text-red-500 hover:underline text-base font-normal">
-              Sign Up
-            </Link>
-          </p>
+            <p className="text-center text-sm text-gray-500 mt-6">
+              Don't have an account?{' '}
+              <Link href="/register" className="text-red-500 hover:underline text-base font-normal">
+                Sign Up
+              </Link>
+            </p>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

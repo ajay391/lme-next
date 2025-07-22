@@ -1,11 +1,17 @@
 "use client";
 
+import Head from "next/head";
 import React from "react";
 
 const CancelRefundPage = () => {
   return (
+    <>
+    <Head>
+        <title>Cancellation & Refund Policy | Last Man On Earth </title>
+        <meta name="description" content="Premium streetwear. Oversized fits, bold designs." />
+      </Head>
     <div className="max-w-4xl mx-auto px-4 py-10 text-gray-800">
-      <h1 className="text-4xl font-bold mb-6 text-red-500 uppercase" >Cancellation & Refund Policy</h1>
+      <h1 className="text-3xl font-bold mb-6 text-red-500 uppercase" >Cancellation & Refund Policy</h1>
       <p className="text-sm text-gray-500 mb-10">Last updated: June 29, 2025</p>
 
       <div className="space-y-8 text-base leading-relaxed">
@@ -64,6 +70,7 @@ const CancelRefundPage = () => {
         </section>
       </div>
     </div>
+    </>
   );
 };
 

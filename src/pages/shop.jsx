@@ -148,114 +148,142 @@ const ShopPage = ({ initialProducts, initialCount, pageSize }) => {
         </div>
 
         {/* Filter Drawer */}
-        <AnimatePresence>
-          {isDrawerOpen && (
-            <div className="fixed inset-0 z-50 flex justify-end">
-              <motion.div
-                initial={{ x: "100%" }}
-                animate={{ x: 0 }}
-                exit={{ x: "100%" }}
-                transition={{ duration: 0.3 }}
-                className="w-80 bg-white h-full p-6 shadow-xl relative z-50 overflow-y-auto"
+       <AnimatePresence>
+        {isDrawerOpen && (
+          <div className="fixed inset-0 z-50 flex justify-end">
+            {/* Drawer Panel */}
+            <motion.div
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ duration: 0.3 }}
+              className="w-80 bg-white h-full p-6 shadow-2xl relative z-50 overflow-y-auto flex flex-col"
+            >
+              {/* Close Button */}
+              <button
+                onClick={() => setIsDrawerOpen(false)}
+                className="absolute top-4 right-4 text-xl text-gray-600 hover:text-black"
+                title="Close"
               >
-                <button
-                  onClick={() => setIsDrawerOpen(false)}
-                  className="absolute top-4 right-4 text-xl text-gray-600 hover:text-black"
-                >
-                  <IoClose />
-                </button>
+                <IoClose />
+              </button>
 
-                <h2 className="text-xl font-semibold mb-4 uppercase">Filter And Sort</h2>
+              <h2 className="text-xl font-bold text-gray-900 mb-6 uppercase tracking-wide border-b pb-2">
+                Filter & Sort
+              </h2>
 
-                {/* Category */}
-                <div className="mb-4">
-                  <label className="block text-base font-semibold text-gray-700 mb-2 uppercase poppins-font border-b">Category</label>
+              {/* Category Section */}
+              <div className="mb-6">
+                <label className="block text-sm font-semibold text-gray-700 mb-2 uppercase border-b pb-1">
+                  Category
+                </label>
+                <div className="space-y-2">
                   {categories.map((cat) => (
-                    <label key={cat} className="block text-sm text-gray-800">
+                    <label key={cat} className="flex items-center gap-2 text-sm cursor-pointer">
                       <input
                         type="checkbox"
                         checked={tempCategory === cat}
-                        onChange={() =>
-                          setTempCategory(tempCategory === cat ? "" : cat)
-                        }
-                        className="mr-2"
+                        onChange={() => setTempCategory(tempCategory === cat ? "" : cat)}
+                        className="form-checkbox text-red-500 w-4 h-4 border-gray-300 rounded-sm"
                       />
-                      {cat}
+                      <span className="text-gray-800">{cat}</span>
                     </label>
                   ))}
                 </div>
+              </div>
 
-                {/* Size */}
-                <div className="mb-4">
-                  <label className="block text-base font-semibold text-gray-700 mb-2 uppercase poppins-font border-b">Size</label>
-                  {sizes.map((size) => (
-                    <label key={size} className="block text-sm text-gray-800">
-                      <input
-                        type="checkbox"
-                        checked={tempSizes.includes(size)}
-                        onChange={() => toggleSize(size)}
-                        className="mr-2"
-                      />
-                      {size}
-                    </label>
-                  ))}
+              {/* Size Section */}
+              <div className="mb-6">
+                <label className="block text-sm font-semibold text-gray-700 mb-2 uppercase border-b pb-1">
+                  Size
+                </label>
+                <div className="flex flex-wrap gap-2">
+                  {sizes.map((size) => {
+                    const isChecked = tempSizes.includes(size);
+                    return (
+                      <label
+                        key={size}
+                        className={`px-3 py-1.5 rounded-sm text-sm font-medium cursor-pointer transition border ${
+                          isChecked
+                            ? "bg-black text-white border-black"
+                            : "bg-white text-gray-700 border-gray-300 hover:border-black"
+                        }`}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={isChecked}
+                          onChange={() => toggleSize(size)}
+                          className="hidden"
+                        />
+                        {size}
+                      </label>
+                    );
+                  })}
                 </div>
+              </div>
 
-                {/* Availability */}
-                <div className="mb-8">
-                  <label className="block text-base font-semibold text-gray-700 mb-2 uppercase poppins-font border-b">Availability</label>
-                  <label className="inline-flex items-center">
-                    <input
-                      type="checkbox"
-                      checked={tempAvailability}
-                      onChange={() => setTempAvailability((prev) => !prev)}
-                      className="form-checkbox h-5 w-5 text-green-500"
-                    />
-                    <span className="ml-2 text-sm text-gray-800">In Stock Only</span>
-                  </label>
-                </div>
+              {/* Availability */}
+              <div className="mb-6">
+                <label className="block text-sm font-semibold text-gray-700 mb-2 uppercase border-b pb-1">
+                  Availability
+                </label>
+                <label className="inline-flex items-center text-sm text-gray-700 gap-2">
+                  <input
+                    type="checkbox"
+                    checked={tempAvailability}
+                    onChange={() => setTempAvailability((prev) => !prev)}
+                    className="form-checkbox w-4 h-4 text-green-500 border-gray-300 rounded-sm"
+                  />
+                  In Stock Only
+                </label>
+              </div>
 
-                {/* Sort */}
-                <div className="mb-6">
-                  <label className="block text-base font-semibold text-gray-700 mb-1 uppercase poppins-font">Sort By</label>
-                  <select
-                    value={tempSortOrder}
-                    onChange={(e) => setTempSortOrder(e.target.value)}
-                    className="w-full border border-gray-300 rounded px-3 py-2 text-sm"
-                  >
-                    <option value="">Date: New to Old</option>
-                    <option value="lowToHigh">Price: Low to High</option>
-                    <option value="highToLow">Price: High to Low</option>
-                  </select>
-                </div>
+              {/* Sort */}
+              <div className="mb-6">
+                <label className="block text-sm font-semibold text-gray-700 mb-2 uppercase pb-1">
+                  Sort By
+                </label>
+                <select
+                  value={tempSortOrder}
+                  onChange={(e) => setTempSortOrder(e.target.value)}
+                  className="w-full border border-gray-300 rounded-sm px-3 py-2 text-sm focus:outline-none focus:border-black"
+                >
+                  <option value="">Date: New to Old</option>
+                  <option value="lowToHigh">Price: Low to High</option>
+                  <option value="highToLow">Price: High to Low</option>
+                </select>
+              </div>
 
-                <div className="flex justify-between gap-3">
-                  <button
-                    onClick={handleResetFilters}
-                    className="flex-1 text-sm px-4 py-2 border border-gray-300 text-gray-700 rounded-sm hover:bg-gray-100"
-                  >
-                    Reset
-                  </button>
-                  <button
-                    onClick={handleApplyFilters}
-                    className="flex-1 text-sm px-4 py-2 bg-black text-white rounded-sm hover:bg-red-600"
-                  >
-                    Apply
-                  </button>
-                </div>
-              </motion.div>
+              {/* Buttons */}
+              <div className="mt-auto flex justify-between gap-3 pt-4 border-t">
+                <button
+                  onClick={handleResetFilters}
+                  className="flex-1 text-sm px-4 py-2 border border-gray-300 text-gray-700 rounded-sm hover:bg-gray-100 transition"
+                >
+                  Reset
+                </button>
+                <button
+                  onClick={handleApplyFilters}
+                  className="flex-1 text-sm px-4 py-2 bg-black text-white rounded-sm hover:bg-red-600 transition"
+                >
+                  Apply
+                </button>
+              </div>
+            </motion.div>
 
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.3 }}
-                className="fixed inset-0 bg-black bg-opacity-40"
-                onClick={() => setIsDrawerOpen(false)}
-              />
-            </div>
-          )}
-        </AnimatePresence>
+            {/* Overlay */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="fixed inset-0 bg-black bg-opacity-40 backdrop-blur-sm"
+              onClick={() => setIsDrawerOpen(false)}
+            />
+          </div>
+        )}
+      </AnimatePresence>
+
 
         {/* Product Grid */}
         {loading ? (

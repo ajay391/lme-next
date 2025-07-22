@@ -121,7 +121,7 @@ const Carousel = () => {
                 alt={car.title}
                 width={500}
                 height={500}
-                className="w-full h-[400px] md:h-[400px] lg:h-[400px] object-cover"
+                className="w-full h-[360px] md:h-[360px] lg:h-[360px] object-cover"
               />
               {/* <video
                 src={car.video}
@@ -134,16 +134,15 @@ const Carousel = () => {
 
               {/* Overlay Content */}
               <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-black/60 to-transparent text-white p-4 flex flex-row justify-between">
-                <h2 className="text-2xl font-semibold mb-2 px-2 flex items-end">{car.title}</h2>
-                <a
+                <h2 className="text-md uppercase font-medium mb-2 px-2 flex items-end">{car.title}</h2>
+                {/* <a
                   href="https://www.instagram.com/lastmanonearth.in?igsh=eXBrcWN6YjBvZWpv"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-fit px-2 py-2 bg-transparent text-white font-medium rounded-sm hover:text-red-500 transition flex items-end gap-2"
+                  className="w-fit px-2 py-2 bg-transparent h-fit bg-white text-black font-medium rounded-sm hover:text-red-500 transition flex items-end gap-2"
                 >
                   <FaInstagram className="text-xl" />
-                  {/* <span>Explore Our Instagram</span> */}
-                </a>
+                </a> */}
                 {/* <p className="text-sm mb-4 px-2">{car.description}</p> */}
 
               </div>
@@ -153,20 +152,37 @@ const Carousel = () => {
       </Slider>
 
       {/* Custom Arrows */}
-      <div className="flex justify-start gap-4 pt-10 pb-5 sm:pb-16 px-4 sm:px-8 md:px-12 lg:px-20 xl:px-28">
-        <button
-          onClick={prevButton}
-          className="px-4 py-4 bg-black text-white rounded-full hover:bg-red-500 flex items-center gap-2"
+      <div className="flex justify-between items-center pt-10 pb-5 sm:pb-16 px-4 sm:px-8 md:px-12 lg:px-20 xl:px-28">
+        {/* Left: Navigation Buttons */}
+        <div className="flex gap-4">
+          <button
+            onClick={prevButton}
+            className="px-4 py-4 bg-black text-white rounded-full hover:bg-red-500 flex items-center gap-2"
+          >
+            <IoIosArrowBack className="text-xl" />
+          </button>
+          <button
+            onClick={nextButton}
+            className="px-4 py-4 bg-black text-white rounded-full hover:bg-red-500 flex items-center gap-2"
+          >
+            <IoIosArrowForward className="text-xl" />
+          </button>
+        </div>
+
+        {/* Right: Instagram Follow Button */}
+        <a
+          href="https://www.instagram.com/lastmanonearth.in?igsh=eXBrcWN6YjBvZWpv"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group inline-flex items-center gap-0 px-4 py-2 rounded-sm bg-black text-white shadow-md"
         >
-          <IoIosArrowBack className="text-xl" />
-        </button>
-        <button
-          onClick={nextButton}
-          className="px-4 py-4 bg-black text-white rounded-full hover:bg-red-500 flex items-center gap-2"
-        >
-          <IoIosArrowForward className="text-xl" />
-        </button>
+          <div className="p-2 rounded-full transition group-hover:text-pink-600">
+            <FaInstagram className="text-lg" />
+          </div>
+          <span className="text-sm font-medium uppercase sm:inline">Follow Us</span>
+        </a>
       </div>
+
     </div>
   );
 };

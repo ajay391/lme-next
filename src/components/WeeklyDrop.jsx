@@ -6,10 +6,10 @@ import AnimatedButton from "../components/AnimatedButton";
 
 const WeeklyDrop = () => {
   return (
-    <section className="flex flex-col md:flex-row items-center justify-between py-5 md:py-16 px-3 sm:px-8 md:px-12 lg:px-12 xl:px-32 gap-12 bg-black">
+    <section className="flex flex-col md:flex-row items-center justify-between py-14 md:py-16 px-3 sm:px-8 md:px-12 lg:px-12 xl:px-32 gap-12 bg-black">
       {/* Left Column */}
-      <div className="md:w-1/2">
-        <h2 className="text-5xl mt-10 sm:mt-0 sm:text-7xl md:text-7xl lg:text-7xl xl:text-8xl font-bold uppercase mb-4 text-white">
+      <div className="md:w-1/2 text-center md:text-start">
+        <h2 className="text-5xl mt-10 sm:mt-0 sm:text-6xl md:text-6xl lg:text-7xl xl:text-8xl font-bold uppercase mb-4 text-white">
           Nightfall Oversized Hoodie
         </h2>
 

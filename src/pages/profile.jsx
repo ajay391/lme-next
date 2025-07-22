@@ -287,7 +287,7 @@ const Profile = () => {
   return (
     <>
       <Head>
-        <title>Last Man On Earth | Profile</title>
+        <title> Profile | Last Man On Earth </title>
         <meta name="description" content="Premium streetwear. Oversized fits, bold designs." />
       </Head>
       <div className=" bg-gray-50">

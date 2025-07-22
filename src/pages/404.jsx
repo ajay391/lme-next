@@ -2,16 +2,22 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import notFoundImg from "../../public/images/no-results.png";
+import notFoundImg from "../../public/images/no-results.jpg";
+
 export default function Custom404() {
   return (
+    <>
+    <Head>
+        <title>404 | Last Man On Earth </title>
+        <meta name="description" content="Premium streetwear. Oversized fits, bold designs." />
+      </Head>
     <div className="min-h-[70vh] flex flex-col lg:flex-row items-center justify-center bg-white text-gray-800 px-6 py-16 gap-12">
       {/* Left Column - Image */}
-      <div className="w-full max-w-md">
+      <div className="w-full max-w-lg">
         <Image
           src={notFoundImg}
           alt="Page not found illustration"
-          className="w-60 sm:w-80 h-auto mx-auto"
+          className="w-74 sm:w-full h-auto mx-auto"
           priority
         />
       </div>
@@ -30,5 +36,6 @@ export default function Custom404() {
         </Link>
       </div>
     </div>
+    </>
   );
 }

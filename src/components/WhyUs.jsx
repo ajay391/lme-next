@@ -41,11 +41,11 @@ const WhyUs = () => (
       {/* Right Column - 8/12 */}
       <div className="md:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
         {features.map((item, index) => (
-          <div key={index} className="text-start bg-black py-12 px-8 sm:px-10 rounded-sm relative">
+          <div key={index} className="text-start bg-black py-12 px-6 sm:px-6 lg:px-10 rounded-sm relative">
             {/* Icon styling */}
             <div className="absolute top-2 right-2 opacity-10 z-0">
               {React.cloneElement(item.icon, {
-                className: "w-20 h-20 text-white",
+                className: "w-20 h-20 text-white",    
               })}
             </div>
 
@@ -53,7 +53,7 @@ const WhyUs = () => (
             <div className="relative z-10">
               {/* <div className="mb-5">{item.icon}</div> */}
               <h3 className="font-semibold text-xl mb-5 uppercase text-white">{item.title}</h3>
-              <p className="text-sm text-white mb-0">{item.description}</p>
+              <p className="text-sm text-white mb-0 opacity-95">{item.description}</p>
             </div>
           </div>
         ))}

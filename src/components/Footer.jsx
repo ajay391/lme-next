@@ -6,7 +6,7 @@ import Image from 'next/image';
 export default function Footer() {
   return (
     <footer className="bg-white text-white pt-0 mt-0 border-t-2 border-gray-200">
-      <div className=" mx-auto  px-3 sm:px-14 md:px-14 lg:px-14 xl:px-14 grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-12 py-16 text-sm">
+      <div className=" mx-auto  px-3 sm:px-14 md:px-14 lg:px-14 xl:px-14 grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-6 py-16 text-sm">
         {/* Brand Info */}
         <div>
           <h4 className="text-2xl sm:text-lg text-red-500 font-semibold mb-4 uppercase">Last Man On Earth</h4>
@@ -32,7 +32,7 @@ export default function Footer() {
 
 
         {/* Quick Links and Support - grouped on smaller screens */}
-        <div className="md:col-span-2 grid grid-cols-2 gap-8">
+        <div className="md:col-span-2 grid grid-cols-2 gap-4">
           {/* Quick Links */}
           <div className="footer-links">
             <h4 className="text-lg text-black font-medium mb-4">Quick Links</h4>

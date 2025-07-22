@@ -123,7 +123,7 @@ const NewProducts = () => {
       </p>
       <div className="text-end mb-3">
         <Link href="/shop">
-          <button className="group inline-flex items-center gap-2 text-red-500 hover:text-red-500 transition px-0 py-2 text-sm font-medium uppercase">
+          <button className="group inline-flex items-center gap-2 text-black hover:text-red-500 transition px-0 py-2 text-sm font-medium uppercase">
             View All
             <ChevronRight
               size={16}
@@ -176,7 +176,7 @@ const NewProducts = () => {
                 </div>
                 <div className="p-0">
                   {product.isNew && (
-                    <span className="absolute top-3 left-4 bg-red-500 text-white text-sm px-3 py-0 rounded-sm">
+                    <span className="absolute top-3 left-4 bg-red-500 text-white text-sm px-3 py-0 ">
                       New
                     </span>
                   )}

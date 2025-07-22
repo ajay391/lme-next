@@ -47,7 +47,7 @@ const StyleBanner = () => {
 
               {/* <a
                 href="#"
-                className="border border-white px-4 py-2 rounded-md text-sm font-medium text-white hover:bg-white hover:text-black transition duration-300"
+                className="border border-white px-4 py-2 rounded-sm text-sm font-medium text-white hover:bg-white hover:text-black transition duration-300"
               >
                 Read our story
               </a> */}
@@ -71,7 +71,7 @@ const StyleBanner = () => {
               </Link>
               {/* <a
                 href="#"
-                className="border border-black px-4 py-2 rounded-md text-sm font-medium text-black hover:border-red-800 hover:bg-red-500 hover:text-white transition duration-300"
+                className="border border-black px-4 py-2 rounded-sm text-sm font-medium text-black hover:border-red-800 hover:bg-red-500 hover:text-white transition duration-300"
               >
                 Read our story
               </a> */}
@@ -98,15 +98,15 @@ const StyleBanner = () => {
             alt="Featured Image"
             width={600} // Adjust width as needed
             height={300} // Adjust height as needed
-            className="w-full h-full object-cover rounded-md max-h-[500px]"
+            className="w-full h-full object-cover rounded-sm max-h-[500px]"
           />
         </div>
 
         {/* Second row - two boxes */}
         <div className="flex flex-wrap mb-8">
           <div className="w-6/12 pr-2">
-            <div className="bg-black text-white rounded-md w-full p-7 flex flex-col justify-end h-[500px]">
-              <h5 className="text-6xl font-extrabold uppercase mb-4">
+            <div className="bg-black text-white rounded-sm w-full p-7 flex flex-col justify-end h-[500px]">
+              <h5 className="text-5xl font-extrabold uppercase mb-4">
                 Gear for the End of the World
               </h5>
               <p className="text-sm text-opacity-60 mb-4">
@@ -117,8 +117,8 @@ const StyleBanner = () => {
             </div>
           </div>
           <div className="w-6/12 pl-2">
-            <div className="bg-red-500 text-black rounded-md w-full p-7 flex flex-col justify-end h-[500px]">
-              <h1 className="text-6xl text-white font-extrabold uppercase mb-4">
+            <div className="bg-red-500 text-black rounded-sm w-full p-7 flex flex-col justify-end h-[500px]">
+              <h1 className="text-5xl text-white font-extrabold uppercase mb-4">
                 Stand Alone. Stand Strong.
               </h1>
               <p className="text-sm text-white opacity-60 mb-4">
@@ -137,7 +137,7 @@ const StyleBanner = () => {
             alt="Featured Image"
             width={600} // Adjust width as needed
             height={300} // Adjust height as needed
-            className="w-full h-full object-cover rounded-md max-h-[500px]"
+            className="w-full h-full object-cover rounded-sm max-h-[500px]"
           />
         </div>
       </div>
@@ -151,13 +151,13 @@ const StyleBanner = () => {
             alt="Featured Image"
             width={600} // Adjust width as needed
             height={300} // Adjust height as needed
-            className="w-full h-full object-cover rounded-md min-h-[300px] max-h-[500px]"
+            className="w-full h-full object-cover rounded-sm min-h-[300px] max-h-[500px]"
           />
         </div>
 
         {/* First box */}
         <div className="mb-4">
-          <div className="bg-black text-white rounded-md w-full p-5 flex flex-col justify-end min-h-[380px] max-h-[500px]">
+          <div className="bg-black text-white rounded-sm w-full p-5 flex flex-col justify-end min-h-[380px] max-h-[500px]">
             <h5 className="text-4xl font-extrabold uppercase mb-4">
               Gear for the End of the World
             </h5>
@@ -172,7 +172,7 @@ const StyleBanner = () => {
 
         {/* Second box */}
         <div className="mb-4">
-          <div className="bg-red-500 text-black rounded-md w-full p-5 flex flex-col justify-end min-h-[380px] max-h-[500px]">
+          <div className="bg-red-500 text-black rounded-sm w-full p-5 flex flex-col justify-end min-h-[380px] max-h-[500px]">
             <h1 className="text-4xl text-white font-extrabold uppercase mb-4 ">
               Stand Alone. Stand Strong.
             </h1>
@@ -191,7 +191,7 @@ const StyleBanner = () => {
             alt="Featured Image"
             width={600} // Adjust width as needed
             height={300} // Adjust height as needed
-            className="w-full h-full object-cover rounded-md min-h-[300px] max-h-[500px] "
+            className="w-full h-full object-cover rounded-sm min-h-[300px] max-h-[500px] "
           />
         </div>
       </div>
