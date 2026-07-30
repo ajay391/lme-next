@@ -1,11 +1,8 @@
-'use client';
+"use client";
 
-import { useRef } from 'react';
-import Slider from 'react-slick';
-import Image from 'next/image';
-
-import c1 from "../../public/images/products/c1.jpeg";
-import c2 from "../../public/images/products/c2.jpg";
+import { useEffect, useRef } from "react";
+import Image from "next/image";
+import { Play, Instagram, ChevronLeft, ChevronRight } from "lucide-react";
 import c3 from "../../public/images/products/c3.jpg";
 import c4 from "../../public/images/products/c4.png";
 import c5 from "../../public/images/products/c5.png";
@@ -13,178 +10,124 @@ import c6 from "../../public/images/products/c6.png";
 import c7 from "../../public/images/products/c7.png";
 import c8 from "../../public/images/products/c8.png";
 import c9 from "../../public/images/products/c9.png";
+import { initGSAP } from "../lib/gsap";
 
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+const reelsData = [
+  { image: c6, title: "Redline Series // Drop 01" },
+  { image: c5, title: "Slipstream Livery" },
+  { image: c4, title: "Blackout Grid" },
+  { image: c3, title: "Trackside Underground" },
+  { image: c7, title: "Livery Line Cut" },
+  { image: c8, title: "Overtake High Voltage" },
+  { image: c9, title: "Ghost Driver Silhouette" },
+];
 
-import { FaInstagram } from 'react-icons/fa';
-import { IoIosArrowForward, IoIosArrowBack } from "react-icons/io";
+export default function ReelsShowcase() {
+  const marqueeTrackRef = useRef(null);
+  const tweenRef = useRef(null);
 
-const Carousel = () => {
-  const sliderRef = useRef(null);
+  useEffect(() => {
+    const { gsap } = initGSAP();
 
-  const settings = {
-    infinite: true,
-    slidesToShow: 5,
-    slidesToScroll: 1,
-    arrows: false,
-    dots: false,
-    centerMode: false,
-    autoplay: true,
-    autoplaySpeed: 3000,
-    responsive: [
-      {
-        breakpoint: 1224,
-        settings: {
-          slidesToShow: 3,
+    // GSAP Infinite Horizontal Marquee Loop
+    if (marqueeTrackRef.current) {
+      const track = marqueeTrackRef.current;
+      const totalWidth = track.scrollWidth / 2;
+
+      tweenRef.current = gsap.to(track, {
+        x: `-=${totalWidth}`,
+        duration: 25,
+        ease: "none",
+        repeat: -1,
+        modifiers: {
+          x: gsap.utils.unitize((x) => parseFloat(x) % totalWidth),
         },
-      },
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 3,
-        },
-      },
-      {
-        breakpoint: 768,
-        settings: {
-          slidesToShow: 2,
-        },
-      },
-      {
-        breakpoint: 480,
-        settings: {
-          slidesToShow: 1,
-        },
-      },
-    ],
+      });
+    }
+
+    return () => {
+      if (tweenRef.current) tweenRef.current.kill();
+    };
+  }, []);
+
+  const handleMouseEnter = () => {
+    if (tweenRef.current) tweenRef.current.timeScale(0.3);
   };
 
-  const nextButton = () => sliderRef.current?.slickNext();
-  const prevButton = () => sliderRef.current?.slickPrev();
-
-  const carData = [
-
-    {
-      image: c6,
-      title: "Redline",
-    },
-    {
-      image: c5,
-      title: "Slipstream",
-    },
-    {
-      image: c4,
-      title: "Blackout Grid",
-    },
-    {
-      image: c3,
-      title: "Trackside",
-    },
-    {
-      image: c7,
-      title: "Livery Line",
-    },
-    {
-      image: c8,
-      title: "Overtake",
-    },
-    {
-      image: c9,
-      title: "Ghost Driver",
-    },
-
-  ];
+  const handleMouseLeave = () => {
+    if (tweenRef.current) tweenRef.current.timeScale(1);
+  };
 
   return (
-    <div className="carousel-container">
-      {/* Section Heading */}
-      <section className="py-16 px-3 sm:px-2 md:px-14 lg:px-14 xl:px-14">
-        <div className="max-w-3xl text-start">
-          <h1 className="text-4xl sm:text-4xl md:text-4xl font-bold mb-4 uppercase">
-            Straight From The Feed <br />
-            <span className="text-red-500">Watch It. Wear It.</span>
-          </h1>
-          <p className="text-base sm:text-base text-gray-600">
-            The streetwear heat you scrolled past? It’s here. Watch our Insta reels to feel the drop before it hits your wardrobe.
+    <section className="py-24 bg-black text-white grain-overlay overflow-hidden border-b border-neutral-900">
+      <div className="container mx-auto px-4 sm:px-14 mb-12 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-6">
+        <div>
+          <span className="text-xs font-mono text-red-500 font-extrabold uppercase tracking-widest block mb-2">
+            // INSTAGRAM REELS SHOWCASE
+          </span>
+          <h2 className="text-4xl sm:text-6xl font-black uppercase tracking-tighter text-white">
+            Straight From The Feed
+          </h2>
+          <p className="text-neutral-400 text-sm sm:text-base mt-2 max-w-lg">
+            Watch it. Wear it. Live the movement before it hits the streets.
           </p>
         </div>
-      </section>
 
-      {/* Carousel */}
-      <Slider {...settings} ref={sliderRef}>
-        {carData.map((car, idx) => (
-          <div key={idx} className="p-4">
-            <div className="relative overflow-hidden rounded-sm shadow-md">
-              <Image
-                src={car.image}
-                alt={car.title}
-                width={500}
-                height={500}
-                className="w-full h-[360px] md:h-[360px] lg:h-[360px] object-cover"
-              />
-              {/* <video
-                src={car.video}
-                className="w-full h-[400px] md:h-[400px] lg:h-[400px] object-cover"
-                autoPlay
-                muted
-                loop
-                playsInline
-              /> */}
-
-              {/* Overlay Content */}
-              <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-black/60 to-transparent text-white p-4 flex flex-row justify-between">
-                <h2 className="text-md uppercase font-medium mb-2 px-2 flex items-end">{car.title}</h2>
-                {/* <a
-                  href="https://www.instagram.com/lastmanonearth.in?igsh=eXBrcWN6YjBvZWpv"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-fit px-2 py-2 bg-transparent h-fit bg-white text-black font-medium rounded-sm hover:text-red-500 transition flex items-end gap-2"
-                >
-                  <FaInstagram className="text-xl" />
-                </a> */}
-                {/* <p className="text-sm mb-4 px-2">{car.description}</p> */}
-
-              </div>
-            </div>
-          </div>
-        ))}
-      </Slider>
-
-      {/* Custom Arrows */}
-      <div className="flex justify-between items-center pt-10 pb-5 sm:pb-16 px-4 sm:px-8 md:px-12 lg:px-20 xl:px-28">
-        {/* Left: Navigation Buttons */}
-        <div className="flex gap-4">
-          <button
-            onClick={prevButton}
-            className="px-4 py-4 bg-black text-white rounded-full hover:bg-red-500 flex items-center gap-2"
-          >
-            <IoIosArrowBack className="text-xl" />
-          </button>
-          <button
-            onClick={nextButton}
-            className="px-4 py-4 bg-black text-white rounded-full hover:bg-red-500 flex items-center gap-2"
-          >
-            <IoIosArrowForward className="text-xl" />
-          </button>
-        </div>
-
-        {/* Right: Instagram Follow Button */}
         <a
           href="https://www.instagram.com/lastmanonearth.in?igsh=eXBrcWN6YjBvZWpv"
           target="_blank"
           rel="noopener noreferrer"
-          className="group inline-flex items-center gap-0 px-4 py-2 rounded-sm bg-black text-white shadow-md"
+          className="group inline-flex items-center space-x-3 px-6 py-3 bg-neutral-900 border border-neutral-800 text-white text-xs font-extrabold uppercase tracking-widest hover:bg-red-600 hover:border-red-600 transition duration-300 shadow-xl"
         >
-          <div className="p-2 rounded-full transition group-hover:text-pink-600">
-            <FaInstagram className="text-lg" />
-          </div>
-          <span className="text-sm font-medium uppercase sm:inline">Follow Us</span>
+          <Instagram className="w-4 h-4 text-red-500 group-hover:text-white transition" />
+          <span>Follow @lastmanonearth.in</span>
         </a>
       </div>
 
-    </div>
-  );
-};
+      {/* Marquee Container */}
+      <div
+        className="w-full overflow-hidden relative cursor-grab active:cursor-grabbing"
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
+        <div ref={marqueeTrackRef} className="flex space-x-6 w-max py-4">
+          {/* Double the array for seamless infinite looping */}
+          {[...reelsData, ...reelsData].map((reel, idx) => (
+            <div
+              key={idx}
+              className="group relative w-[240px] sm:w-[280px] aspect-[9/16] bg-neutral-900 border border-neutral-900 overflow-hidden flex-shrink-0 transition-transform duration-500 hover:scale-105 hover:border-red-600 shadow-2xl"
+            >
+              <Image
+                src={reel.image}
+                alt={reel.title}
+                fill
+                sizes="280px"
+                className="object-cover transition-transform duration-700 group-hover:scale-110"
+              />
 
-export default Carousel;
+              {/* Dark Gradient Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
+
+              {/* Center Play Icon Hover Reveal */}
+              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/40 backdrop-blur-[2px]">
+                <div className="w-14 h-14 bg-red-600 text-white rounded-full flex items-center justify-center shadow-2xl transform scale-75 group-hover:scale-100 transition-transform duration-300">
+                  <Play className="w-6 h-6 fill-current ml-1" />
+                </div>
+              </div>
+
+              {/* Bottom Reel Caption */}
+              <div className="absolute bottom-0 inset-x-0 p-4 z-10">
+                <span className="text-[10px] font-mono text-red-500 font-extrabold uppercase tracking-wider block mb-1">
+                  REEL DROP
+                </span>
+                <h3 className="text-sm font-extrabold uppercase text-white truncate">
+                  {reel.title}
+                </h3>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}

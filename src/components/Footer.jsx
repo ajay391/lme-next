@@ -1,101 +1,124 @@
-'use client';
+"use client";
 
-import { Instagram, Twitter, Facebook, Mail, Phone } from 'lucide-react';
-import Image from 'next/image';
+import { useEffect, useRef } from "react";
+import Link from "next/link";
+import { Instagram, Twitter, Facebook, Mail, Phone, ArrowUpRight } from "lucide-react";
+import { initGSAP } from "../lib/gsap";
 
 export default function Footer() {
+  const footerRef = useRef(null);
+  const socialIconsRef = useRef([]);
+
+  useEffect(() => {
+    const { gsap, ScrollTrigger } = initGSAP();
+
+    if (footerRef.current && socialIconsRef.current.length > 0) {
+      gsap.fromTo(
+        socialIconsRef.current,
+        { opacity: 0, y: 20 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.6,
+          stagger: 0.1,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: footerRef.current,
+            start: "top 90%",
+            toggleActions: "play none none reverse",
+          },
+        }
+      );
+    }
+  }, []);
+
   return (
-    <footer className="bg-white text-white pt-0 mt-0 border-t-2 border-gray-200">
-      <div className=" mx-auto  px-3 sm:px-14 md:px-14 lg:px-14 xl:px-14 grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-6 py-16 text-sm">
-        {/* Brand Info */}
-        <div>
-          <h4 className="text-2xl sm:text-lg text-red-500 font-semibold mb-4 uppercase">Last Man On Earth</h4>
-          {/* <Image src="/images/logo.png" alt="Logo" width={55} height={55} className="object-contain mb-5" /> */}
-
-          <p className="text-base text-gray-400 leading-relaxed mb-7 ">
-           Elevate your everyday style with bold, oversized streetwear. Designed for comfort, crafted for impact.
+    <footer ref={footerRef} className="bg-black text-white grain-overlay border-t border-neutral-900 pt-16">
+      <div className="container mx-auto px-4 sm:px-14 pb-16 grid grid-cols-1 md:grid-cols-12 gap-10">
+        {/* Brand Info Column */}
+        <div className="md:col-span-5 space-y-6">
+          <Link href="/" className="inline-block">
+            <h3 className="text-3xl font-black tracking-tighter uppercase text-white">
+              LAST MAN ON <span className="text-red-600">EARTH</span>
+            </h3>
+          </Link>
+          <p className="text-neutral-400 text-sm leading-relaxed max-w-sm">
+            Post-apocalyptic oversized streetwear. Designed for high velocity, built with heavyweight cotton, and forged for street rebellion.
           </p>
-          <ul className="text-base text-gray-600 font-medium flex items-center justify-start gap-4">
-            <li className="flex items-center hover:text-red-500">
-              <a href="https://www.instagram.com/lastmanonearth.in?igsh=eXBrcWN6YjBvZWpv" target="_blank" rel="noopener noreferrer"><Instagram className="w-6 h-6" /></a>
-            </li>
-            <li className="flex items-center hover:text-red-500">
-              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer"><Facebook className="w-6 h-6" /></a>
-            </li>
-            <li className="flex items-center hover:text-red-500" >
-              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer"><Twitter className="w-6 h-6" /></a>
-            </li>
-          </ul>
-        </div>
 
-        {/* Quick Links */}
-
-
-        {/* Quick Links and Support - grouped on smaller screens */}
-        <div className="md:col-span-2 grid grid-cols-2 gap-4">
-          {/* Quick Links */}
-          <div className="footer-links">
-            <h4 className="text-lg text-black font-medium mb-4">Quick Links</h4>
-            <ul className="space-y-2 md:space-y-3 text-base text-gray-400 font-medium">
-              <li><a href="/shop" className="hover:text-red-500">Shop</a></li>
-              <li><a href="/about-us" className="hover:text-red-500">About Us</a></li>
-              <li><a href="/support" className="hover:text-red-500">Support</a></li>
-              <li><a href="/faq" className="hover:text-red-500">FAQs</a></li>
-            </ul>
-          </div>
-
-          {/* Customer Support */}
-          <div className="footer-links">
-            <h4 className="text-lg text-black font-medium mb-4">Customer Support</h4>
-            <ul className="space-y-2 md:space-y-3 text-base text-gray-400 font-medium">
-              <li><a href="/shipping" className="hover:text-red-500">Shipping Info</a></li>
-              <li><a href="/refund" className="hover:text-red-500">Returns & Exchanges</a></li>
-              <li><a href="/privacy" className="hover:text-red-500">Privacy Policy</a></li>
-              <li><a href="/terms" className="hover:text-red-500">Terms of Service</a></li>
-            </ul>
+          {/* Social Icons Stagger Fade In */}
+          <div className="flex items-center space-x-4 pt-2">
+            {[
+              { icon: Instagram, href: "https://www.instagram.com/lastmanonearth.in?igsh=eXBrcWN6YjBvZWpv", label: "Instagram" },
+              { icon: Facebook, href: "#", label: "Facebook" },
+              { icon: Twitter, href: "#", label: "Twitter" },
+            ].map((social, idx) => {
+              const IconComp = social.icon;
+              return (
+                <a
+                  key={social.label}
+                  ref={(el) => (socialIconsRef.current[idx] = el)}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={social.label}
+                  className="w-10 h-10 bg-neutral-950 border border-neutral-800 text-neutral-300 hover:text-white hover:bg-red-600 hover:border-red-600 flex items-center justify-center transition duration-300 shadow-lg"
+                >
+                  <IconComp className="w-4 h-4" />
+                </a>
+              );
+            })}
           </div>
         </div>
 
-        {/* Social */}
-        <div className='footer-links'>
-          <h4 className="text-lg text-black font-medium mb-4">Contact Us</h4>
-          <ul className="text-base text-gray-400 font-medium space-y-3">
-            <li className="flex items-center gap-2 hover:text-red-500 break-words">
-              <Phone className="w-5 h-5 shrink-0" />
-              <p
-               
-                className="break-all text-sm"
-              >
-                +91 XXXXX-XXXXX
-              </p>
-            </li>
-            <li className="flex items-center gap-2 hover:text-red-500 break-words">
-              <Mail className="w-5 h-5 shrink-0" />
-              <a
-               
-                className="break-all text-sm"
-              >
-                lme.store.in@gmail.com
-              </a>
-            </li>
+        {/* Quick Links Column */}
+        <div className="md:col-span-3 space-y-4">
+          <h4 className="text-xs font-mono uppercase tracking-widest text-neutral-500 font-bold">
+            // NAVIGATION
+          </h4>
+          <ul className="space-y-3 text-xs font-extrabold uppercase tracking-widest text-neutral-300">
+            {["Shop", "About Us", "Support", "FAQs"].map((item) => (
+              <li key={item}>
+                <Link href={`/${item.toLowerCase().replace(/\s+/g, "-")}`} className="hover:text-red-500 transition flex items-center space-x-1 group">
+                  <span>{item}</span>
+                  <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity text-red-500" />
+                </Link>
+              </li>
+            ))}
           </ul>
+        </div>
+
+        {/* Support & Policies Column */}
+        <div className="md:col-span-4 space-y-4">
+          <h4 className="text-xs font-mono uppercase tracking-widest text-neutral-500 font-bold">
+            // CUSTOMER SUPPORT & CONTACT
+          </h4>
+          <ul className="space-y-3 text-xs font-extrabold uppercase tracking-widest text-neutral-300">
+            {["Shipping Info", "Returns & Exchanges", "Privacy Policy", "Terms of Service"].map((item) => (
+              <li key={item}>
+                <Link href={`/${item.toLowerCase().split(" ")[0]}`} className="hover:text-red-500 transition">
+                  {item}
+                </Link>
+              </li>
+            ))}
+          </ul>
+
+          <div className="pt-4 border-t border-neutral-900 text-xs font-mono text-neutral-400 space-y-2">
+            <div className="flex items-center space-x-2">
+              <Phone className="w-3.5 h-3.5 text-red-500" />
+              <span>+91 XXXXX-XXXXX</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Mail className="w-3.5 h-3.5 text-red-500" />
+              <span>lme.store.in@gmail.com</span>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Bottom Bar */}
-      <div className="bg-black border-t border-gray-700 text-gray-400 text-sm text-center py-4 px-4">
-        <p>&copy; 2025 Last Man On Earth. All rights reserved.</p>
-        {/* <div className="flex justify-center gap-6 mt-3">
-          <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
-            <Instagram className="w-5 h-5 hover:text-white transition" />
-          </a>
-          <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">
-            <Twitter className="w-5 h-5 hover:text-white transition" />
-          </a>
-          <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
-            <Facebook className="w-5 h-5 hover:text-white transition" />
-          </a>
-        </div> */}
+      {/* Copyright Bar */}
+      <div className="bg-neutral-950 border-t border-neutral-900 py-6 text-center text-xs font-mono text-neutral-500 tracking-wider">
+        <p>&copy; {new Date().getFullYear()} LAST MAN ON EARTH. ALL RIGHTS RESERVED.</p>
       </div>
     </footer>
   );

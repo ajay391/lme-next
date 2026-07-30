@@ -1,66 +1,126 @@
-'use client';
-import React, { useState } from 'react';
+"use client";
+
+import { useState, useRef } from "react";
 import axiosInstance from "../utils/axiosInstance";
-import toast from 'react-hot-toast';
+import toast from "react-hot-toast";
+import { Check, Mail, ArrowRight, Loader2 } from "lucide-react";
+import { initGSAP } from "../lib/gsap";
 
-const Newsletter = () => {
-  const [email, setEmail] = useState('');
+export default function Newsletter() {
+  const [email, setEmail] = useState("");
+  const [status, setStatus] = useState("idle"); // idle | loading | success
+  const buttonRef = useRef(null);
 
-  const isValidEmail = (email) => {
-    // Basic regex for email validation
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const isValidEmail = (val) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!isValidEmail(email)) {
-      toast.error('Please enter a valid email address.');
+      toast.error("Please enter a valid email address.");
       return;
     }
 
+    setStatus("loading");
+
     try {
-      await axiosInstance.post('/auth/newsletter/', { email });
-      toast.success('Successfully subscribed to the newsletter!');
-      setEmail('');
+      await axiosInstance.post("/auth/newsletter/", { email });
+      setStatus("success");
+      toast.success("Welcome to the Last Man on Earth Syndicate!");
+
+      // GSAP Button morph animation
+      const { gsap } = initGSAP();
+      if (buttonRef.current) {
+        gsap.fromTo(
+          buttonRef.current,
+          { scale: 0.95 },
+          { scale: 1, duration: 0.4, ease: "back.out(2)" }
+        );
+      }
+
+      setTimeout(() => {
+        setEmail("");
+        setStatus("idle");
+      }, 3000);
     } catch (err) {
-      toast.error('Something went wrong. Please try again.');
+      setStatus("idle");
+      toast.error("Something went wrong. Please try again.");
     }
   };
 
   return (
-    <section className="bg-red-500 py-24 px-3 sm:px-10 lg:px-24">
-      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+    <section className="relative py-24 px-4 sm:px-14 bg-red-600 text-white overflow-hidden newsletter-pattern">
+      {/* Dark Vignette Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-r from-red-700/80 via-red-600/90 to-red-700/80 pointer-events-none" />
 
-        {/* Left Column */}
-        <div>
-          <h2 className="text-5xl text-white font-bold mb-4 uppercase">Subscribe to Our Newsletter</h2>
-          <p className="text-white text-base opacity-60">
-            Stay updated with our latest drops, exclusive offers, and style tips — directly to your inbox.
-          </p>
+      <div className="relative z-10 container mx-auto max-w-6xl">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+          {/* Left Column Content */}
+          <div className="lg:col-span-6 space-y-4">
+            <div className="inline-flex items-center space-x-2 px-3 py-1 bg-black text-white text-[10px] font-black uppercase tracking-widest">
+              <Mail className="w-3.5 h-3.5 text-red-500" />
+              <span>JOIN THE SYNDICATE</span>
+            </div>
+
+            <h2 className="text-4xl sm:text-6xl font-black uppercase tracking-tighter text-white leading-tight">
+              Get Early Access To Secret Drops
+            </h2>
+
+            <p className="text-neutral-100 text-sm sm:text-base font-medium opacity-90 max-w-lg">
+              Subscribers receive early access 1 hour before public drop launch, exclusive discount codes, and unreleased lookbooks.
+            </p>
+          </div>
+
+          {/* Right Column Form */}
+          <div className="lg:col-span-6">
+            <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row items-stretch gap-3 w-full">
+              <div className="relative flex-1">
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="ENTER YOUR EMAIL..."
+                  required
+                  disabled={status === "loading" || status === "success"}
+                  className="w-full px-5 py-4 bg-black text-white placeholder-neutral-500 text-xs font-mono tracking-wider border-2 border-transparent newsletter-input-focus focus:outline-none transition duration-300"
+                />
+              </div>
+
+              <button
+                ref={buttonRef}
+                type="submit"
+                disabled={status === "loading" || status === "success"}
+                className={`px-8 py-4 font-extrabold text-xs uppercase tracking-widest flex items-center justify-center space-x-3 transition-all duration-300 shadow-2xl ${
+                  status === "success"
+                    ? "bg-green-600 text-white"
+                    : "bg-black text-white hover:bg-white hover:text-black"
+                }`}
+              >
+                {status === "loading" && (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span>SUBSCRIBING...</span>
+                  </>
+                )}
+                {status === "success" && (
+                  <>
+                    <Check className="w-4 h-4" />
+                    <span>SUBSCRIBED!</span>
+                  </>
+                )}
+                {status === "idle" && (
+                  <>
+                    <span>JOIN NOW</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </>
+                )}
+              </button>
+            </form>
+          </div>
         </div>
-
-        {/* Right Column - Form */}
-        <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full">
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Enter your email"
-            required
-            className="w-full flex-1 px-4 py-3 rounded-sm border border-gray-300 focus:ring-2 focus:ring-red-500 outline-none"
-          />
-          <button
-            type="submit"
-            className="px-6 py-3 bg-black text-white rounded-sm hover:bg-white hover:text-black transition font-medium uppercase"
-          >
-            Subscribe
-          </button>
-        </form>
-
       </div>
     </section>
   );
-};
-
-export default Newsletter;
+}

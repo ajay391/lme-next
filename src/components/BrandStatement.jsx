@@ -1,29 +1,105 @@
-import React from 'react';
-import Link from 'next/link';
-import AnimatedButton from "./AnimatedButton";
+"use client";
 
-const BrandStatement = () => (
-  <section className=" text-black py-16 px-3 sm:px-10 lg:px-24">
-    <div className="flex flex-col lg:flex-row items-center justify-between max-w-7xl mx-auto">
-      
-      {/* Left Column: Big Impact Heading */}
-      <div className="w-full lg:w-1/2 mb-10 lg:mb-0 text-center lg:text-left">
-        <h2 className="text-4xl sm:text-4xl md:text-7xl lg:text-7xl p-5 font-extrabold leading-tight uppercase ">
-        Wear the Movement, Break the Mold.
-        </h2>
+import { useEffect, useRef } from "react";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
+import { initGSAP, setupMagneticEffect } from "../lib/gsap";
+
+export default function BrandStatement() {
+  const sectionRef = useRef(null);
+  const line1Ref = useRef(null);
+  const line2Ref = useRef(null);
+  const line3Ref = useRef(null);
+  const buttonRef = useRef(null);
+
+  useEffect(() => {
+    const { gsap } = initGSAP();
+
+    const lines = [line1Ref.current, line2Ref.current, line3Ref.current].filter(Boolean);
+
+    if (sectionRef.current && lines.length > 0) {
+      gsap.fromTo(
+        lines,
+        { opacity: 0, y: 40, filter: "blur(6px)" },
+        {
+          opacity: 1,
+          y: 0,
+          filter: "blur(0px)",
+          duration: 0.8,
+          stagger: 0.25,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top 75%",
+            toggleActions: "play none none reverse",
+          },
+        }
+      );
+    }
+
+    if (buttonRef.current) {
+      const cleanup = setupMagneticEffect(buttonRef.current, 0.4);
+      return cleanup;
+    }
+  }, []);
+
+  return (
+    <section
+      ref={sectionRef}
+      className="py-28 px-4 sm:px-14 bg-white text-black border-b border-neutral-200 overflow-hidden"
+    >
+      <div className="container mx-auto max-w-7xl">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          {/* Left Column: Line-by-line Manifesto Lines */}
+          <div className="lg:col-span-7">
+            <span className="text-xs font-mono uppercase tracking-widest text-red-600 font-extrabold mb-4 block">
+              // BRAND MANIFESTO
+            </span>
+            <div className="space-y-2">
+              <h2
+                ref={line1Ref}
+                className="text-4xl sm:text-6xl lg:text-7xl font-black uppercase tracking-tighter text-black"
+              >
+                Wear The Movement.
+              </h2>
+              <h2
+                ref={line2Ref}
+                className="text-4xl sm:text-6xl lg:text-7xl font-black uppercase tracking-tighter text-red-600"
+              >
+                Break The Mold.
+              </h2>
+              <h2
+                ref={line3Ref}
+                className="text-4xl sm:text-6xl lg:text-7xl font-black uppercase tracking-tighter text-neutral-400"
+              >
+                Survive The Norm.
+              </h2>
+            </div>
+          </div>
+
+          {/* Right Column: Copy & Magnetic CTA */}
+          <div className="lg:col-span-5 bg-neutral-50 border border-neutral-200 p-8 sm:p-12 shadow-sm">
+            <p className="text-neutral-700 text-sm sm:text-base leading-relaxed mb-6 font-medium">
+              Forged in the concrete jungles where style meets substance, we are more than apparel — we are armor for the urban warrior. Drawing from the rhythm of subway trains, back-alley art, and motorsport grit, we design for those who write their own rules.
+            </p>
+            <p className="text-neutral-600 text-sm leading-relaxed mb-8">
+              Heavyweight hoodies, statement tees, and silhouettes that command attention. This isn’t just fashion; it’s a revolution stitched in cotton and canvas.
+            </p>
+
+            <Link href="/shop" className="inline-block">
+              <div
+                ref={buttonRef}
+                className="group relative inline-flex items-center justify-center px-8 py-4 bg-black text-white font-extrabold uppercase tracking-widest text-xs overflow-hidden shadow-xl transition duration-300 hover:bg-red-600"
+              >
+                <span className="relative z-10 flex items-center space-x-3">
+                  <span>Shop Collection</span>
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-2 transition-transform duration-300" />
+                </span>
+              </div>
+            </Link>
+          </div>
+        </div>
       </div>
-
-      {/* Right Column: Brand Story Paragraph and Button */}
-      <div className="w-full lg:w-1/2 text-center lg:text-left">
-        <p className="text-base sm:text-base mb-6 max-w-xl mx-auto lg:mx-0 opacity-60">
-          Forged in the concrete jungles where style meets substance, we're more than apparel—we're armor for the urban warrior. Drawing from the rhythm of subway trains, the poetry of back-alley art, and the symphony of sneakers on pavement, we design for those who write their own rules.
-          <br /><br />
-          Our collections fuse premium craftsmanship with underground aesthetics—think heavyweight hoodies, statement tees, and silhouettes that command attention. This isn't just fashion; it's a revolution stitched in cotton and canvas. Stand with us, wear your defiance, and redefine streetwear on your terms.
-        </p>
-        <AnimatedButton text="Shop Collection" color="#000" spanBg="#ffffff" url="/shop" />
-      </div>
-
-    </div>
-  </section>
-);
-export default BrandStatement;
+    </section>
+  );
+}

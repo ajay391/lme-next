@@ -5,20 +5,23 @@ import Link from "next/link";
 import Image from "next/image";
 import { useSelector, useDispatch } from "react-redux";
 import { ShoppingCart, Heart, Instagram, Twitter, Facebook, User, Menu, X } from "lucide-react";
-import { IoPersonOutline } from "react-icons/io5";
-// import logo from "../../public/images/logo.png";
-// import profile from "../../public/images/profile.png";
 import { login, logout } from "../store/authSlice";
 import { useRouter } from "next/router";
 import { fetchWishlist } from "../store/wishlistSlice";
-
+import { gsap, initGSAP } from "../lib/gsap";
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isLogoutConfirmOpen, setIsLogoutConfirmOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
   const profileRef = useRef(null);
+  const logoRef = useRef(null);
+  const cartIconRef = useRef(null);
+  const prevCartCount = useRef(0);
+
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -42,6 +45,44 @@ const Navbar = () => {
     }
   }, [authState.isAuthenticated, dispatch]);
 
+  // GSAP Logo Load Pulse & Scroll Listener
+  useEffect(() => {
+    if (!isMounted) return;
+    initGSAP();
+
+    if (logoRef.current) {
+      gsap.fromTo(
+        logoRef.current,
+        { scale: 0.8, rotate: -8, opacity: 0 },
+        { scale: 1, rotate: 0, opacity: 1, duration: 0.8, ease: "back.out(1.7)" }
+      );
+    }
+
+    const handleScroll = () => {
+      if (window.scrollY > 40) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [isMounted]);
+
+  // GSAP Cart Bounce
+  useEffect(() => {
+    if (!isMounted || !cartIconRef.current) return;
+    if (cartItemCount > prevCartCount.current) {
+      gsap.fromTo(
+        cartIconRef.current,
+        { scale: 1 },
+        { scale: 1.4, duration: 0.3, ease: "back.out(3.5)", yoyo: true, repeat: 1 }
+      );
+    }
+    prevCartCount.current = cartItemCount;
+  }, [cartItemCount, isMounted]);
+
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
@@ -49,7 +90,7 @@ const Navbar = () => {
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (profileRef.current && !profileRef.current.contains(event.target)) {
-        setIsProfileOpen(false); // Close only if clicked outside
+        setIsProfileOpen(false);
       }
     };
 
@@ -67,92 +108,124 @@ const Navbar = () => {
   if (!isMounted) return null;
 
   return (
-    <>
-
-      <div className="bg-black text-sm text-gray-400 px-3 sm:px-14 md:px-14 lg:px-14 xl:px-14 py-2 border-b">
+    <header className="sticky top-0 z-50 transition-all duration-300">
+      {/* Top Bar */}
+      <div className="bg-black text-xs text-neutral-300 px-4 sm:px-14 py-2 border-b border-neutral-800">
         <div className="container mx-auto flex justify-between items-center">
-          {/* Left Icons */}
           <div className="flex space-x-4 items-center">
-            <a href="https://www.instagram.com/lastmanonearth.in?igsh=eXBrcWN6YjBvZWpv" target="_blank" className="hover:text-red-500"> <Instagram className="w-5 h-5 hover:text-white transition" /></a>
-            <a href="#" className="hover:text-red-500"><Facebook className="w-5 h-5 hover:text-white transition" /></a>
-            <a href="#" className="hover:text-red-500"> <Twitter className="w-5 h-5 hover:text-white transition" /></a>
+            <a href="https://www.instagram.com/lastmanonearth.in?igsh=eXBrcWN6YjBvZWpv" target="_blank" rel="noopener noreferrer" className="hover:text-red-500 transition">
+              <Instagram className="w-4 h-4" />
+            </a>
+            <a href="#" className="hover:text-red-500 transition">
+              <Facebook className="w-4 h-4" />
+            </a>
+            <a href="#" className="hover:text-red-500 transition">
+              <Twitter className="w-4 h-4" />
+            </a>
           </div>
 
-          {/* Right Links */}
-          <div className="flex space-x-6 items-center">
-            <Link href="/contact" className="hover:text-red-500">Contact</Link>
-            <Link href="/faqs" className="hover:text-red-500">FAQs</Link>
-            <Link href="/support" className="hover:text-red-500">Support</Link>
+          <div className="hidden sm:block text-center uppercase tracking-widest text-[11px] font-bold text-red-500">
+            Free Express Shipping Nationwide — Post-Apocalyptic Streetwear
+          </div>
+
+          <div className="flex space-x-6 items-center uppercase tracking-wider text-[11px]">
+            <Link href="/contact" className="hover:text-red-500 transition">Contact</Link>
+            <Link href="/faqs" className="hover:text-red-500 transition">FAQs</Link>
+            <Link href="/support" className="hover:text-red-500 transition">Support</Link>
           </div>
         </div>
       </div>
-      <nav className="bg-white px-3 sm:px-14 md:px-14 lg:px-14 xl:px-14 py-4 border-b shadow-none sticky top-0 z-50">
+
+      {/* Main Navbar: Transparent on Hero, Crisp White on Scroll */}
+      <nav
+        className={`w-full px-4 sm:px-14 py-4 transition-all duration-500 border-b ${
+          isScrolled
+            ? "bg-white/95 backdrop-blur-md border-neutral-200 text-black shadow-md"
+            : "bg-black/50 backdrop-blur-sm border-white/10 text-white"
+        }`}
+      >
         <div className="container mx-auto flex items-center justify-between relative">
-          {/* Left: Logo */}
-          <div className="text-gray-800 font-bold text-lg z-10">
-            <Link href="/">
-              <Image src="/images/logo.png" alt="Logo" width={45} height={45} className="object-contain" />
-              {/* <h3 className="text-red-500">LAST MAN ON EARTH</h3> */}
+          {/* Logo */}
+          <div className="flex items-center space-x-3 z-10" ref={logoRef}>
+            <Link href="/" className="flex items-center space-x-3 group">
+              <div className="relative w-10 h-10 overflow-hidden">
+                <Image
+                  src="/images/logo.png"
+                  alt="LME Logo"
+                  width={40}
+                  height={40}
+                  className="object-contain group-hover:scale-110 transition duration-300"
+                />
+              </div>
+              <span className={`font-extrabold text-lg tracking-wider uppercase transition ${isScrolled ? "text-black group-hover:text-red-600" : "text-white group-hover:text-red-500"}`}>
+                Last Man On Earth
+              </span>
             </Link>
           </div>
 
-          {/* Right: Icons */}
-          <div className="hidden md:flex items-center space-x-6 z-10">
-            <Link href="/" className="text-lg text-gray-800 hover:text-red-500">Home</Link>
-            <Link href="/shop" className="text-lg text-gray-800 hover:text-red-500">Shop</Link>
-            <Link href="/about-us" className="text-lg text-gray-800 hover:text-red-500">About Us</Link>
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center space-x-8 z-10 font-bold uppercase text-sm tracking-wider">
+            {[
+              { label: "Home", path: "/" },
+              { label: "Shop", path: "/shop" },
+              { label: "About Us", path: "/about-us" },
+            ].map((link) => (
+              <Link
+                key={link.path}
+                href={link.path}
+                className={`relative py-1 group transition ${isScrolled ? "text-neutral-800 hover:text-black" : "text-neutral-200 hover:text-white"}`}
+              >
+                {link.label}
+                <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-red-600 group-hover:w-full transition-all duration-300 ease-out" />
+              </Link>
+            ))}
 
             {/* Wishlist */}
-            <Link href="/wishlist">
-              <div className="relative flex items-center text-gray-800 hover:text-red-500">
-                <Heart className="w-5 h-5" />
-                {authState.isAuthenticated && wishlistItemCount > 0 && (
-                  <span className="absolute top-[-5px] right-[-10px] text-[10px] bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center">
-                    {wishlistItemCount}
-                  </span>
-                )}
-              </div>
+            <Link href="/wishlist" className={`relative group p-1 transition ${isScrolled ? "text-neutral-800 hover:text-red-600" : "text-neutral-200 hover:text-red-500"}`}>
+              <Heart className="w-5 h-5 group-hover:scale-110 transition duration-200" />
+              {authState.isAuthenticated && wishlistItemCount > 0 && (
+                <span className="absolute -top-1 -right-2 text-[10px] font-extrabold bg-red-600 text-white rounded-full w-4 h-4 flex items-center justify-center">
+                  {wishlistItemCount}
+                </span>
+              )}
             </Link>
 
             {/* Cart */}
-            <Link href="/cart">
-              <div className="relative flex items-center text-gray-800 hover:text-red-500">
-                <ShoppingCart className="w-5 h-5" />
-                {cartItemCount > 0 && (
-                  <span className="absolute top-[-5px] right-[-10px] text-[10px] bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center">
-                    {cartItemCount}
-                  </span>
-                )}
+            <Link href="/cart" className={`relative group p-1 transition ${isScrolled ? "text-neutral-800 hover:text-red-600" : "text-neutral-200 hover:text-red-500"}`}>
+              <div ref={cartIconRef}>
+                <ShoppingCart className="w-5 h-5 group-hover:scale-110 transition duration-200" />
               </div>
+              {cartItemCount > 0 && (
+                <span className="absolute -top-1 -right-2 text-[10px] font-extrabold bg-red-600 text-white rounded-full w-4 h-4 flex items-center justify-center">
+                  {cartItemCount}
+                </span>
+              )}
             </Link>
 
-            {/* Profile */}
-            <div className="relative flex" ref={profileRef}>
-              <button onClick={() => setIsProfileOpen((prev) => !prev)}>
-                {/* <Image
-                  src="/images/profile.png"
-                  width="100"
-                  height="100"
-                  alt="Profile"
-                  className="w-8 h-8 rounded-full hover:border-red-500 transition"
-                /> */}
+            {/* Profile Dropdown */}
+            <div className="relative flex items-center" ref={profileRef}>
+              <button
+                onClick={() => setIsProfileOpen((prev) => !prev)}
+                className={`transition focus:outline-none p-1 ${isScrolled ? "text-neutral-800 hover:text-red-600" : "text-neutral-200 hover:text-red-500"}`}
+                aria-label="Profile Menu"
+              >
                 <User className="w-5 h-5" />
               </button>
 
               {isProfileOpen && (
-                <div className="absolute top-12 right-0 bg-white shadow-md rounded-sm w-40 p-1 border border-gray-200 z-50">
+                <div className="absolute top-12 right-0 bg-white shadow-2xl rounded-none w-44 p-2 border border-neutral-200 z-50 animate-in fade-in slide-in-from-top-2">
                   {authState.isAuthenticated ? (
                     <>
                       <Link
                         href="/profile"
-                        className="block text-gray-800 rounded-sm hover:bg-black hover:text-white px-4 py-2"
+                        className="block text-neutral-800 hover:bg-red-600 hover:text-white px-4 py-2 text-xs uppercase tracking-widest transition"
                         onClick={() => setIsProfileOpen(false)}
                       >
                         Profile
                       </Link>
                       <button
                         onClick={() => setIsLogoutConfirmOpen(true)}
-                        className="w-full text-left text-gray-800 rounded-sm hover:bg-black hover:text-white px-4 py-2"
+                        className="w-full text-left text-neutral-800 hover:bg-red-600 hover:text-white px-4 py-2 text-xs uppercase tracking-widest transition"
                       >
                         Logout
                       </button>
@@ -160,7 +233,7 @@ const Navbar = () => {
                   ) : (
                     <Link
                       href="/login"
-                      className="block rounded-sm hover:bg-black hover:text-white px-4 py-2"
+                      className="block text-neutral-800 hover:bg-red-600 hover:text-white px-4 py-2 text-xs uppercase tracking-widest transition"
                       onClick={() => setIsProfileOpen(false)}
                     >
                       Login
@@ -171,85 +244,56 @@ const Navbar = () => {
             </div>
           </div>
 
-          {/* Mobile Icons */}
-          <div className="md:hidden flex items-center space-x-4 text-gray-800">
-            <Link href="/wishlist">
-              <div className="relative flex items-center text-gray-800 hover:text-red-500">
-                <Heart className="w-5 h-5" />
-                {authState.isAuthenticated && wishlistItemCount > 0 && (
-                  <span className="absolute top-[-5px] right-[-10px] text-xs bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center">
-                    {wishlistItemCount}
-                  </span>
-                )}
-              </div>
+          {/* Mobile Menu Icon */}
+          <div className="md:hidden flex items-center space-x-4">
+            <Link href="/wishlist" className="relative p-1">
+              <Heart className={`w-5 h-5 ${isScrolled ? "text-black" : "text-white"}`} />
+              {authState.isAuthenticated && wishlistItemCount > 0 && (
+                <span className="absolute -top-1 -right-2 text-[10px] bg-red-600 text-white rounded-full w-4 h-4 flex items-center justify-center">
+                  {wishlistItemCount}
+                </span>
+              )}
             </Link>
-            <Link href="/cart">
-              <div className="relative flex items-center text-gray-800 hover:text-red-500">
-                <ShoppingCart className="w-5 h-5" />
-                {cartItemCount > 0 && (
-                  <span className="absolute top-[-5px] right-[-10px] text-xs bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center">
-                    {cartItemCount}
-                  </span>
-                )}
-              </div>
+            <Link href="/cart" className="relative p-1">
+              <ShoppingCart className={`w-5 h-5 ${isScrolled ? "text-black" : "text-white"}`} />
+              {cartItemCount > 0 && (
+                <span className="absolute -top-1 -right-2 text-[10px] bg-red-600 text-white rounded-full w-4 h-4 flex items-center justify-center">
+                  {cartItemCount}
+                </span>
+              )}
             </Link>
-            <button onClick={toggleMobileMenu} className="text-gray-800 hover:text-red-500 transition md:hidden">
-              {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            <button onClick={toggleMobileMenu} className={`transition p-1 ${isScrolled ? "text-black hover:text-red-600" : "text-white hover:text-red-500"}`}>
+              {isMobileMenuOpen ? <X size={26} /> : <Menu size={26} />}
             </button>
           </div>
         </div>
 
-        {/* Mobile Menu */}
-
         {/* Mobile Slide-Down Menu */}
         <div
-          className={`absolute left-0 right-0 bg-white shadow-md z-40 transition-all duration-300 ease-in-out overflow-hidden uppercase ${isMobileMenuOpen ? 'max-h-[500px] opacity-100 translate-y-4' : 'max-h-0 opacity-0 -translate-y-2'
-            }`}
+          className={`absolute left-0 right-0 bg-white border-b border-neutral-200 z-40 transition-all duration-300 ease-in-out overflow-hidden uppercase ${
+            isMobileMenuOpen ? "max-h-[500px] opacity-100 py-4 shadow-xl" : "max-h-0 opacity-0 py-0"
+          }`}
         >
-          <nav className="flex flex-col items-start gap-0 md:hidden">
-            <Link
-              href="/"
-              onClick={toggleMobileMenu}
-              className="block w-full px-3 border-t py-4 text-gray-800 hover:text-red-600 transition font-medium"
-            >
+          <nav className="flex flex-col items-start px-6 gap-2 md:hidden tracking-wider text-sm font-bold">
+            <Link href="/" onClick={toggleMobileMenu} className="w-full py-3 border-b border-neutral-200 text-neutral-800 hover:text-red-600">
               Home
             </Link>
-            <Link
-              href="/shop"
-              onClick={toggleMobileMenu}
-              className="block w-full px-3 border-t py-4 text-gray-800 hover:text-red-600 transition font-medium"
-            >
+            <Link href="/shop" onClick={toggleMobileMenu} className="w-full py-3 border-b border-neutral-200 text-neutral-800 hover:text-red-600">
               Shop
             </Link>
-            <Link
-              href="/about-us"
-              onClick={toggleMobileMenu}
-              className="block w-full px-3 border-t py-4 text-gray-800 hover:text-red-600 transition font-medium"
-            >
+            <Link href="/about-us" onClick={toggleMobileMenu} className="w-full py-3 border-b border-neutral-200 text-neutral-800 hover:text-red-600">
               About Us
             </Link>
-            <Link
-              href="/wishlist"
-              onClick={toggleMobileMenu}
-              className="block w-full px-3 border-t py-4 text-gray-800 hover:text-red-600 transition font-medium"
-            >
+            <Link href="/wishlist" onClick={toggleMobileMenu} className="w-full py-3 border-b border-neutral-200 text-neutral-800 hover:text-red-600">
               Wishlist
             </Link>
-            <Link
-              href="/cart"
-              onClick={toggleMobileMenu}
-              className="block w-full px-3 border-t py-4 text-gray-800 hover:text-red-600 transition font-medium"
-            >
+            <Link href="/cart" onClick={toggleMobileMenu} className="w-full py-3 border-b border-neutral-200 text-neutral-800 hover:text-red-600">
               Cart
             </Link>
 
             {authState.isAuthenticated ? (
               <>
-                <Link
-                  href="/profile"
-                  onClick={toggleMobileMenu}
-                  className="block w-full px-3 border-t py-4 text-gray-800 hover:text-red-600 transition font-medium"
-                >
+                <Link href="/profile" onClick={toggleMobileMenu} className="w-full py-3 border-b border-neutral-200 text-neutral-800 hover:text-red-600">
                   Profile
                 </Link>
                 <button
@@ -257,43 +301,38 @@ const Navbar = () => {
                     toggleMobileMenu();
                     setIsLogoutConfirmOpen(true);
                   }}
-                  className="block w-full px-3 border-t py-4 text-start text-red-600 hover:text-red-700 transition font-medium uppercase"
+                  className="w-full text-left py-3 text-red-600 hover:text-red-700"
                 >
                   Logout
                 </button>
               </>
             ) : (
-              <Link
-                href="/login"
-                onClick={toggleMobileMenu}
-                className="block w-full px-3 border-t py-4 text-gray-800 hover:text-red-600 transition font-medium uppercase"
-              >
+              <Link href="/login" onClick={toggleMobileMenu} className="w-full py-3 text-red-600 hover:text-red-700">
                 Login
               </Link>
             )}
           </nav>
         </div>
 
-
+        {/* Logout Modal */}
         {isLogoutConfirmOpen && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-sm shadow-lg p-6 w-80 sm:w-full max-w-sm text-center">
-              <h2 className="text-lg font-semibold text-gray-900 mb-2">Confirm Logout</h2>
-              <p className="text-gray-600 mb-4">Are you sure you want to logout?</p>
-
+          <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50">
+            <div className="bg-white border border-neutral-200 p-6 w-80 max-w-sm text-center shadow-2xl">
+              <h2 className="text-lg font-extrabold text-black uppercase mb-2">Confirm Logout</h2>
+              <p className="text-neutral-600 text-xs mb-6">Are you sure you want to log out of your session?</p>
               <div className="flex justify-center gap-4">
                 <button
                   onClick={() => setIsLogoutConfirmOpen(false)}
-                  className="px-4 py-2 rounded-sm border text-gray-700 hover:bg-gray-100"
+                  className="px-4 py-2 border border-neutral-300 text-neutral-700 hover:bg-neutral-100 text-xs uppercase tracking-wider font-bold"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={() => {
                     setIsLogoutConfirmOpen(false);
-                    handleLogout(); // Your logout function
+                    handleLogout();
                   }}
-                  className="px-4 py-2 rounded-sm bg-red-600 text-white hover:bg-red-700"
+                  className="px-4 py-2 bg-red-600 text-white hover:bg-red-700 text-xs uppercase tracking-wider font-bold"
                 >
                   Logout
                 </button>
@@ -301,10 +340,8 @@ const Navbar = () => {
             </div>
           </div>
         )}
-
-
       </nav>
-    </>
+    </header>
   );
 };
 
