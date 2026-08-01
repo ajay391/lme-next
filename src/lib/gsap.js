@@ -13,7 +13,12 @@ export const initGSAP = () => {
 
 export const isReducedMotion = () => {
   if (typeof window === "undefined") return false;
-  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  try {
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    return !!(mediaQuery && mediaQuery.matches);
+  } catch {
+    return false;
+  }
 };
 
 /**

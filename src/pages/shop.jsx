@@ -1,86 +1,175 @@
-// pages/shop.js
-import { useState, useEffect, useMemo } from "react";
-import ProductCard from "../components/ProductCard";
-import axiosInstance from "../utils/axiosInstance";
+import { useState, useMemo } from "react";
 import Head from "next/head";
+import Link from "next/link";
+import ProductCard from "../components/ProductCard";
 import { IoClose } from "react-icons/io5";
 import { motion, AnimatePresence } from "framer-motion";
-import { HiAdjustmentsHorizontal } from "react-icons/hi2";
+import { SlidersHorizontal, ArrowUpDown, Filter, RotateCcw } from "lucide-react";
 
+// Expanded static catalog with real image assets for preview
+const STATIC_CATALOG = [
+  {
+    id: 1,
+    name: "EVERYDAY REBEL",
+    slug: "oversized-black-tee",
+    price: "999",
+    oldPrice: "1299",
+    image: "/images/home/new-1.png",
+    hoverImage: "/images/home/new-4.png",
+    category: "T-Shirts",
+    sizes: ["S", "M", "L", "XL"],
+    in_stock: true,
+    isNew: true,
+  },
+  {
+    id: 2,
+    name: "LIMITLESS SPIRIT",
+    slug: "urban-white-hoodie",
+    price: "1999",
+    oldPrice: "2499",
+    image: "/images/home/new-2.png",
+    hoverImage: "/images/home/new-5.png",
+    category: "Hoodies",
+    sizes: ["M", "L", "XL"],
+    in_stock: true,
+    isNew: true,
+  },
+  {
+    id: 3,
+    name: "URBAN VIBES",
+    slug: "nowhere-graphic-tee",
+    price: "1199",
+    oldPrice: "1499",
+    image: "/images/home/new-3.png",
+    hoverImage: "/images/home/new-1.png",
+    category: "T-Shirts",
+    sizes: ["S", "M", "L"],
+    in_stock: true,
+    isNew: true,
+  },
+  {
+    id: 4,
+    name: "STREET LEGEND",
+    slug: "minimal-cream-hoodie",
+    price: "2099",
+    oldPrice: "2499",
+    image: "/images/home/new-5.png",
+    hoverImage: "/images/home/new-2.png",
+    category: "Hoodies",
+    sizes: ["S", "M", "L", "XL"],
+    in_stock: true,
+    isNew: false,
+  },
+  {
+    id: 5,
+    name: "BLACKOUT GRID",
+    slug: "drop-shoulder-tee",
+    price: "1299",
+    oldPrice: "1599",
+    image: "/images/home/style-1.png",
+    hoverImage: "/images/home/style-2.png",
+    category: "T-Shirts",
+    sizes: ["M", "L", "XL"],
+    in_stock: true,
+    isNew: false,
+  },
+  {
+    id: 6,
+    name: "UNSEEN REALM",
+    slug: "oversized-washed-tee",
+    price: "1399",
+    oldPrice: "1699",
+    image: "/images/home/new-4.png",
+    hoverImage: "/images/home/new-6.png",
+    category: "T-Shirts",
+    sizes: ["S", "M", "L", "XL"],
+    in_stock: true,
+    isNew: false,
+  },
+  {
+    id: 7,
+    name: "MINIMAL POWER",
+    slug: "cropped-hoodie",
+    price: "1899",
+    oldPrice: "2299",
+    image: "/images/home/new-6.png",
+    hoverImage: "/images/home/new-3.png",
+    category: "Hoodies",
+    sizes: ["S", "M", "L"],
+    in_stock: true,
+    isNew: false,
+  },
+  {
+    id: 8,
+    name: "PRIME STREETWEAR",
+    slug: "nowhere-classic-tee",
+    price: "1099",
+    oldPrice: "1399",
+    image: "/images/home/hero-1.png",
+    hoverImage: "/images/home/style-1.png",
+    category: "T-Shirts",
+    sizes: ["S", "M", "L", "XL"],
+    in_stock: true,
+    isNew: false,
+  },
+];
 
-const ShopPage = ({ initialProducts, initialCount, pageSize }) => {
-
-  const [products, setProducts] = useState(initialProducts);
-  const [count, setCount] = useState(initialCount);
-  const [currentPage, setCurrentPage] = useState(1);
-
-
-  const totalPages = Math.ceil(count / pageSize);
-
-  // Fetch data when page changes
-  useEffect(() => {
-    const fetchProducts = async () => {
-      setLoading(true);
-      try {
-        const res = await axiosInstance.get(`/products/?page=${currentPage}`);
-        setProducts(res.data.results);
-        setCount(res.data.count);
-        window.scrollTo({ top: 0, behavior: "smooth" }); // ✅ Scroll to top
-      } catch (err) {
-        console.error("Error fetching page:", err);
-      }
-      setLoading(false);
-    };
-
-    fetchProducts();
-  }, [currentPage]);
-
-  console.log(products)
+export default function ShopPage() {
+  const [activeTab, setActiveTab] = useState("ALL");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedSizes, setSelectedSizes] = useState([]);
   const [isAvailable, setIsAvailable] = useState(false);
   const [sortOrder, setSortOrder] = useState("");
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
+  // Temporary drawer state
   const [tempCategory, setTempCategory] = useState("");
   const [tempSizes, setTempSizes] = useState([]);
   const [tempAvailability, setTempAvailability] = useState(false);
   const [tempSortOrder, setTempSortOrder] = useState("");
 
-  const categories = ["Oversized T-shirt", "T-shirt"];
+  const categories = ["T-Shirts", "Hoodies"];
   const sizes = ["S", "M", "L", "XL"];
 
-  // const [filteredProducts, setFilteredProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-
+  // Filter products cleanly using static data
   const filteredProducts = useMemo(() => {
-  if (loading) return [];
-  let filtered = [...products];
+    let list = [...STATIC_CATALOG];
 
-  if (selectedCategory) {
-    filtered = filtered.filter((p) => p.category === selectedCategory);
-  }
+    // Top tab quick filter
+    if (activeTab === "TEES") {
+      list = list.filter((p) => p.category === "T-Shirts");
+    } else if (activeTab === "HOODIES") {
+      list = list.filter((p) => p.category === "Hoodies");
+    } else if (activeTab === "NEW") {
+      list = list.filter((p) => p.isNew);
+    }
 
-  if (selectedSizes.length > 0) {
-    filtered = filtered.filter((p) =>
-      selectedSizes.some((size) => p.available_sizes.includes(size))
-    );
-  }
+    // Drawer Category Filter
+    if (selectedCategory) {
+      list = list.filter((p) => p.category === selectedCategory);
+    }
 
-  if (isAvailable) {
-    filtered = filtered.filter((p) => p.in_stock === true);
-  }
+    // Drawer Size Filter
+    if (selectedSizes.length > 0) {
+      list = list.filter((p) =>
+        selectedSizes.some((size) => p.sizes?.includes(size))
+      );
+    }
 
-  if (sortOrder === "lowToHigh") {
-    filtered.sort((a, b) => a.price - b.price);
-  } else if (sortOrder === "highToLow") {
-    filtered.sort((a, b) => b.price - a.price);
-  }
+    // Availability Filter
+    if (isAvailable) {
+      list = list.filter((p) => p.in_stock === true);
+    }
 
-  return filtered;
-}, [products, selectedCategory, selectedSizes, isAvailable, sortOrder, loading]);
+    // Sort Order
+    if (sortOrder === "lowToHigh") {
+      list.sort((a, b) => Number(a.price) - Number(b.price));
+    } else if (sortOrder === "highToLow") {
+      list.sort((a, b) => Number(b.price) - Number(a.price));
+    }
 
-
+    return list;
+  }, [activeTab, selectedCategory, selectedSizes, isAvailable, sortOrder]);
 
   const handleApplyFilters = () => {
     setSelectedCategory(tempCategory);
@@ -103,285 +192,303 @@ const ShopPage = ({ initialProducts, initialCount, pageSize }) => {
     );
   };
 
+  const activeFilterCount =
+    (selectedCategory ? 1 : 0) +
+    selectedSizes.length +
+    (isAvailable ? 1 : 0) +
+    (sortOrder ? 1 : 0);
+
   return (
     <>
       <Head>
-        <title>Shop | LME</title>
+        <title>Shop Drop Catalog | Last Man On Earth</title>
         <meta
           name="description"
-          content="Explore our latest collection of oversized T-shirts and more."
+          content="Explore our latest collection of oversized streetwear tees, heavyweight hoodies, and limited drops."
         />
       </Head>
 
-      <div className="py-8 px-4 sm:px-6 lg:px-20 xl:px-28">
-        <h1 className="text-2xl font-bold text-gray-800 mb-10 sm:mb-5 uppercase">Our Store</h1>
-        <div className=" justify-between items-center hidden sm:block">
-          <button
-            onClick={() => {
-              setTempCategory(selectedCategory);
-              setTempSizes(selectedSizes);
-              setTempAvailability(isAvailable);
-              setTempSortOrder(sortOrder);
-              setIsDrawerOpen(true);
-            }}
-            className="flex justify-center gap-3 items-center text-sm px-0 py-2 mb-5 bg-white text-black rounded hover:text-red-600 uppercase"
-          >
-            <HiAdjustmentsHorizontal size={20} /> Filters and Sort
-          </button>
-        </div>
+      <main className="bg-white text-black min-h-screen selection:bg-red-600 selection:text-white">
+        {/* Shop Hero Header Section */}
+        <section className="relative py-16 sm:py-24 px-4 sm:px-14 border-b border-neutral-200 overflow-hidden bg-neutral-50">
+          <div className="container mx-auto max-w-7xl relative z-10">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+              <div className="max-w-2xl">
+                <div className="flex items-center space-x-3 mb-4">
+                  <span className="px-3 py-1 bg-red-600 text-white text-[10px] font-mono font-black uppercase tracking-widest">
+                    DROP ARCHIVE 2026
+                  </span>
+                  <span className="text-xs font-mono text-neutral-500 uppercase tracking-widest">
+                    // POST-APOCALYPTIC STREETWEAR
+                  </span>
+                </div>
+                <h1 className="text-4xl sm:text-6xl md:text-7xl font-black uppercase tracking-tighter text-black leading-none mb-4">
+                  The Full Catalog
+                </h1>
+                <p className="text-neutral-600 text-sm sm:text-base font-mono leading-relaxed max-w-xl">
+                  Heavyweight 450GSM cotton, engineered drop-shoulder cuts, and kinetic graphics built to outlast the storm.
+                </p>
+              </div>
 
-        {/* Mobile Fixed Filter Button */}
-        <div className="sm:hidden fixed bottom-5 right-5 z-50">
-          <button
-            onClick={() => {
-              setTempCategory(selectedCategory);
-              setTempSizes(selectedSizes);
-              setTempAvailability(isAvailable);
-              setTempSortOrder(sortOrder);
-              setIsDrawerOpen(true);
-            }}
-            className="flex items-center gap-2 px-4 py-2 bg-black text-white rounded-sm shadow-lg hover:bg-red-600 transition uppercase"
-          >
-            <HiAdjustmentsHorizontal size={20} />
-            <span className="text-sm font-medium">Filter & Sort</span>
-          </button>
-        </div>
+              {/* Status Stats Pill */}
+              <div className="flex items-center gap-6 border-t md:border-t-0 md:border-l border-neutral-200 pt-4 md:pt-0 md:pl-8 text-xs font-mono text-neutral-500">
+                <div>
+                  <span className="block text-2xl font-black text-black">{filteredProducts.length}</span>
+                  <span className="text-[10px] uppercase text-neutral-500 tracking-wider">Active Drops</span>
+                </div>
+                <div className="w-[1px] h-8 bg-neutral-200" />
+                <div>
+                  <span className="block text-2xl font-black text-red-600">450</span>
+                  <span className="text-[10px] uppercase text-neutral-500 tracking-wider">GSM Cotton</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
 
-        {/* Filter Drawer */}
-       <AnimatePresence>
-        {isDrawerOpen && (
-          <div className="fixed inset-0 z-50 flex justify-end">
-            {/* Drawer Panel */}
-            <motion.div
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
-              transition={{ duration: 0.3 }}
-              className="w-80 bg-white h-full p-6 shadow-2xl relative z-50 overflow-y-auto flex flex-col"
-            >
-              {/* Close Button */}
+        {/* Catalog Controls & Filter Bar */}
+        <section className="sticky top-16 z-30 bg-white/95 backdrop-blur-md border-b border-neutral-200 py-4 px-4 sm:px-14">
+          <div className="container mx-auto max-w-7xl flex flex-wrap justify-between items-center gap-4">
+            {/* Quick Filter Category Tabs */}
+            <div className="flex items-center space-x-2 overflow-x-auto scrollbar-hide py-1">
+              {[
+                { id: "ALL", label: "ALL DROPS" },
+                { id: "TEES", label: "OVERSIZED TEES" },
+                { id: "HOODIES", label: "HEAVYWEIGHT HOODIES" },
+                { id: "NEW", label: "NEW RELEASES" },
+              ].map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`px-4 py-2 text-xs font-mono font-bold uppercase tracking-wider transition-all duration-200 rounded-sm whitespace-nowrap ${
+                    activeTab === tab.id
+                      ? "bg-red-600 text-white shadow-md shadow-red-600/20"
+                      : "bg-neutral-100 text-neutral-700 hover:text-black hover:bg-neutral-200"
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Filter & Sort Actions */}
+            <div className="flex items-center space-x-3 ml-auto">
               <button
-                onClick={() => setIsDrawerOpen(false)}
-                className="absolute top-4 right-4 text-xl text-gray-600 hover:text-black"
-                title="Close"
+                onClick={() => {
+                  setTempCategory(selectedCategory);
+                  setTempSizes(selectedSizes);
+                  setTempAvailability(isAvailable);
+                  setTempSortOrder(sortOrder);
+                  setIsDrawerOpen(true);
+                }}
+                className="flex items-center space-x-2 px-4 py-2 bg-white hover:bg-black hover:text-white text-black text-xs font-mono font-bold uppercase tracking-wider border border-neutral-300 transition duration-200 rounded-sm shadow-sm"
               >
-                <IoClose />
+                <SlidersHorizontal className="w-4 h-4 text-red-600" />
+                <span>Filter & Sort</span>
+                {activeFilterCount > 0 && (
+                  <span className="ml-1 px-1.5 py-0.5 bg-red-600 text-white text-[10px] rounded-full">
+                    {activeFilterCount}
+                  </span>
+                )}
               </button>
 
-              <h2 className="text-xl font-bold text-gray-900 mb-6 uppercase tracking-wide border-b pb-2">
-                Filter & Sort
-              </h2>
-
-              {/* Category Section */}
-              <div className="mb-6">
-                <label className="block text-sm font-semibold text-gray-700 mb-2 uppercase border-b pb-1">
-                  Category
-                </label>
-                <div className="space-y-2">
-                  {categories.map((cat) => (
-                    <label key={cat} className="flex items-center gap-2 text-sm cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={tempCategory === cat}
-                        onChange={() => setTempCategory(tempCategory === cat ? "" : cat)}
-                        className="form-checkbox text-red-500 w-4 h-4 border-gray-300 rounded-sm"
-                      />
-                      <span className="text-gray-800">{cat}</span>
-                    </label>
-                  ))}
-                </div>
-              </div>
-
-              {/* Size Section */}
-              <div className="mb-6">
-                <label className="block text-sm font-semibold text-gray-700 mb-2 uppercase border-b pb-1">
-                  Size
-                </label>
-                <div className="flex flex-wrap gap-2">
-                  {sizes.map((size) => {
-                    const isChecked = tempSizes.includes(size);
-                    return (
-                      <label
-                        key={size}
-                        className={`px-3 py-1.5 rounded-sm text-sm font-medium cursor-pointer transition border ${
-                          isChecked
-                            ? "bg-black text-white border-black"
-                            : "bg-white text-gray-700 border-gray-300 hover:border-black"
-                        }`}
-                      >
-                        <input
-                          type="checkbox"
-                          checked={isChecked}
-                          onChange={() => toggleSize(size)}
-                          className="hidden"
-                        />
-                        {size}
-                      </label>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Availability */}
-              <div className="mb-6">
-                <label className="block text-sm font-semibold text-gray-700 mb-2 uppercase border-b pb-1">
-                  Availability
-                </label>
-                <label className="inline-flex items-center text-sm text-gray-700 gap-2">
-                  <input
-                    type="checkbox"
-                    checked={tempAvailability}
-                    onChange={() => setTempAvailability((prev) => !prev)}
-                    className="form-checkbox w-4 h-4 text-green-500 border-gray-300 rounded-sm"
-                  />
-                  In Stock Only
-                </label>
-              </div>
-
-              {/* Sort */}
-              <div className="mb-6">
-                <label className="block text-sm font-semibold text-gray-700 mb-2 uppercase pb-1">
-                  Sort By
-                </label>
+              {/* Inline Sort Dropdown */}
+              <div className="hidden md:flex items-center space-x-2 bg-white border border-neutral-300 px-3 py-1.5 rounded-sm shadow-sm">
+                <ArrowUpDown className="w-3.5 h-3.5 text-neutral-500" />
                 <select
-                  value={tempSortOrder}
-                  onChange={(e) => setTempSortOrder(e.target.value)}
-                  className="w-full border border-gray-300 rounded-sm px-3 py-2 text-sm focus:outline-none focus:border-black"
+                  value={sortOrder}
+                  onChange={(e) => setSortOrder(e.target.value)}
+                  className="bg-transparent text-black text-xs font-mono uppercase focus:outline-none cursor-pointer"
                 >
-                  <option value="">Date: New to Old</option>
+                  <option value="">Sort: Default</option>
                   <option value="lowToHigh">Price: Low to High</option>
                   <option value="highToLow">Price: High to Low</option>
                 </select>
               </div>
-
-              {/* Buttons */}
-              <div className="mt-auto flex justify-between gap-3 pt-4 border-t">
-                <button
-                  onClick={handleResetFilters}
-                  className="flex-1 text-sm px-4 py-2 border border-gray-300 text-gray-700 rounded-sm hover:bg-gray-100 transition"
-                >
-                  Reset
-                </button>
-                <button
-                  onClick={handleApplyFilters}
-                  className="flex-1 text-sm px-4 py-2 bg-black text-white rounded-sm hover:bg-red-600 transition"
-                >
-                  Apply
-                </button>
-              </div>
-            </motion.div>
-
-            {/* Overlay */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              className="fixed inset-0 bg-black bg-opacity-40 backdrop-blur-sm"
-              onClick={() => setIsDrawerOpen(false)}
-            />
-          </div>
-        )}
-      </AnimatePresence>
-
-
-        {/* Product Grid */}
-        {loading ? (
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {[...Array(12)].map((_, i) => (
-              <div key={i} className="animate-pulse border-gray-200 rounded-sm p-4">
-                <div className="bg-gray-200 h-[250px] sm:h-[320px] md:h-[360px] lg:h-[380px] w-full mb-4 rounded-sm" />
-                <div className="h-4 bg-gray-200 rounded w-3/4 mb-2" />
-                <div className="h-4 bg-gray-200 rounded w-1/2" />
-              </div>
-            ))}
-          </div>
-        )  : !loading && filteredProducts.length === 0 ? (
-          <div className="text-center text-gray-600 py-10">
-            <h2 className="text-2xl font-semibold mb-2 uppercase">No products found</h2>
-            <p className="mb-4">We couldn't find any items that match your filters.</p>
-            <button
-              onClick={() => {
-                setSelectedCategory("");
-                setSelectedSizes([]);
-                setIsAvailable(false);
-                setSortOrder("");
-              }}
-              className="px-4 py-2 bg-black text-white rounded-sm hover:bg-red-600 transition"
-            >
-              View All Products
-            </button>
-          </div>
-        ) : (
-          <>
-            {/* Product Grid */}
-            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6">
-              {filteredProducts.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
             </div>
+          </div>
+        </section>
 
-            {/* Pagination */}
-            {totalPages > 1 && (
-              <div className="mt-12 flex justify-center items-center gap-2 flex-wrap text-sm">
+        {/* Product Grid Section */}
+        <section className="py-12 px-4 sm:px-14 bg-white">
+          <div className="container mx-auto max-w-7xl">
+            {filteredProducts.length === 0 ? (
+              <div className="text-center py-20 bg-neutral-50 border border-neutral-200 rounded-2xl p-8">
+                <Filter className="w-12 h-12 text-red-600 mx-auto mb-4 opacity-80" />
+                <h2 className="text-2xl font-black uppercase text-black tracking-tight mb-2">
+                  No Drops Found
+                </h2>
+                <p className="text-neutral-500 font-mono text-xs max-w-md mx-auto mb-6">
+                  No products matched your selected filters. Try resetting your size or category selection.
+                </p>
                 <button
-                  onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
-                  disabled={currentPage === 1}
-                  className="px-4 py-2 border border-black bg-black hover:bg-white hover:text-black text-white disabled:opacity-60"
+                  onClick={() => {
+                    setActiveTab("ALL");
+                    setSelectedCategory("");
+                    setSelectedSizes([]);
+                    setIsAvailable(false);
+                    setSortOrder("");
+                  }}
+                  className="inline-flex items-center space-x-2 px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-mono font-bold text-xs uppercase tracking-widest rounded-sm transition duration-200 shadow-lg"
                 >
-                  Previous
+                  <RotateCcw className="w-4 h-4" />
+                  <span>Reset All Filters</span>
                 </button>
-
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map((num) => (
-                  <button
-                    key={num}
-                    onClick={() => setCurrentPage(num)}
-                    className={`px-4 py-2 rounded-sm border transition ${num === currentPage
-                        ? "bg-red-500 text-white"
-                        : "bg-white text-gray-700 hover:bg-gray-100"
-                      }`}
-                  >
-                    {num}
-                  </button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                {filteredProducts.map((product) => (
+                  <ProductCard key={product.id} product={product} />
                 ))}
-
-                <button
-                  onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
-                  disabled={currentPage === totalPages}
-                  className="px-4 py-2 border border-black bg-black hover:bg-white hover:text-black text-white disabled:opacity-60"
-                >
-                  Next
-                </button>
               </div>
             )}
-          </>
-        )}
+          </div>
+        </section>
 
-      </div>
+        {/* White Filter & Sort Slide-Over Drawer */}
+        <AnimatePresence>
+          {isDrawerOpen && (
+            <div className="fixed inset-0 z-50 flex justify-end">
+              {/* Drawer Panel */}
+              <motion.div
+                initial={{ x: "100%" }}
+                animate={{ x: 0 }}
+                exit={{ x: "100%" }}
+                transition={{ type: "spring", damping: 25, stiffness: 250 }}
+                className="w-full sm:w-96 bg-white text-black h-full p-6 border-l border-neutral-200 shadow-2xl relative z-50 overflow-y-auto flex flex-col"
+              >
+                {/* Header */}
+                <div className="flex justify-between items-center pb-4 border-b border-neutral-200 mb-6">
+                  <div>
+                    <span className="text-[10px] font-mono text-red-600 uppercase tracking-widest block">
+                      // PREFERENCES
+                    </span>
+                    <h2 className="text-xl font-black uppercase tracking-tight text-black">
+                      Filter & Sort
+                    </h2>
+                  </div>
+                  <button
+                    onClick={() => setIsDrawerOpen(false)}
+                    className="p-2 text-neutral-500 hover:text-black hover:bg-neutral-100 rounded-full transition duration-200"
+                    aria-label="Close Drawer"
+                  >
+                    <IoClose className="w-6 h-6" />
+                  </button>
+                </div>
 
+                {/* Category Section */}
+                <div className="mb-6">
+                  <label className="block text-xs font-mono uppercase text-neutral-500 font-bold mb-3 tracking-widest">
+                    CATEGORY
+                  </label>
+                  <div className="space-y-2">
+                    {categories.map((cat) => (
+                      <label
+                        key={cat}
+                        className="flex items-center space-x-3 p-2.5 rounded bg-neutral-50 hover:bg-neutral-100 border border-neutral-200 text-sm font-mono text-neutral-800 cursor-pointer transition"
+                      >
+                        <input
+                          type="checkbox"
+                          checked={tempCategory === cat}
+                          onChange={() =>
+                            setTempCategory(tempCategory === cat ? "" : cat)
+                          }
+                          className="w-4 h-4 accent-red-600 rounded cursor-pointer"
+                        />
+                        <span>{cat}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Size Section */}
+                <div className="mb-6">
+                  <label className="block text-xs font-mono uppercase text-neutral-400 font-bold mb-3 tracking-widest">
+                    AVAILABLE SIZE
+                  </label>
+                  <div className="grid grid-cols-4 gap-2">
+                    {sizes.map((size) => {
+                      const isChecked = tempSizes.includes(size);
+                      return (
+                        <button
+                          key={size}
+                          type="button"
+                          onClick={() => toggleSize(size)}
+                          className={`py-2 rounded text-xs font-mono font-bold uppercase transition border ${
+                            isChecked
+                              ? "bg-red-600 text-white border-red-600"
+                              : "bg-neutral-100 text-neutral-700 border-neutral-200 hover:border-black"
+                          }`}
+                        >
+                          {size}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Availability Section */}
+                <div className="mb-6">
+                  <label className="block text-xs font-mono uppercase text-neutral-500 font-bold mb-3 tracking-widest">
+                    AVAILABILITY
+                  </label>
+                  <label className="flex items-center space-x-3 p-2.5 rounded bg-neutral-50 border border-neutral-200 text-sm font-mono text-neutral-800 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={tempAvailability}
+                      onChange={() => setTempAvailability((prev) => !prev)}
+                      className="w-4 h-4 accent-red-600 rounded cursor-pointer"
+                    />
+                    <span>In Stock Drops Only</span>
+                  </label>
+                </div>
+
+                {/* Sort Section */}
+                <div className="mb-6">
+                  <label className="block text-xs font-mono uppercase text-neutral-500 font-bold mb-3 tracking-widest">
+                    SORT ORDER
+                  </label>
+                  <select
+                    value={tempSortOrder}
+                    onChange={(e) => setTempSortOrder(e.target.value)}
+                    className="w-full bg-white border border-neutral-300 text-black font-mono text-xs rounded p-3 focus:outline-none focus:border-red-600 cursor-pointer"
+                  >
+                    <option value="">Date: Newest First</option>
+                    <option value="lowToHigh">Price: Low to High</option>
+                    <option value="highToLow">Price: High to Low</option>
+                  </select>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="mt-auto flex gap-3 pt-6 border-t border-neutral-200">
+                  <button
+                    onClick={handleResetFilters}
+                    className="flex-1 py-3 border border-neutral-300 hover:border-neutral-800 text-neutral-700 font-mono font-bold text-xs uppercase rounded transition"
+                  >
+                    Reset
+                  </button>
+                  <button
+                    onClick={handleApplyFilters}
+                    className="flex-1 py-3 bg-red-600 hover:bg-red-700 text-white font-mono font-bold text-xs uppercase rounded transition shadow-lg shadow-red-600/20"
+                  >
+                    Apply Filters
+                  </button>
+                </div>
+              </motion.div>
+
+              {/* Backdrop Overlay */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="fixed inset-0 bg-black/40 backdrop-blur-sm"
+                onClick={() => setIsDrawerOpen(false)}
+              />
+            </div>
+          )}
+        </AnimatePresence>
+      </main>
     </>
   );
-};
-
-export default ShopPage;
-
-export async function getServerSideProps() {
-  try {
-    const res = await axiosInstance.get(`/products/?page=1`);
-    return {
-      props: {
-        initialProducts: res.data.results,
-        initialCount: res.data.count,
-        pageSize: 12,
-      },
-    };
-  } catch (error) {
-    return {
-      props: {
-        initialProducts: [],
-        initialCount: 0,
-        pageSize: 12,
-      },
-    };
-  }
 }

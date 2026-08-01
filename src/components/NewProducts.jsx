@@ -7,7 +7,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { ChevronRight, ShoppingBag } from "lucide-react";
+import { ChevronLeft, ChevronRight, ShoppingBag } from "lucide-react";
 import { initGSAP } from "../lib/gsap";
 
 const featuredProducts = [
@@ -76,6 +76,8 @@ const featuredProducts = [
 export default function NewProducts() {
   const sectionRef = useRef(null);
   const cardsRef = useRef([]);
+  const prevBtnRef = useRef(null);
+  const nextBtnRef = useRef(null);
 
   useEffect(() => {
     const { gsap, ScrollTrigger } = initGSAP();
@@ -119,91 +121,120 @@ export default function NewProducts() {
             </h2>
           </div>
 
-          <Link href="/shop" className="group inline-flex items-center space-x-2 text-sm font-bold uppercase tracking-widest text-neutral-700 hover:text-red-600 transition">
-            <span>View Drop Catalog</span>
-            <ChevronRight className="w-4 h-4 group-hover:translate-x-2 transition-transform duration-300 text-red-600" />
-          </Link>
+          <div className="flex items-center space-x-6">
+            {/* Custom Navigation Arrows */}
+            <div className="flex items-center space-x-2">
+              <button
+                ref={prevBtnRef}
+                aria-label="Previous Slide"
+                className="w-10 h-10 rounded-full border border-neutral-300 bg-white hover:bg-red-600 hover:border-red-600 hover:text-white flex items-center justify-center transition-colors duration-200 text-black shadow-sm z-20 cursor-pointer"
+              >
+                <ChevronLeft className="w-5 h-5" />
+              </button>
+              <button
+                ref={nextBtnRef}
+                aria-label="Next Slide"
+                className="w-10 h-10 rounded-full border border-neutral-300 bg-white hover:bg-red-600 hover:border-red-600 hover:text-white flex items-center justify-center transition-colors duration-200 text-black shadow-sm z-20 cursor-pointer"
+              >
+                <ChevronRight className="w-5 h-5" />
+              </button>
+            </div>
+
+            <Link href="/shop" className="group inline-flex items-center space-x-2 text-sm font-bold uppercase tracking-widest text-neutral-700 hover:text-red-600 transition">
+              <span>View Drop Catalog</span>
+              <ChevronRight className="w-4 h-4 group-hover:translate-x-2 transition-transform duration-300 text-red-600" />
+            </Link>
+          </div>
         </div>
 
         {/* Products Swiper Slider */}
-        <Swiper
-          className="newproducts-swiper overflow-visible"
-          spaceBetween={20}
-          loop={true}
-          navigation={true}
-          autoplay={{ delay: 4000, disableOnInteraction: false }}
-          modules={[Navigation, Autoplay]}
-          breakpoints={{
-            0: { slidesPerView: 1.2, spaceBetween: 15 },
-            640: { slidesPerView: 2, spaceBetween: 20 },
-            1024: { slidesPerView: 3, spaceBetween: 24 },
-            1280: { slidesPerView: 4, spaceBetween: 24 },
-          }}
-        >
-          {featuredProducts.map((product, index) => (
-            <SwiperSlide key={product.id}>
-              <div
-                ref={(el) => (cardsRef.current[index] = el)}
-                className="group relative bg-white border border-neutral-200 shadow-sm hover:shadow-xl overflow-hidden transition-all duration-500 hover:border-neutral-400"
-              >
-                {/* Product Image Container */}
-                <Link href={`/product/${product.id}`} className="block relative aspect-[3/4] w-full overflow-hidden bg-neutral-100">
-                  {/* Base Image */}
-                  <Image
-                    src={product.image}
-                    alt={product.name}
-                    fill
-                    className="object-cover transition-opacity duration-500 group-hover:opacity-0"
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 25vw"
-                  />
-                  {/* Secondary Image Crossfade on Hover */}
-                  <Image
-                    src={product.hoverImage}
-                    alt={`${product.name} alternate view`}
-                    fill
-                    className="object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100 group-hover:scale-105"
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 25vw"
-                  />
+        <div className="relative">
+          <Swiper
+            className="newproducts-swiper overflow-visible"
+            spaceBetween={20}
+            loop={true}
+            navigation={{
+              prevEl: prevBtnRef.current,
+              nextEl: nextBtnRef.current,
+            }}
+            onBeforeInit={(swiper) => {
+              swiper.params.navigation.prevEl = prevBtnRef.current;
+              swiper.params.navigation.nextEl = nextBtnRef.current;
+            }}
+            autoplay={{ delay: 4000, disableOnInteraction: false }}
+            modules={[Navigation, Autoplay]}
+            breakpoints={{
+              0: { slidesPerView: 1.2, spaceBetween: 15 },
+              640: { slidesPerView: 2, spaceBetween: 20 },
+              1024: { slidesPerView: 3, spaceBetween: 24 },
+              1280: { slidesPerView: 4, spaceBetween: 24 },
+            }}
+          >
+            {featuredProducts.map((product, index) => (
+              <SwiperSlide key={product.id}>
+                <div
+                  ref={(el) => (cardsRef.current[index] = el)}
+                  className="group relative bg-white border border-neutral-200 shadow-sm hover:shadow-xl overflow-hidden transition-all duration-500 hover:border-neutral-400"
+                >
+                  {/* Product Image Container */}
+                  <Link href={`/product/${product.id}`} className="block relative aspect-[3/4] w-full overflow-hidden bg-neutral-100">
+                    {/* Base Image */}
+                    <Image
+                      src={product.image}
+                      alt={product.name}
+                      fill
+                      className="object-cover transition-opacity duration-500 group-hover:opacity-0"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 25vw"
+                    />
+                    {/* Secondary Image Crossfade on Hover */}
+                    <Image
+                      src={product.hoverImage}
+                      alt={`${product.name} alternate view`}
+                      fill
+                      className="object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100 group-hover:scale-105"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 25vw"
+                    />
 
-                  {/* Pulsing Chip */}
-                  {product.isNew && (
-                    <span className="absolute top-3 left-3 bg-red-600 text-white text-[10px] font-black uppercase px-2.5 py-1 tracking-widest z-10">
-                      NEW
-                    </span>
-                  )}
-
-                  {/* Quick Action Button Slide-Up on Hover */}
-                  <div className="absolute inset-x-0 bottom-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out z-20 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
-                    <button className="w-full py-3 bg-black hover:bg-red-600 text-white font-extrabold text-xs uppercase tracking-widest flex items-center justify-center space-x-2 transition duration-200 shadow-lg">
-                      <ShoppingBag className="w-4 h-4" />
-                      <span>Quick View & Add</span>
-                    </button>
-                  </div>
-                </Link>
-
-                {/* Card Info */}
-                <div className="p-5">
-                  <div className="text-[11px] font-mono uppercase text-red-600 font-bold mb-1 tracking-wider">
-                    {product.category}
-                  </div>
-                  <h3 className="text-base font-extrabold uppercase text-neutral-900 truncate group-hover:text-red-600 transition duration-200">
-                    {product.name}
-                  </h3>
-                  <div className="flex items-center space-x-3 mt-3">
-                    <span className="text-lg font-black text-black group-hover:underline group-hover:decoration-red-600">
-                      ₹{product.price}
-                    </span>
-                    {product.oldPrice && (
-                      <span className="text-xs text-neutral-400 line-through">
-                        ₹{product.oldPrice}
+                    {/* Pulsing Chip */}
+                    {product.isNew && (
+                      <span className="absolute top-3 left-3 bg-red-600 text-white text-[10px] font-black uppercase px-2.5 py-1 tracking-widest z-10">
+                        NEW
                       </span>
                     )}
+
+                    {/* Quick Action Button Slide-Up on Hover */}
+                    <div className="absolute inset-x-0 bottom-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out z-20 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
+                      <button className="w-full py-3 bg-black hover:bg-red-600 text-white font-extrabold text-xs uppercase tracking-widest flex items-center justify-center space-x-2 transition duration-200 shadow-lg">
+                        <ShoppingBag className="w-4 h-4" />
+                        <span>Quick View & Add</span>
+                      </button>
+                    </div>
+                  </Link>
+
+                  {/* Card Info */}
+                  <div className="p-5">
+                    <div className="text-[11px] font-mono uppercase text-red-600 font-bold mb-1 tracking-wider">
+                      {product.category}
+                    </div>
+                    <h3 className="text-base font-extrabold uppercase text-neutral-900 truncate group-hover:text-red-600 transition duration-200">
+                      {product.name}
+                    </h3>
+                    <div className="flex items-center space-x-3 mt-3">
+                      <span className="text-lg font-black text-black group-hover:underline group-hover:decoration-red-600">
+                        ₹{product.price}
+                      </span>
+                      {product.oldPrice && (
+                        <span className="text-xs text-neutral-400 line-through">
+                          ₹{product.oldPrice}
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-            </SwiperSlide>
-          ))}
-        </Swiper>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
       </div>
     </section>
   );

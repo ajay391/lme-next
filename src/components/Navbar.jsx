@@ -140,8 +140,8 @@ const Navbar = () => {
       <nav
         className={`w-full px-4 sm:px-14 py-4 transition-all duration-500 border-b ${
           isScrolled
-            ? "bg-white/95 backdrop-blur-md border-neutral-200 text-black shadow-md"
-            : "bg-black/50 backdrop-blur-sm border-white/10 text-white"
+            ? "bg-white/95 backdrop-blur-md border-neutral-200 text-black shadow-md shadow-black/5"
+            : "bg-black/90 backdrop-blur-md border-white/10 text-white shadow-xl shadow-black/40"
         }`}
       >
         <div className="container mx-auto flex items-center justify-between relative">
