@@ -6,8 +6,19 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: true,
    },
    images: {
-    domains: ['res.cloudinary.com'],
+    domains: ['res.cloudinary.com', 'pvmxxcppyzujsyuqbosw.supabase.co'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '*.supabase.co',
+      },
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+      },
+    ],
   },
+
   
 };
 

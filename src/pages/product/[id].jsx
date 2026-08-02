@@ -9,6 +9,8 @@ import AddToCartButton from "../../components/AddToCartButton";
 import AddToWishlistButton from "../../components/AddToWishlistButton";
 import ProductCard from "../../components/ProductCard";
 import staticProducts from "../../data/products";
+import { getProductByIdOrSlug, getProducts } from "../../lib/products";
+
 
 // Fallback catalog list if API server is offline
 const FALLBACK_PRODUCTS = [
@@ -87,11 +89,9 @@ const ProductViewPage = ({ product, relatedProducts }) => {
 
   if (!product) return null;
 
-  const galleryImages = [
-    product.image,
-    ...(product.images || []),
-    product.hoverImage,
-  ].filter(Boolean);
+  const galleryImages = Array.from(
+    new Set([product.image, ...(product.images || []), product.hoverImage].filter(Boolean))
+  );
 
   const sizeList =
     typeof product.available_sizes === "string"
@@ -157,7 +157,7 @@ const ProductViewPage = ({ product, relatedProducts }) => {
               {/* Gallery Thumbnails */}
               {galleryImages.length > 1 && (
                 <div className="flex items-center justify-center space-x-3 overflow-x-auto py-1">
-                  {galleryImages.slice(0, 4).map((img, i) => (
+                  {galleryImages.map((img, i) => (
                     <button
                       key={i}
                       onClick={() => setSelectedImage(img)}
@@ -408,50 +408,31 @@ export async function getServerSideProps(context) {
   const { id } = context.params;
 
   try {
-    let product = null;
-
-    // Try fetching from API server first
-    try {
-      const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/products/${id}/`);
-      product = res.data;
-    } catch (apiError) {
-      // Fallback to static products array if API server is offline
-      product =
-        FALLBACK_PRODUCTS.find((p) => String(p.id) === String(id) || p.slug === id) ||
-        FALLBACK_PRODUCTS[0];
-    }
+    let product = await getProductByIdOrSlug(id);
 
     if (!product) {
-      product = FALLBACK_PRODUCTS[0];
+      console.warn(`Product not found for id/slug: "${id}"`);
+      return {
+        notFound: true,
+      };
     }
 
-    // Related products fallback
-    let related = FALLBACK_PRODUCTS.filter((p) => String(p.id) !== String(product.id)).slice(0, 4);
-
-    try {
-      const relatedRes = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/products/`);
-      const allApiProducts = relatedRes.data.results || [];
-      if (allApiProducts.length > 0) {
-        related = allApiProducts
-          .filter((p) => p.category === product.category && String(p.id) !== String(product.id))
-          .slice(0, 4);
-      }
-    } catch (e) {
-      // Ignore API related error, use static related products
-    }
+    let allProducts = await getProducts();
+    let related = allProducts.filter((p) => String(p.id) !== String(product.id)).slice(0, 4);
 
     return {
       props: {
-        product,
-        relatedProducts: related,
+        product: JSON.parse(JSON.stringify(product)),
+        relatedProducts: JSON.parse(JSON.stringify(related)),
       },
     };
   } catch (err) {
+    console.error("getServerSideProps error for product detail page:", err);
     return {
-      props: {
-        product: FALLBACK_PRODUCTS[0],
-        relatedProducts: FALLBACK_PRODUCTS.slice(1, 5),
-      },
+      notFound: true,
     };
   }
 }
+
+
+

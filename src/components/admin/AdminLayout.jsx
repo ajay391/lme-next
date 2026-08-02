@@ -19,12 +19,16 @@ import {
   ShieldCheck,
   Bell,
   Search,
+  Palette,
+  Shirt,
 } from "lucide-react";
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
 
 const NAVIGATION_ITEMS = [
   { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
+  { name: "DesignMyTee", href: "/admin/designmytee", icon: Palette, badge: "Lab" },
+  { name: "Designer Home", href: "/admin/designmytee/designer", icon: Shirt, roleOnly: "Designer" },
   { name: "Products", href: "/admin/products", icon: Package },
   { name: "Categories", href: "/admin/categories", icon: FolderTree },
   { name: "Orders", href: "/admin/orders", icon: ShoppingCart },
@@ -36,6 +40,30 @@ const NAVIGATION_ITEMS = [
 export default function AdminLayout({ children, title = "Admin Portal" }) {
   const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [currentRole, setCurrentRole] = useState("Super Admin");
+
+  // Sync role with localStorage
+  if (typeof window !== "undefined" && !window.adminRoleLoaded) {
+    const saved = localStorage.getItem("lme_admin_active_role");
+    if (saved && saved !== currentRole) {
+      setCurrentRole(saved);
+    }
+    window.adminRoleLoaded = true;
+  }
+
+  const handleRoleChange = (role) => {
+    setCurrentRole(role);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("lme_admin_active_role", role);
+      window.dispatchEvent(new Event("admin_role_change"));
+    }
+    toast.success(`Switched role to ${role}`);
+    if (role === "Designer") {
+      router.push("/admin/designmytee/designer");
+    } else if (router.pathname.includes("/designer")) {
+      router.push("/admin/designmytee");
+    }
+  };
 
   const handleLogout = () => {
     Cookies.remove("admin_access_token");
@@ -167,17 +195,31 @@ export default function AdminLayout({ children, title = "Admin Portal" }) {
                 />
               </div>
 
+              {/* Role Switcher Chip */}
+              <div className="flex items-center space-x-2 bg-neutral-100 border border-neutral-300 rounded-lg px-2.5 py-1 text-xs">
+                <span className="text-[10px] font-mono font-bold text-neutral-400 uppercase">Role:</span>
+                <select
+                  value={currentRole}
+                  onChange={(e) => handleRoleChange(e.target.value)}
+                  className="bg-transparent font-mono font-bold text-xs text-neutral-900 focus:outline-none cursor-pointer"
+                >
+                  <option value="Super Admin">Super Admin</option>
+                  <option value="Admin">Admin</option>
+                  <option value="Designer">Designer</option>
+                </select>
+              </div>
+
               {/* Admin Profile Chip */}
               <div className="flex items-center space-x-3 border-l border-neutral-200 pl-4">
                 <div className="w-8 h-8 rounded-full bg-neutral-900 text-white flex items-center justify-center font-mono text-xs font-bold border border-neutral-700">
-                  AD
+                  {currentRole === 'Designer' ? 'DES' : 'AD'}
                 </div>
                 <div className="hidden sm:block text-left">
                   <span className="block text-xs font-mono font-bold text-neutral-900 leading-none">
-                    Administrator
+                    {currentRole === 'Designer' ? 'Alex Rivera (Designer)' : 'Administrator'}
                   </span>
                   <span className="text-[10px] font-mono text-neutral-500">
-                    admin@lme.com
+                    {currentRole === 'Designer' ? 'alex.rivera@lme.com' : 'admin@lme.com'}
                   </span>
                 </div>
               </div>

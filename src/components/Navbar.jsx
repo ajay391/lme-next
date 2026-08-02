@@ -168,6 +168,7 @@ const Navbar = () => {
             {[
               { label: "Home", path: "/" },
               { label: "Shop", path: "/shop" },
+              { label: "DesignMyTee", path: "/designmytee" },
               { label: "About Us", path: "/about-us" },
             ].map((link) => (
               <Link
@@ -280,6 +281,10 @@ const Navbar = () => {
             </Link>
             <Link href="/shop" onClick={toggleMobileMenu} className="w-full py-3 border-b border-neutral-200 text-neutral-800 hover:text-red-600">
               Shop
+            </Link>
+            <Link href="/designmytee" onClick={toggleMobileMenu} className="w-full py-3 border-b border-neutral-200 text-neutral-800 hover:text-red-600 flex items-center justify-between">
+              <span>DesignMyTee</span>
+              <span className="text-[10px] bg-red-600 text-white px-2 py-0.5 rounded font-mono font-bold">CUSTOM</span>
             </Link>
             <Link href="/about-us" onClick={toggleMobileMenu} className="w-full py-3 border-b border-neutral-200 text-neutral-800 hover:text-red-600">
               About Us

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import AdminLayout from "../../../components/admin/AdminLayout";
 import Link from "next/link";
 import Image from "next/image";
-import { Plus, Search, Edit, Trash2, CheckCircle, XCircle, AlertCircle } from "lucide-react";
+import { Plus, Search, Edit, Trash2, CheckCircle, XCircle, AlertCircle, RefreshCw } from "lucide-react";
 import toast from "react-hot-toast";
 
 export default function AdminProductsPage() {
@@ -11,7 +11,8 @@ export default function AdminProductsPage() {
   const [categoryFilter, setCategoryFilter] = useState("ALL");
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  const fetchProducts = () => {
+    setLoading(true);
     fetch("/api/admin/products")
       .then((res) => res.json())
       .then((data) => {
@@ -19,23 +20,40 @@ export default function AdminProductsPage() {
         setLoading(false);
       })
       .catch(() => setLoading(false));
+  };
+
+  useEffect(() => {
+    fetchProducts();
   }, []);
 
-  const handleDelete = (id) => {
-    if (confirm("Are you sure you want to delete this drop from catalog?")) {
-      setProducts(products.filter((p) => p.id !== id));
-      toast.success("Product deleted successfully");
+  const handleDelete = async (id) => {
+    if (!confirm("Are you sure you want to delete this drop from catalog?")) return;
+
+    try {
+      const res = await fetch(`/api/admin/products/${id}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        setProducts(products.filter((p) => String(p.id) !== String(id)));
+        toast.success("Product deleted successfully from Supabase!");
+      } else {
+        toast.error(data.message || "Failed to delete product.");
+      }
+    } catch (err) {
+      toast.error("An error occurred deleting product.");
     }
   };
 
   const filteredProducts = products.filter((p) => {
-    const matchesSearch = p.name.toLowerCase().includes(search.toLowerCase());
+    const matchesSearch = (p.name || "").toLowerCase().includes(search.toLowerCase());
     const matchesCat = categoryFilter === "ALL" || p.category === categoryFilter;
     return matchesSearch && matchesCat;
   });
 
   return (
-    <AdminLayout title="Catalog Products">
+    <AdminLayout title="Catalog Products (Supabase)">
       {/* Action Header Bar */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <div className="flex items-center space-x-3 w-full sm:w-auto">
@@ -61,7 +79,16 @@ export default function AdminProductsPage() {
             <option value="T-Shirts">T-Shirts</option>
             <option value="Hoodies">Hoodies</option>
             <option value="Jackets">Jackets</option>
+            <option value="Accessories">Accessories</option>
           </select>
+
+          <button
+            onClick={fetchProducts}
+            className="p-2 text-neutral-600 hover:text-black bg-white border border-neutral-300 rounded-lg transition"
+            title="Refresh Catalog"
+          >
+            <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
+          </button>
         </div>
 
         <Link
@@ -88,7 +115,13 @@ export default function AdminProductsPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-neutral-200 text-xs font-mono">
-              {filteredProducts.length === 0 ? (
+              {loading ? (
+                <tr>
+                  <td colSpan={6} className="py-12 text-center text-neutral-400 font-mono">
+                    Loading products from Supabase...
+                  </td>
+                </tr>
+              ) : filteredProducts.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="py-12 text-center text-neutral-400 font-mono">
                     No products found matching your search.
@@ -102,7 +135,7 @@ export default function AdminProductsPage() {
                         <div className="relative w-12 h-14 rounded-lg overflow-hidden bg-neutral-100 border border-neutral-200 flex-shrink-0">
                           <Image
                             src={p.image || "/images/home/new-1.png"}
-                            alt={p.name}
+                            alt={p.name || "Product"}
                             fill
                             className="object-cover"
                             sizes="48px"
@@ -113,7 +146,7 @@ export default function AdminProductsPage() {
                             {p.name}
                           </span>
                           <span className="text-[10px] text-neutral-400 font-mono">
-                            {p.sizes?.join(", ")}
+                            {Array.isArray(p.sizes) ? p.sizes.join(", ") : "S, M, L, XL"}
                           </span>
                         </div>
                       </div>
@@ -125,22 +158,22 @@ export default function AdminProductsPage() {
                     </td>
                     <td className="py-4 px-6 font-bold text-neutral-900">
                       ₹{p.price}
-                      {p.oldPrice && (
+                      {(p.oldPrice || p.old_price) && (
                         <span className="block text-[10px] text-neutral-400 line-through">
-                          ₹{p.oldPrice}
+                          ₹{p.oldPrice || p.old_price}
                         </span>
                       )}
                     </td>
                     <td className="py-4 px-6">
                       <span
                         className={`inline-flex items-center font-bold ${
-                          p.stock_quantity <= 5 ? "text-amber-600" : "text-neutral-900"
+                          (p.stock_quantity ?? 10) <= 5 ? "text-amber-600" : "text-neutral-900"
                         }`}
                       >
-                        {p.stock_quantity <= 5 && (
+                        {(p.stock_quantity ?? 10) <= 5 && (
                           <AlertCircle className="w-3.5 h-3.5 mr-1" />
                         )}
-                        {p.stock_quantity} units
+                        {p.stock_quantity ?? 10} units
                       </span>
                     </td>
                     <td className="py-4 px-6">

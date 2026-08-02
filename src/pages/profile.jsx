@@ -19,6 +19,7 @@ import emptyWishlist from "../../public/images/add-to-favorites.png";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import Head from "next/head";
+import UserDesignRequestsTab from "../components/designmytee/UserDesignRequestsTab";
 
 const Profile = () => {
   const router = useRouter();
@@ -86,8 +87,11 @@ const Profile = () => {
       }
     };
 
+    if (router.query.tab === 'design-requests' || router.query.tab === 'designmytee') {
+      setActiveTab('design-requests');
+    }
     fetchProfileData();
-  }, []);
+  }, [router.query.tab]);
 
   const handleUpdate = async (e) => {
     e.preventDefault();
@@ -337,6 +341,13 @@ const Profile = () => {
                   My Orders
                 </button>
                 <button
+                  onClick={() => setActiveTab("design-requests")}
+                  className={`w-full text-left px-4 py-4 rounded-sm font-medium flex items-center justify-between ${activeTab === "design-requests" ? 'bg-red-50 text-red-700 font-bold' : 'text-gray-700 hover:bg-gray-100'}`}
+                >
+                  <span>My Design Requests</span>
+                  <span className="bg-red-600 text-white text-[10px] font-mono px-1.5 py-0.5 rounded uppercase font-bold">New</span>
+                </button>
+                <button
                   onClick={() => setActiveTab("addresses")}
                   className={`w-full text-left px-4 py-4 rounded-sm font-medium ${activeTab === "addresses" ? 'bg-red-50 text-red-700' : 'text-gray-700 hover:bg-gray-100'}`}
                 >
@@ -377,6 +388,7 @@ const Profile = () => {
                     {[
                       { key: "profile", label: "Profile Information", icon: <FaUser className="mr-2" size={20} /> },
                       { key: "orders", label: "My Orders", icon: <FaBoxOpen className="mr-2" size={20} /> },
+                      { key: "design-requests", label: "My Design Requests (DesignMyTee)", icon: <FaBoxOpen className="mr-2" size={20} /> },
                       { key: "addresses", label: "Saved Addresses", icon: <FaHome className="mr-2" size={20} /> },
                       { key: "wishlist", label: "Wishlist", icon: <FaHeart className="mr-2" size={20} /> },
                     ].map((item) => (
@@ -435,6 +447,11 @@ const Profile = () => {
             )}
             {/* Main Content */}
             <div className="flex-1">
+              {/* My Design Requests (DesignMyTee) */}
+              {activeTab === "design-requests" && (
+                <UserDesignRequestsTab />
+              )}
+
               {/* Profile Information */}
               {activeTab === "profile" && (
                 <div className="bg-white rounded-sm p-0 md:p-6">

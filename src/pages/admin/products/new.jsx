@@ -3,12 +3,13 @@ import AdminLayout from "../../../components/admin/AdminLayout";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowLeft, Upload, Plus, Trash2, Save } from "lucide-react";
+import { ArrowLeft, Upload, Save, Loader2, Trash2, Star, Plus } from "lucide-react";
 import toast from "react-hot-toast";
 
 export default function AddProductPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -19,6 +20,7 @@ export default function AddProductPage() {
     sizes: ["S", "M", "L", "XL"],
     stock_quantity: "25",
     image: "/images/home/new-1.png",
+    images: [],
     description: "",
     is_active: true,
     is_featured: false,
@@ -41,25 +43,102 @@ export default function AddProductPage() {
     setFormData({ ...formData, sizes: updated });
   };
 
+  // Single & Multi-File Upload Handler for Supabase Storage
+  const handleMultipleUploads = async (e) => {
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
+
+    setUploading(true);
+    const uploadToast = toast.loading(`Uploading ${files.length} image(s) to Supabase Storage...`);
+
+    const uploadedUrls = [];
+
+    for (const file of files) {
+      try {
+        const data = new FormData();
+        data.append("file", file);
+        data.append("bucket", "uploads");
+
+        const res = await fetch("/api/storage/upload", {
+          method: "POST",
+          body: data,
+        });
+
+        const json = await res.json();
+        if (res.ok && json.url) {
+          uploadedUrls.push(json.url);
+        } else {
+          // Fallback to local object URL if storage bucket fails
+          uploadedUrls.push(URL.createObjectURL(file));
+        }
+      } catch (err) {
+        console.error("Upload failed for file:", file.name);
+      }
+    }
+
+    if (uploadedUrls.length > 0) {
+      setFormData((prev) => {
+        const newImages = [...prev.images, ...uploadedUrls];
+        const newPrimary = prev.image === "/images/home/new-1.png" || !prev.image ? newImages[0] : prev.image;
+        return {
+          ...prev,
+          image: newPrimary,
+          images: newImages,
+        };
+      });
+      toast.success(`Successfully uploaded ${uploadedUrls.length} image(s)!`, { id: uploadToast });
+    } else {
+      toast.error("Failed to upload images.", { id: uploadToast });
+    }
+
+    setUploading(false);
+  };
+
+  const removeGalleryImage = (indexToRemove) => {
+    setFormData((prev) => {
+      const updatedImages = prev.images.filter((_, idx) => idx !== indexToRemove);
+      const updatedCover = prev.image === prev.images[indexToRemove]
+        ? (updatedImages[0] || "/images/home/new-1.png")
+        : prev.image;
+      return {
+        ...prev,
+        image: updatedCover,
+        images: updatedImages,
+      };
+    });
+  };
+
+  const setCoverImage = (imgUrl) => {
+    setFormData((prev) => ({ ...prev, image: imgUrl }));
+    toast.success("Cover image updated!");
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     try {
+      const payload = {
+        ...formData,
+        images: formData.images.length > 0 ? formData.images : [formData.image],
+      };
+
       const res = await fetch("/api/admin/products", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       });
 
+      const data = await res.json();
+
       if (res.ok) {
-        toast.success("New Drop Product Created!");
+        toast.success("New Product Drop Created in Supabase!");
         router.push("/admin/products");
       } else {
-        toast.error("Failed to create product");
+        toast.error(data.error || "Failed to create product");
       }
     } catch (err) {
-      toast.error("An error occurred");
+      toast.error("An error occurred creating product drop.");
     } finally {
       setLoading(false);
     }
@@ -221,36 +300,98 @@ export default function AddProductPage() {
             </div>
           </div>
 
-          {/* Media & Status Card */}
+          {/* Product Gallery & Visibility Card */}
           <div className="bg-white p-6 sm:p-8 rounded-xl border border-neutral-200 shadow-sm space-y-6">
-            <h3 className="text-base font-black uppercase text-neutral-900 tracking-tight border-b border-neutral-200 pb-4">
-              Media & Visibility
-            </h3>
-
-            <div>
-              <label className="block text-xs font-mono font-bold uppercase text-neutral-700 mb-2">
-                Primary Product Image Path
-              </label>
-              <div className="flex items-center space-x-4">
-                <input
-                  type="text"
-                  value={formData.image}
-                  onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                  placeholder="/images/home/new-1.png"
-                  className="flex-1 px-4 py-2.5 bg-neutral-50 border border-neutral-300 rounded-lg text-xs font-mono text-black focus:outline-none focus:border-red-600"
-                />
-                <div className="relative w-12 h-14 rounded-lg overflow-hidden bg-neutral-100 border border-neutral-200 flex-shrink-0">
-                  <Image
-                    src={formData.image || "/images/home/new-1.png"}
-                    alt="Preview"
-                    fill
-                    className="object-cover"
-                  />
-                </div>
+            <div className="border-b border-neutral-200 pb-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+              <div>
+                <h3 className="text-base font-black uppercase text-neutral-900 tracking-tight">
+                  Product Gallery Images (4–5 Photos)
+                </h3>
+                <p className="text-xs font-mono text-neutral-500 mt-1">
+                  Upload multiple product angles. Click any photo star to set it as the primary cover image.
+                </p>
               </div>
+
+              <label className="cursor-pointer px-4 py-2.5 bg-neutral-900 hover:bg-red-600 text-white font-mono text-xs font-bold uppercase rounded-lg transition flex items-center space-x-2 shrink-0">
+                {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
+                <span>{uploading ? "Uploading..." : "Upload Multiple Images"}</span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={handleMultipleUploads}
+                  className="hidden"
+                  disabled={uploading}
+                />
+              </label>
             </div>
 
-            <div className="flex items-center space-x-8 pt-2">
+            {/* Gallery Images Grid */}
+            {formData.images.length > 0 ? (
+              <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-4">
+                {formData.images.map((imgUrl, idx) => {
+                  const isCover = formData.image === imgUrl;
+                  return (
+                    <div
+                      key={idx}
+                      className={`relative group aspect-[3/4] rounded-xl overflow-hidden bg-neutral-100 border-2 transition ${
+                        isCover ? "border-red-600 ring-2 ring-red-600/30" : "border-neutral-200"
+                      }`}
+                    >
+                      <Image
+                        src={imgUrl}
+                        alt={`Gallery Image ${idx + 1}`}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 768px) 50vw, 20vw"
+                      />
+
+                      {/* Cover Badge */}
+                      {isCover && (
+                        <div className="absolute top-2 left-2 px-2 py-1 bg-red-600 text-white text-[9px] font-mono font-bold uppercase rounded shadow">
+                          Cover
+                        </div>
+                      )}
+
+                      {/* Action Overlay */}
+                      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition flex items-center justify-center space-x-2 p-2">
+                        {!isCover && (
+                          <button
+                            type="button"
+                            onClick={() => setCoverImage(imgUrl)}
+                            className="p-2 bg-white/90 text-black hover:bg-yellow-400 hover:text-black rounded-lg transition"
+                            title="Set as Cover Image"
+                          >
+                            <Star className="w-4 h-4 fill-yellow-400 text-yellow-500" />
+                          </button>
+                        )}
+                        <button
+                          type="button"
+                          onClick={() => removeGalleryImage(idx)}
+                          className="p-2 bg-white/90 text-neutral-700 hover:bg-red-600 hover:text-white rounded-lg transition"
+                          title="Remove Image"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="p-8 border-2 border-dashed border-neutral-300 rounded-xl text-center">
+                <Upload className="w-8 h-8 text-neutral-400 mx-auto mb-2" />
+                <p className="text-xs font-mono text-neutral-600 font-bold uppercase">
+                  No gallery images uploaded yet
+                </p>
+                <p className="text-[11px] font-mono text-neutral-400 mt-1">
+                  Click "Upload Multiple Images" above to add front, back, and detail product shots.
+                </p>
+              </div>
+            )}
+
+            {/* Visibility Settings */}
+            <div className="flex items-center space-x-8 pt-4 border-t border-neutral-200">
               <label className="flex items-center space-x-3 cursor-pointer">
                 <input
                   type="checkbox"
@@ -287,11 +428,11 @@ export default function AddProductPage() {
             </Link>
             <button
               type="submit"
-              disabled={loading}
+              disabled={loading || uploading}
               className="px-8 py-3 bg-red-600 hover:bg-black text-white font-mono font-bold text-xs uppercase tracking-wider rounded-lg transition shadow-lg shadow-red-600/20 flex items-center space-x-2"
             >
-              <Save className="w-4 h-4" />
-              <span>{loading ? "Saving..." : "Save Product Drop"}</span>
+              {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+              <span>{loading ? "Saving to Supabase..." : "Save Product Drop"}</span>
             </button>
           </div>
         </form>
